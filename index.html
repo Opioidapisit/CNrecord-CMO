@@ -18,21 +18,23 @@
     .page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Login Section */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 70vh; }
     .login-box { background: var(--surface); width: 100%; max-width: 450px; padding: 45px 35px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
     .login-box h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 5px; font-weight: 700; }
-    .login-box select { font-size: 1.2rem; padding: 15px; margin: 25px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; width: 100%; box-sizing: border-box; font-weight: 600; }
+    .login-box select { font-size: 1.2rem; padding: 15px; margin: 25px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; width: 100%; box-sizing: border-box; outline: none; color: var(--text-main); font-weight: 600; }
 
+    /* Top Nav & Common Buttons */
     .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+    .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; text-decoration: none; }
     .btn-primary { background: var(--primary); color: white; width: 100%; margin-bottom: 20px; font-size: 1.1rem; }
     .btn-back { background: #f1f5f9; color: var(--text-main); }
     .btn-warning { background: var(--warning); color: white; flex: 1; }
     .btn-success { background: var(--success); color: white; flex: 1; }
 
+    /* Filter & Table */
     .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
     @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
-    
     .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; }
     .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
     .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -42,12 +44,13 @@
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
 
-    .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; text-decoration: none; }
+    .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; }
     .btn-view { background: #f1f5f9; color: #475569; margin-right: 5px; }
     .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
-    .btn-img { background: #ecfdf5; color: #059669; margin-right: 5px; font-size: 1rem; padding: 6px 10px; font-weight: bold; }
+    .btn-img-row { background: #ecfdf5; color: #059669; margin-right: 5px; font-size: 1rem; padding: 6px 10px; font-weight: bold; }
     .btn-delete { background: #fee2e2; color: #b91c1c; }
 
+    /* Form Section */
     .form-section { background: var(--surface); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
     .form-section h3 { font-size: 1.2rem; color: var(--primary); margin: 0 0 20px 0; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; }
     label { display: block; font-weight: 700; margin-bottom: 8px; margin-top: 15px; }
@@ -56,13 +59,13 @@
     .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 12px; display: flex; gap: 10px; color: #92400e; font-weight: 600; font-size: 0.9rem; }
     .hidden { display: none !important; }
 
+    /* Modals */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .modal-card { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); }
+    .modal-card { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
     .detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
     .detail-label { font-weight: 700; color: var(--text-muted); min-width: 140px; }
     .detail-value { text-align: right; color: var(--text-main); font-weight: 500; }
-    
-    .btn-full-img { background: var(--primary); color: white; padding: 12px; width: 100%; margin-top: 10px; text-decoration: none; border-radius: 10px; font-weight: bold; display: block; text-align: center; }
+    .btn-full-img { background: var(--success); color: white; padding: 15px; width: 100%; margin-top: 10px; text-decoration: none; border-radius: 12px; font-weight: bold; display: block; text-align: center; box-shadow: 0 4px 12px rgba(5,150,105,0.2); }
   </style>
 </head>
 <body>
@@ -93,7 +96,7 @@
     <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
 
     <div class="filter-bar">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาชื่อบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
@@ -106,7 +109,7 @@
       </select>
     </div>
 
-    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted); font-size:1.1rem;">กำลังโหลดข้อมูล...</div>
+    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted);">กำลังโหลดข้อมูล...</div>
 
     <div class="table-responsive" id="table-container" style="display:none;">
       <table class="data-table">
@@ -160,7 +163,7 @@
         
         <div class="notice-box">
           <input type="checkbox" id="confirmStep1" style="width:18px; height:18px;"> 
-          <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันการจัดการเอกสารสำเนาเรียบร้อยแล้ว</span>
+          <span onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันการจัดการเอกสารสำเนาเรียบร้อยแล้ว</span>
         </div>
         
         <div id="product-container"></div>
@@ -182,14 +185,15 @@
       <div class="form-section">
         <h3>✅ 3. ผลการดำเนินการ</h3>
         <textarea name="actionResult" placeholder="บันทึกผลการติดตาม..."></textarea>
-        <select name="returnType" id="returnType" style="margin-top:15px;" onchange="toggleStep3Notice()">
+        <label>สถานะสรุป</label>
+        <select name="returnType" id="returnType" onchange="toggleStep3Notice()">
           <option value="">-- เลือกสถานะ --</option>
           <option value="ได้รับใบลดหนี้">ได้รับใบลดหนี้แล้ว</option>
           <option value="เปลี่ยนสินค้า">ได้รับการเปลี่ยนสินค้าเรียบร้อย</option>
           <option value="คืนเงินสด">ได้รับคืนเป็นเงินสดเรียบร้อย</option>
         </select>
         <input type="text" name="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" style="margin-top:15px;">
-        
+
         <div id="step3-notice-box" class="notice-box hidden">
           <input type="checkbox" id="confirmStep3" style="width:18px; height:18px;"> 
           <span onclick="document.getElementById('confirmStep3').click()" style="cursor:pointer;">ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขาร่วมกับบิลที่คืน) เรียบร้อยแล้ว</span>
@@ -206,8 +210,8 @@
 
 <div class="fullscreen-overlay" id="confirm-login-modal">
   <div class="modal-card" style="max-width:350px; text-align:center;">
-    <h3 style="margin-top:0;">ยืนยันการเข้าสู่ระบบ</h3>
-    <p>คุณต้องการเข้าสู่ <b id="display-selected-branch" style="color:var(--primary); font-size:1.2rem;"></b> ใช่หรือไม่?</p>
+    <h3>ยืนยันการเข้าสู่ระบบ</h3>
+    <p>คุณต้องการเข้าสู่ระบบงานของ <br><b id="display-selected-branch" style="color:var(--primary); font-size:1.2rem;"></b> ใช่หรือไม่?</p>
     <div style="display:flex; gap:10px; margin-top:25px;">
       <button class="btn btn-back" style="flex:1;" onclick="closeModal('confirm-login-modal')">ยกเลิก</button>
       <button class="btn btn-primary" style="flex:1; margin:0;" onclick="doLogin()">ยืนยัน</button>
@@ -226,7 +230,7 @@
 </div>
 
 <div class="fullscreen-overlay" id="fullscreen-alert" style="background:rgba(255,255,255,0.95);">
-  <div id="alert-icon-box" style="width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:50px; color:white;">✓</div>
+  <div id="alert-icon-box" style="width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:50px; color:white; background:var(--success);">✓</div>
   <h2 id="alert-text">สำเร็จ</h2>
 </div>
 
@@ -250,6 +254,7 @@
   let allData = [];
   let currentBranch = "";
 
+  // Navigation Logic
   window.switchPage = (id) => { 
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -258,6 +263,7 @@
   window.goHome = () => switchPage('page-home');
   window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
+  // Login Logic
   window.confirmLogin = () => {
     const sel = document.getElementById('main-branch-select').value;
     if(!sel) return alert("กรุณาเลือกสาขาก่อนครับ");
@@ -279,13 +285,18 @@
     await loadData();
   };
 
+  // Data Logic
   async function loadData() {
     document.getElementById('loading-msg').style.display = 'block';
     document.getElementById('table-container').style.display = 'none';
-    const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
-    const snap = await getDocs(q);
-    allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    applyFilters();
+    try {
+      const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
+      const snap = await getDocs(q);
+      allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      applyFilters();
+    } catch(e) { 
+      document.getElementById('loading-msg').innerText = "เกิดข้อผิดพลาด: " + e.message; 
+    }
   }
 
   window.applyFilters = () => {
@@ -327,7 +338,7 @@
           <td style="text-align:center; white-space:nowrap;">
             <button class="btn-action btn-view" onclick="showDetails('${item.id}')">👁️</button>
             <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>
-            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-action btn-img">📸</a>` : ''}
+            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-action btn-img-row">📸</a>` : ''}
             <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️</button>
           </td>
         </tr>
@@ -335,6 +346,7 @@
     });
   }
 
+  // Details Modal Logic
   window.showDetails = (id) => {
     const item = allData.find(d => d.id === id);
     if(!item) return;
@@ -347,15 +359,12 @@
       </div>
     `).join('');
 
-    // ปรับปรุงส่วนรูปภาพ: แสดงเป็นปุ่มลิงก์ที่ชัดเจนแทนการโหลดรูปตัวอย่าง
-    let photoHtml = `<div style="color:var(--text-muted); font-style:italic; font-size:0.9rem; text-align:center; padding:10px; border:1px dashed #ccc; border-radius:10px;">(ไม่มีรูปภาพประกอบในรายการนี้)</div>`;
+    let photoHtml = `<div style="color:var(--text-muted); font-style:italic; font-size:0.9rem; text-align:center; padding:15px; border:1px dashed #ccc; border-radius:10px;">(ไม่มีรูปภาพประกอบในรายการนี้)</div>`;
     if (item.photoUrl) {
       photoHtml = `
         <div style="margin-top:10px; text-align:center;">
-          <a href="${item.photoUrl}" target="_blank" class="btn-full-img" style="background:#059669; color:white; text-decoration:none; padding:15px; border-radius:12px; display:block; font-weight:bold; box-shadow:0 4px 10px rgba(5,150,105,0.2);">
-            📂 คลิกเพื่อเปิดดูรูปภาพหลักฐาน (Google Drive)
-          </a>
-          <small style="display:block; margin-top:8px; color:var(--text-muted);">* ระบบจะเปิดรูปภาพในหน้าต่างใหม่เพื่อให้เห็นรายละเอียดชัดเจน</small>
+          <a href="${item.photoUrl}" target="_blank" class="btn-full-img">📂 คลิกเปิดดูรูปภาพหลักฐาน (Google Drive)</a>
+          <small style="display:block; margin-top:5px; color:#666;">* ระบบจะเปิดหน้าต่างใหม่เพื่อให้เห็นรูปภาพที่ชัดเจน</small>
         </div>
       `;
     }
@@ -367,8 +376,8 @@
       <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
       <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value">${item.status}</span></div>
       
-      <div style="margin-top:20px; padding:15px; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">
-        <label style="margin-top:0; color:var(--primary); display:block; margin-bottom:10px;">📸 หลักฐานรูปถ่าย:</label>
+      <div style="margin-top:15px; padding:15px; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">
+        <label style="margin-top:0; color:var(--primary);">📸 หลักฐานรูปถ่าย:</label>
         ${photoHtml}
       </div>
 
@@ -388,15 +397,35 @@
     document.getElementById('detail-content').innerHTML = html;
     document.getElementById('detail-modal').style.display = 'flex';
   };
-  
+
   window.deleteRecord = async (id) => {
-    if(confirm("ลบรายการนี้ใช่หรือไม่? ข้อมูลจะหายถาวร")) {
+    if(confirm("⚠️ ยืนยันการลบข้อมูลรายการนี้? (ไม่สามารถกู้คืนได้)")) {
       await deleteDoc(doc(db, "returns", id));
       await loadData();
     }
   };
 
+  // Form Logic
+  window.toggleStep3Notice = () => {
+    const val = document.getElementById('returnType').value;
+    const box = document.getElementById('step3-notice-box');
+    if(val === 'ได้รับใบลดหนี้') box.classList.remove('hidden');
+    else { box.classList.add('hidden'); document.getElementById('confirmStep3').checked = false; }
+  };
+
+  window.toggleVendorFields = () => {
+    const v = document.getElementById('vendorType').value;
+    const extra = document.getElementById('vendor-extra');
+    const label = document.getElementById('doc-label');
+    if(v === 'อื่นๆ') {
+      extra.classList.remove('hidden'); label.innerText = 'เลขที่บิลซื้อ';
+    } else {
+      extra.classList.add('hidden'); label.innerText = 'เลขที่บิลคืน SRN';
+    }
+  };
+
   window.openFormNew = () => {
+    document.getElementById('form-title').innerText = "สร้างรายการใหม่";
     const b = document.getElementById('filterBranch').value || currentBranch;
     document.getElementById('returnForm').reset();
     document.getElementById('form-branch').value = b;
@@ -404,7 +433,7 @@
     document.getElementById('oldPhotoUrl').value = "";
     document.getElementById('notifyDate').valueAsDate = new Date();
     document.getElementById('product-container').innerHTML = "";
-    document.getElementById('step3-notice-box').classList.add('hidden'); // ซ่อน checkbox ส่วนที่ 3
+    document.getElementById('step3-notice-box').classList.add('hidden');
     addProductRow();
     toggleVendorFields();
     switchPage('page-form');
@@ -428,7 +457,6 @@
     document.getElementById('returnType').value = item.returnType || "";
     document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
     
-    // ตรวจสอบสถานะส่วนที่ 3 ตอนแก้ไข
     toggleStep3Notice();
     if(item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
 
@@ -455,38 +483,14 @@
     document.getElementById('product-container').appendChild(div);
   };
 
-  window.toggleVendorFields = () => {
-    const v = document.getElementById('vendorType').value;
-    const extra = document.getElementById('vendor-extra');
-    const label = document.getElementById('doc-label');
-    const confirmText = document.getElementById('confirm-text');
-    if(v === 'อื่นๆ') {
-      extra.classList.remove('hidden'); label.innerText = 'เลขที่บิลซื้อ';
-      confirmText.innerText = 'ยืนยันแยกบิลและยังไม่จัดเก็บเข้าแฟ้มจนกว่าจะสำเร็จ';
-    } else {
-      extra.classList.add('hidden'); label.innerText = 'เลขที่บิลคืน SRN';
-      confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว';
-    }
-  };
-
-  // ฟังก์ชันใหม่สำหรับคุมการแสดงผล Checkbox ส่วนที่ 3
-  window.toggleStep3Notice = () => {
-    const type = document.getElementById('returnType').value;
-    const box = document.getElementById('step3-notice-box');
-    if(type === 'ได้รับใบลดหนี้') {
-      box.classList.remove('hidden');
-    } else {
-      box.classList.add('hidden');
-      document.getElementById('confirmStep3').checked = false;
-    }
-  };
-
+  // Submit Logic
   window.submitForm = async (type) => {
     const form = document.getElementById('returnForm');
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
     const docId = data.docId;
     
+    // สินค้า
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
       data.products.push({
@@ -497,9 +501,6 @@
     });
 
     data.confirmStep1 = document.getElementById('confirmStep1').checked ? "YES" : "NO";
-    
-    // ตรวจสอบ checkbox ส่วนที่ 3
-    const isCreditNote = document.getElementById('returnType').value === 'ได้รับใบลดหนี้';
     const isStep3Checked = document.getElementById('confirmStep3').checked;
     data.confirmStep3 = isStep3Checked ? "YES" : "NO";
 
@@ -507,57 +508,51 @@
     
     if(type === 'close') {
       if(!data.actionResult || !data.returnType) return alert("กรุณากรอกผลดำเนินการให้ครบถ้วน");
-      
-      // เงื่อนไขบังคับติ๊กถ้าได้รับใบลดหนี้
-      if(isCreditNote && !isStep3Checked) {
-        return alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคสครับ");
-      }
-
-      if(!confirm("ยืนยันจัดการเอกสารใบลดหนี้เข้าแฟ้มเรียบร้อยแล้ว?")) return;
+      if(data.returnType === 'ได้รับใบลดหนี้' && !isStep3Checked) return alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส");
+      if(!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้วใช่หรือไม่?")) return;
     }
 
     const bPark = document.getElementById('btn-park');
     const bClose = document.getElementById('btn-close');
     bPark.disabled = true; bClose.disabled = true;
-    const oldTxt = bPark.innerText;
     bPark.innerText = "กำลังบันทึก...";
 
     try {
-      const photoInput = document.getElementById('photoInput');
-      const file = photoInput.files[0];
+      const fileInput = document.getElementById('photoInput');
+      const file = fileInput.files[0];
       let url = document.getElementById('oldPhotoUrl').value;
 
+      // Upload Photo ONLY if new file is selected
       if(file) {
         bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
           const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file);
         });
 
-        const branchName = data.branch.replace(/\s+/g, '');
-        const dateStr = data.notifyDate.split('-').reverse().join(''); 
-        const cleanDocNum = data.docNumber.replace(/[^a-zA-Z0-9]/g, '');
-        const fileName = `${branchName}-${dateStr}-${cleanDocNum}.jpg`;
+        // Name format: สาขาX-วันเดือนปี-เลขบิล.jpg
+        const branchClean = data.branch.replace(/\s+/g, '');
+        const dateClean = data.notifyDate.split('-').reverse().join('');
+        const docClean = data.docNumber.replace(/[^a-zA-Z0-9]/g, '');
+        const fileName = `${branchClean}-${dateClean}-${docClean}.jpg`;
 
         const response = await fetch(GAS_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ base64: base64, fileName: fileName })
         });
-        
         const txt = await response.text();
         const resData = JSON.parse(txt);
         if(resData.status === 'success') {
           url = resData.url;
-          photoInput.value = "";
+          fileInput.value = ""; // Clear file input
         }
       }
 
       bPark.innerText = "บันทึกฐานข้อมูล...";
       const saveData = {
         branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
-        vendorName: data.vendorName, docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
-        confirmStep3: data.confirmStep3 || "NO", // เก็บสถานะ checkbox ใหม่
-        notifyNote: data.notifyNote || "", returnDate: data.returnDate || "", 
+        vendorName: data.vendorName || "", docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
+        confirmStep3: data.confirmStep3, notifyNote: data.notifyNote || "", returnDate: data.returnDate || "", 
         returnStaff: data.returnStaff || "", photoUrl: url, actionResult: data.actionResult || "", 
         returnType: data.returnType || "", creditNoteNo: data.creditNoteNo || "", 
         products: data.products, status: data.status
@@ -571,21 +566,20 @@
       }
       showSuccess(type);
     } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
-    bPark.disabled = false; bClose.disabled = false; bPark.innerText = oldTxt;
+    bPark.disabled = false; bClose.disabled = false; bPark.innerText = "⏳ พักบิล";
   };
 
   function showSuccess(type) {
     const overlay = document.getElementById('fullscreen-alert');
-    const icon = document.getElementById('alert-icon-box');
     const text = document.getElementById('alert-text');
-    if(type === 'close') { icon.style.background = "var(--success)"; text.innerText = "ปิดเคสสำเร็จ"; }
-    else { icon.style.background = "var(--warning)"; text.innerText = "พักบิลเรียบร้อย"; }
+    if(type === 'close') { text.innerText = "ปิดเคสสำเร็จ"; }
+    else { text.innerText = "พักบิลเรียบร้อย"; }
     overlay.style.display = 'flex';
     setTimeout(async () => { 
       overlay.style.display = 'none'; 
       await loadData(); 
       switchPage('page-dashboard'); 
-    }, 2000);
+    }, 1500);
   }
 </script>
 </body>
