@@ -17,55 +17,55 @@
     .app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
     .page { display: none; animation: fadeIn 0.4s ease; }
     .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ================= หน้าแรก: Dropdown & Login ================= */
+    /* Login Section */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 70vh; }
-    .login-box { background: var(--surface); width: 100%; max-width: 450px; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid rgba(255,255,255,0.8); }
-    .login-box h2 { color: var(--primary); font-size: 2rem; margin-bottom: 10px; }
-    .login-box select { font-size: 1.2rem; padding: 15px; margin: 20px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; font-weight: 600; color: var(--primary); outline: none; }
-    .login-box select:focus { border-color: var(--primary); }
+    .login-box { background: var(--surface); width: 100%; max-width: 450px; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
+    .login-box h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 5px; font-weight: 700; }
+    .login-box select { font-size: 1.2rem; padding: 15px; margin: 25px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; width: 100%; box-sizing: border-box; outline: none; color: var(--text-main); }
 
-    /* Dashboard & Filter */
+    /* Nav & Filter */
     .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+    .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
     .btn-primary { background: var(--primary); color: white; width: 100%; margin-bottom: 20px; font-size: 1.1rem; }
     .btn-back { background: #f1f5f9; color: var(--text-main); }
     .btn-warning { background: var(--warning); color: white; flex: 1; }
     .btn-success { background: var(--success); color: white; flex: 1; }
 
     .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
-    @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
     
-    .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    /* Table */
+    .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; }
     .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
     .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
-    .data-table th { background: #f8fafc; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; white-space: nowrap; }
-    .data-table tr:hover td { background: #f8fafc; }
-    
-    .badge { padding: 6px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+    .data-table th { background: #f8fafc; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
 
-    .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; }
-    .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
-    .btn-img { background: #f1f5f9; color: #475569; text-decoration: none; margin-right: 5px; font-size: 1.2rem; padding: 5px 10px; border-radius: 8px; }
+    .btn-action { padding: 6px 10px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1rem; }
+    .btn-view { background: #f1f5f9; color: #475569; margin-right: 4px; }
+    .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 4px; }
+    .btn-img { background: #ecfdf5; color: #059669; text-decoration: none; margin-right: 4px; padding: 6px 10px; border-radius: 8px; }
     .btn-delete { background: #fee2e2; color: #b91c1c; }
 
-    /* Form Styles */
+    /* Form & Notice */
     .form-section { background: var(--surface); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
     .form-section h3 { font-size: 1.2rem; color: var(--primary); margin: 0 0 20px 0; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; }
-    label { display: block; font-weight: 600; margin-bottom: 8px; margin-top: 15px; }
-    input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Sarabun'; font-size: 1rem; box-sizing: border-box; background: #f8fafc; }
+    label { display: block; font-weight: 700; margin-bottom: 8px; margin-top: 15px; }
+    input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Sarabun'; background: #f8fafc; box-sizing: border-box; }
     .product-row { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 15px; margin-top: 12px; }
-    .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 12px; display: flex; gap: 10px; color: #92400e; font-weight: 500; }
+    .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 12px; display: flex; gap: 10px; color: #92400e; font-weight: 600; font-size: 0.9rem; }
     .hidden { display: none !important; }
 
-    /* Overlay / Modals */
-    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
-    .modal-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; border: 1px solid var(--border); }
-    .alert-icon { width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; color: white; margin-bottom: 20px; }
+    /* Modals */
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+    .detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .detail-label { font-weight: 700; color: var(--text-muted); min-width: 140px; }
+    .detail-value { text-align: right; color: var(--text-main); }
   </style>
 </head>
 <body>
@@ -75,16 +75,13 @@
   <div id="page-home" class="page active">
     <div class="login-container">
       <div class="login-box">
-        <div style="font-size: 60px; margin-bottom: 10px;">🏥</div>
         <h2>คลินิคยา มอ ออ</h2>
-        <p style="color:var(--text-muted);">ระบบบันทึกการส่งคืนสินค้า</p>
-        
+        <p>ระบบบันทึกข้อมูลการส่งคืนสินค้า</p>
         <select id="main-branch-select">
           <option value="">-- กรุณาเลือกสาขา --</option>
           <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
         </select>
-        
-        <button class="btn btn-primary" style="padding:15px; font-size:1.2rem;" onclick="confirmLogin()">เข้าสู่ระบบ</button>
+        <button class="btn btn-primary" style="padding:15px;" onclick="confirmLogin()">เข้าสู่ระบบ</button>
       </div>
     </div>
   </div>
@@ -99,7 +96,7 @@
     <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
 
     <div class="filter-bar">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาชื่อบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
@@ -112,17 +109,16 @@
       </select>
     </div>
 
-    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted); font-size:1.1rem;">กำลังโหลดข้อมูล...</div>
+    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted);">กำลังโหลดข้อมูล...</div>
 
     <div class="table-responsive" id="table-container" style="display:none;">
       <table class="data-table">
         <thead>
           <tr>
             <th>วันที่แจ้ง</th>
-            <th>สาขา</th>
             <th>บริษัทจำหน่าย</th>
             <th>เลขบิล</th>
-            <th>รายการสินค้าที่คืน</th>
+            <th>รายการสินค้า</th>
             <th style="text-align:center;">จำนวน</th>
             <th>สถานะ</th>
             <th style="text-align:center;">จัดการ</th>
@@ -141,12 +137,13 @@
     </div>
     
     <form id="returnForm">
-      <input type="hidden" name="docId" id="docId"> <input type="hidden" name="oldPhotoUrl" id="oldPhotoUrl">
+      <input type="hidden" name="docId" id="docId">
+      <input type="hidden" name="oldPhotoUrl" id="oldPhotoUrl">
       
       <div class="form-section">
         <h3>📝 1. ข้อมูลการแจ้งคืน</h3>
         <label>สาขา</label>
-        <input type="text" id="form-branch" name="branch" readonly style="color:var(--primary); font-weight:700; background:#f1f5f9;">
+        <input type="text" id="form-branch" name="branch" readonly style="color:var(--primary); font-weight:700;">
         
         <label>วันที่แจ้ง</label>
         <input type="date" name="notifyDate" id="notifyDate">
@@ -161,16 +158,16 @@
           <input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท" style="margin-top:10px;">
         </div>
         
-        <label id="doc-label">เลขที่บิลที่คืน SRN</label>
+        <label id="doc-label">เลขที่บิลคืน SRN</label>
         <input type="text" name="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
         
         <div class="notice-box">
-          <input type="checkbox" id="confirmStep1" style="width:20px; height:20px;"> 
+          <input type="checkbox" id="confirmStep1" style="width:18px; height:18px;"> 
           <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันการจัดการเอกสารสำเนาเรียบร้อยแล้ว</span>
         </div>
         
         <div id="product-container"></div>
-        <button type="button" class="btn" style="background:#f1f5f9; width:100%; margin-top:15px; border:1px dashed #cbd5e1; color:var(--text-main);" onclick="addProductRow()">+ เพิ่มรายการสินค้าอีก</button>
+        <button type="button" class="btn" style="background:#f1f5f9; width:100%; margin-top:15px; border:1px dashed #cbd5e1;" onclick="addProductRow()">+ เพิ่มรายการสินค้าอีก</button>
       </div>
       
       <div class="form-section">
@@ -204,19 +201,28 @@
 </div>
 
 <div class="fullscreen-overlay" id="confirm-login-modal">
-  <div class="modal-card">
-    <div style="font-size: 50px;">🏥</div>
-    <h3>ยืนยันการเข้าใช้งาน</h3>
-    <p>คุณต้องการเข้าสู่ระบบในนาม <br><b id="display-selected-branch" style="color:var(--primary); font-size:1.3rem;"></b> ใช่หรือไม่?</p>
-    <div style="display:flex; gap:10px; margin-top:20px;">
+  <div class="modal-card" style="max-width:350px; text-align:center;">
+    <h3 style="margin-top:0;">ยืนยันการเข้าสู่ระบบ</h3>
+    <p>คุณต้องการเข้าสู่ <b id="display-selected-branch" style="color:var(--primary); font-size:1.2rem;"></b> ใช่หรือไม่?</p>
+    <div style="display:flex; gap:10px; margin-top:25px;">
       <button class="btn btn-back" style="flex:1;" onclick="closeModal('confirm-login-modal')">ยกเลิก</button>
       <button class="btn btn-primary" style="flex:1; margin:0;" onclick="doLogin()">ยืนยัน</button>
     </div>
   </div>
 </div>
 
-<div class="fullscreen-overlay" id="fullscreen-alert">
-  <div class="alert-icon" id="alert-icon-box">✓</div>
+<div class="fullscreen-overlay" id="detail-modal">
+  <div class="modal-card">
+    <h3 style="color:var(--primary); margin-top:0; border-bottom:2px solid var(--primary); padding-bottom:10px;">รายละเอียดข้อมูลการคืน</h3>
+    <div id="detail-content"></div>
+    <div style="margin-top:25px; text-align:right;">
+      <button class="btn btn-back" onclick="closeModal('detail-modal')">ปิดหน้าต่าง</button>
+    </div>
+  </div>
+</div>
+
+<div class="fullscreen-overlay" id="fullscreen-alert" style="background:rgba(255,255,255,0.95);">
+  <div class="alert-icon" id="alert-icon-box" style="background:var(--success); width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:50px; color:white;">✓</div>
   <h2 id="alert-text">สำเร็จ</h2>
 </div>
 
@@ -245,11 +251,8 @@
     document.getElementById(id).classList.add('active');
     window.scrollTo(0,0);
   };
-
-  window.goHome = () => switchPage('page-home');
   window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-  // --- ระบบ Login ---
   window.confirmLogin = () => {
     const sel = document.getElementById('main-branch-select').value;
     if(!sel) return alert("กรุณาเลือกสาขา");
@@ -304,34 +307,62 @@
     
     data.forEach(item => {
       const badge = item.status === "ปิดเคสแล้ว" ? "badge-green" : (item.status === "ส่งคืนแล้วรอปิดเคส" ? "badge-yellow" : "badge-red");
-      const dot = item.status === "ปิดเคสแล้ว" ? "🟢" : (item.status === "ส่งคืนแล้วรอปิดเคส" ? "🟡" : "🔴");
       const vendor = item.vendorType === 'อื่นๆ' ? (item.vendorName || '-') : item.vendorType;
-      
-      // สรุปสินค้า
-      let pList = "-"; let total = 0;
-      if(item.products && item.products.length > 0) {
-        pList = item.products.map(p => p.name).join(', ');
-        total = item.products.reduce((sum, p) => sum + (Number(p.qty) || 0), 0);
-      }
+      const pSummary = item.products ? item.products.map(p => p.name).join(', ') : "-";
+      const total = item.products ? item.products.reduce((sum, p) => sum + (Number(p.qty) || 0), 0) : 0;
 
       tbody.innerHTML += `
         <tr>
           <td><small>${item.notifyDate || '-'}</small></td>
-          <td><b>${item.branch}</b></td>
           <td>${vendor}</td>
           <td>${item.docNumber || '-'}</td>
-          <td><div style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--primary); font-weight:500;">${pList}</div></td>
+          <td><div style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--primary); font-weight:500;">${pSummary}</div></td>
           <td style="text-align:center; font-weight:700;">${total}</td>
-          <td><span class="badge ${badge}">${dot} ${item.status}</span></td>
+          <td><span class="badge ${badge}">${item.status}</span></td>
           <td style="text-align:center; white-space:nowrap;">
-            <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>
-            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-img">📸</a>` : ''}
-            <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️</button>
+            <button class="btn-action btn-view" onclick="showDetails('${item.id}')" title="ดูข้อมูล">👁️</button>
+            <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')" title="แก้ไข">✏️</button>
+            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-img" title="รูปภาพ">📸</a>` : ''}
+            <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')" title="ลบ">🗑️</button>
           </td>
         </tr>
       `;
     });
   }
+
+  // --- ฟังก์ชันแสดงรายละเอียดข้อมูล ---
+  window.showDetails = (id) => {
+    const item = allData.find(d => d.id === id);
+    if(!item) return;
+    
+    let prodHtml = item.products.map(p => `
+      <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--primary); font-size:0.9rem;">
+        <b>📦 ${p.name}</b><br>
+        จำนวน: ${p.qty} | LOT: ${p.lot} | EXP: ${p.exp}<br>
+        สาเหตุ: ${p.reason}
+      </div>
+    `).join('');
+
+    const html = `
+      <div class="detail-item"><span class="detail-label">วันที่แจ้ง:</span><span class="detail-value">${item.notifyDate}</span></div>
+      <div class="detail-item"><span class="detail-label">สาขา:</span><span class="detail-value">${item.branch}</span></div>
+      <div class="detail-item"><span class="detail-label">บริษัทจำหน่าย:</span><span class="detail-value">${item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType}</span></div>
+      <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
+      <div class="detail-item"><span class="detail-label">สถานะ:</span><span class="detail-value">${item.status}</span></div>
+      <div style="margin-top:15px;"><label>รายการสินค้า:</label>${prodHtml}</div>
+      <div style="margin-top:15px;"><label>หมายเหตุ:</label><div style="background:#fffbeb; padding:10px; border-radius:8px; font-size:0.9rem;">${item.notifyNote || '-'}</div></div>
+      <div style="margin-top:15px; background:#f1f5f9; padding:15px; border-radius:12px;">
+        <div class="detail-item"><span class="detail-label">วันที่รับคืน:</span><span class="detail-value">${item.returnDate || '-'}</span></div>
+        <div class="detail-item"><span class="detail-label">ชื่อผู้ส่งคืน:</span><span class="detail-value">${item.returnStaff || '-'}</span></div>
+      </div>
+      <div style="margin-top:15px;"><label>ผลการดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem;">${item.actionResult || '-'}</div></div>
+      <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}</span></div>
+      <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
+    `;
+    
+    document.getElementById('detail-content').innerHTML = html;
+    document.getElementById('detail-modal').style.display = 'flex';
+  };
 
   window.deleteRecord = async (id) => {
     if(confirm("ลบรายการนี้ใช่หรือไม่?")) {
@@ -341,7 +372,6 @@
   };
 
   window.openFormNew = () => {
-    document.getElementById('form-title').innerText = "สร้างรายการใหม่";
     const b = document.getElementById('filterBranch').value || currentBranch;
     document.getElementById('returnForm').reset();
     document.getElementById('form-branch').value = b;
@@ -412,7 +442,7 @@
     const form = document.getElementById('returnForm');
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
-    const docId = data.docId; // ตอนนี้จะอ่านได้แล้วเพราะมี name="docId"
+    const docId = data.docId;
     
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
@@ -438,16 +468,17 @@
     bPark.innerText = "กำลังบันทึก...";
 
     try {
-      const file = document.getElementById('photoInput').files[0];
+      const photoInput = document.getElementById('photoInput');
+      const file = photoInput.files[0];
       let url = document.getElementById('oldPhotoUrl').value;
 
+      // แก้ไขปัญหาการอัพรูปเบิ้ล: อัพรูปเฉพาะเมื่อมีการเลือกไฟล์ใหม่ (file มีค่า)
       if(file) {
         bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
           const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file);
         });
 
-        // ส่งรูปลง Drive (แก้ปัญหา CORS Error ด้วยการรับแบบ Text ก่อน)
         const response = await fetch(GAS_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -456,10 +487,12 @@
         
         const txt = await response.text();
         const resData = JSON.parse(txt);
-        if(resData.status === 'success') url = resData.url;
+        if(resData.status === 'success') {
+          url = resData.url;
+          photoInput.value = ""; // ล้างค่าหลังอัพโหลดเสร็จเพื่อกันส่งซ้ำ
+        }
       }
 
-      bPark.innerText = "บันทึกฐานข้อมูล...";
       const saveData = {
         branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
         vendorName: data.vendorName, docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
@@ -475,7 +508,7 @@
         await addDoc(collection(db, "returns"), saveData);
       }
       showSuccess(type);
-    } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+    } catch (e) { alert("Error: " + e.message); }
     bPark.disabled = false; bClose.disabled = false; bPark.innerText = oldTxt;
   };
 
