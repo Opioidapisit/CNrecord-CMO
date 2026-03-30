@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบคืนสินค้า - คลินิคยา มอ ออ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ... CSS ส่วนใหญ่เหมือนเดิม เพิ่มส่วน Filter Bar ... */
+    :root { --primary: #2563eb; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --background: #f8fafc; --surface: #ffffff; --border: #e2e8f0; }
+    body { font-family: 'Prompt', sans-serif; background-color: var(--background); margin: 0; padding: 0; }
+    .app-container { max-width: 900px; margin: 0 auto; padding: 15px; }
+    .page { display: none; animation: fadeIn 0.3s; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Filter Bar */
+    .filter-bar { 
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; 
+      background: var(--surface); padding: 15px; border-radius: 12px; 
+      margin-bottom: 15px; border: 1px solid var(--border);
+    }
+    @media (max-width: 600px) { .filter-bar { grid-template-columns: 1fr; } }
+
+    .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Prompt'; font-weight: 500; }
+    .btn-primary { background: var(--primary); color: white; width: 100%; margin-bottom: 15px; }
+    .table-responsive { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .data-table th, .data-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    .data-table th { background: #f1f5f9; color: #64748b; }
+    
+    .badge { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    
+    input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: 'Prompt'; box-sizing: border-box; }
+    .btn-action { padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; text-decoration: none; display: inline-block; }
+    .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
+    .btn-img { background: #f1f5f9; color: #475569; }
+
+    /* ฟอร์มและส่วนอื่นๆ คงเดิม */
+    .form-section { background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
+    .hidden { display: none !important; }
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="page-home" class="page active">
+    <div style="text-align:center; margin: 40px 0;">
+      <h2 style="color:var(--primary);">คลินิคยา มอ ออ</h2>
+      <p style="color:#64748b;">ระบบจัดการส่งคืนสินค้า (Firebase Version)</p>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px;" id="branch-grid"></div>
+  </div>
+
+  <div id="page-dashboard" class="page">
+    <div class="top-nav">
+      <button class="btn" style="background:#f1f5f9;" onclick="goHome()">◀ หน้าแรก</button>
+      <h3 id="dash-title" style="margin:0; color:var(--primary);">Dashboard</h3>
+      <div style="width:70px;"></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
+
+    <div class="filter-bar">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท / เลขบิล..." onkeyup="applyFilters()">
+      <select id="filterStatus" onchange="applyFilters()">
+        <option value="">ทุกสถานะ</option>
+        <option value="รอรับคืน">🔴 รอรับคืน</option>
+        <option value="ส่งคืนแล้วรอปิดเคส">🟡 รอปิดเคส</option>
+        <option value="ปิดเคสแล้ว">🟢 ปิดเคสแล้ว</option>
+      </select>
+      <select id="filterBranch" onchange="applyFilters()">
+        <option value="">ทุกสาขา</option>
+        <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
+      </select>
+    </div>
+
+    <div id="loading-msg" style="text-align:center; padding:30px;">กำลังโหลดข้อมูล...</div>
+
+    <div class="table-responsive" id="table-container" style="display:none;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>วันที่</th>
+            <th>สาขา</th>
+            <th>บริษัทจำหน่าย</th>
+            <th>เลขบิล</th>
+            <th>สถานะ</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="dashboard-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="page-form" class="page">
+    <div class="top-nav">
+      <button class="btn" style="background:#f1f5f9;" onclick="switchPage('page-dashboard')">◀ กลับ</button>
+      <h3 id="form-title">แบบฟอร์ม</h3>
+      <div style="width:70px;"></div>
+    </div>
+    <form id="returnForm">
+      <input type="hidden" id="docId">
+      <input type="hidden" id="oldPhotoUrl">
+      <div class="form-section">
+        <h3>1. การแจ้งคืน</h3>
+        <label>สาขาที่ดำเนินการ</label>
+        <input type="text" id="form-branch" name="branch" readonly style="background:#f1f5f9; font-weight:bold;">
+        <label>วันที่แจ้ง</label>
+        <input type="date" name="notifyDate" id="notifyDate">
+        <label>บริษัทจำหน่าย</label>
+        <select name="vendorType" id="vendorType" onchange="toggleVendorFields()">
+          <option value="คลินิคยา มอ ออ 3">คลินิคยา มอ ออ 3</option>
+          <option value="อื่นๆ">อื่นๆ</option>
+        </select>
+        <div id="vendor-extra" class="hidden">
+          <input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท">
+        </div>
+        <label id="doc-label">เลขที่บิลคืน SRN</label>
+        <input type="text" name="docNumber" required>
+        <div id="product-container"></div>
+        <button type="button" class="btn" style="background:#334155; color:white; width:100%; margin-top:10px;" onclick="addProductRow()">+ เพิ่มสินค้า</button>
+      </div>
+      
+      <div class="form-section">
+        <h3>2. การรับคืน</h3>
+        <input type="date" name="returnDate" placeholder="วันที่รับคืน">
+        <input type="text" name="returnStaff" placeholder="ลงชื่อผู้ส่งคืน" style="margin-top:10px;">
+        <label style="margin-top:10px;">รูปถ่ายหลักฐาน</label>
+        <input type="file" id="photoInput" accept="image/*" capture="camera">
+      </div>
+
+      <div class="form-section">
+        <h3>3. ผลดำเนินการ</h3>
+        <textarea name="actionResult" placeholder="บันทึกผลการดำเนินการ"></textarea>
+        <select name="returnType" style="margin-top:10px;">
+          <option value="">-- เลือกสถานะ --</option>
+          <option value="ได้รับใบลดหนี้">ได้รับใบลดหนี้</option>
+          <option value="เปลี่ยนสินค้า">เปลี่ยนสินค้าเรียบร้อย</option>
+          <option value="คืนเงินสด">คืนเงินสดเรียบร้อย</option>
+        </select>
+        <input type="text" name="creditNoteNo" placeholder="เลขใบลดหนี้" style="margin-top:10px;">
+      </div>
+
+      <div style="display:flex; gap:10px; margin-bottom:50px;">
+        <button type="button" class="btn" style="background:var(--warning); color:white; flex:1;" onclick="submitForm('park')">พักบิล</button>
+        <button type="button" class="btn" style="background:var(--success); color:white; flex:1;" onclick="submitForm('close')">ปิดเคส</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="fullscreen-overlay" id="fullscreen-alert">
+  <div style="font-size:50px;" id="alert-icon">✔️</div>
+  <h2 id="alert-text">บันทึกสำเร็จ</h2>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAv0-NKFMbUUS8UXaKFR-mju1qAdtSdG9s",
+    authDomain: "cmo-cn-record.firebaseapp.com",
+    projectId: "cmo-cn-record",
+    storageBucket: "cmo-cn-record.firebasestorage.app",
+    messagingSenderId: "538061444858",
+    appId: "1:538061444858:web:11951fdca832d5b1ecdb43"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // --- Logic การทำงาน ---
+  let allData = [];
+
+  window.openDashboard = async function(branchName) {
+    document.getElementById('dash-title').innerText = "Dashboard - " + branchName;
+    document.getElementById('filterBranch').value = branchName; // ล็อคสาขาเบื้องต้น
+    switchPage('page-dashboard');
+    await loadData();
+  };
+
+  async function loadData() {
+    document.getElementById('loading-msg').style.display = 'block';
+    document.getElementById('table-container').style.display = 'none';
+    
+    const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
+    const snap = await getDocs(q);
+    allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    applyFilters();
+  }
+
+  window.applyFilters = function() {
+    const search = document.getElementById('filterSearch').value.toLowerCase();
+    const status = document.getElementById('filterStatus').value;
+    const branch = document.getElementById('filterBranch').value;
+
+    const filtered = allData.filter(item => {
+      const vendor = (item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType).toLowerCase();
+      const matchSearch = vendor.includes(search) || item.docNumber.toLowerCase().includes(search);
+      const matchStatus = status === "" || item.status === status;
+      const matchBranch = branch === "" || item.branch === branch;
+      return matchSearch && matchStatus && matchBranch;
+    });
+
+    renderTable(filtered);
+  };
+
+  function renderTable(data) {
+    const tbody = document.getElementById('dashboard-tbody');
+    tbody.innerHTML = '';
+    document.getElementById('loading-msg').style.display = 'none';
+    document.getElementById('table-container').style.display = 'block';
+
+    data.forEach(item => {
+      const statusClass = item.status === "ปิดเคสแล้ว" ? "badge-green" : (item.status === "รอรับคืน" ? "badge-red" : "badge-yellow");
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.notifyDate}</td>
+          <td><small>${item.branch}</small></td>
+          <td><b>${item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType}</b></td>
+          <td>${item.docNumber}</td>
+          <td><span class="badge ${statusClass}">${item.status}</span></td>
+          <td>
+            <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">แก้ไข</button>
+            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-action btn-img">รูป</a>` : ''}
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  // --- ฟังก์ชันเสริม (เหมือนเดิม) ---
+  window.submitForm = async function(type) {
+    const form = document.getElementById('returnForm');
+    const fd = new FormData(form);
+    const data = Object.fromEntries(fd.entries());
+    const docId = document.getElementById('docId').value;
+    
+    // จัดการสินค้า
+    data.products = [];
+    document.querySelectorAll('.product-row').forEach(row => {
+      data.products.push({
+        name: row.querySelector('.p-name').value,
+        qty: row.querySelector('.p-qty').value,
+        lot: row.querySelector('.p-lot').value,
+        exp: row.querySelector('.p-exp').value,
+        reason: row.querySelector('.p-reason').value
+      });
+    });
+
+    // สถานะ
+    data.status = type === 'close' ? "ปิดเคสแล้ว" : (data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน");
+    
+    try {
+      const file = document.getElementById('photoInput').files[0];
+      let url = document.getElementById('oldPhotoUrl').value;
+      if(file) {
+        const sRef = ref(storage, `photos/${Date.now()}_${file.name}`);
+        await uploadBytes(sRef, file);
+        url = await getDownloadURL(sRef);
+      }
+      data.photoUrl = url;
+
+      if(docId) {
+        await updateDoc(doc(db, "returns", docId), data);
+      } else {
+        data.timestamp = serverTimestamp();
+        await addDoc(collection(db, "returns"), data);
+      }
+      
+      showSuccess(type);
+    } catch (e) { alert("Error: " + e.message); }
+  };
+
+  // ปุ่มสาขาหน้าแรก
+  const grid = document.getElementById('branch-grid');
+  for(let i=1; i<=9; i++) {
+    grid.innerHTML += `<div class="branch-card" onclick="openDashboard('สาขา ${i}')">สาขา ${i}</div>`;
+  }
+
+  window.switchPage = (id) => { 
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  };
+  window.goHome = () => switchPage('page-home');
+  window.openFormNew = () => { 
+    document.getElementById('returnForm').reset();
+    document.getElementById('docId').value = "";
+    document.getElementById('product-container').innerHTML = "";
+    addProductRow();
+    switchPage('page-form'); 
+  };
+  window.openFormEdit = (id) => {
+    const item = allData.find(d => d.id === id);
+    // วนลูปหยอดข้อมูลลงฟอร์ม...
+    document.getElementById('docId').value = item.id;
+    document.getElementById('oldPhotoUrl').value = item.photoUrl || "";
+    // (หยอดข้อมูลอื่นๆ จนครบ)
+    switchPage('page-form');
+  };
+  window.addProductRow = (p={name:'',qty:'',lot:'',exp:'',reason:''}) => {
+    const div = document.createElement('div');
+    div.className = 'product-row';
+    div.innerHTML = `<input type="text" class="p-name" placeholder="ชื่อสินค้า" value="${p.name}" style="margin-top:5px;">
+                     <div style="display:flex; gap:5px; margin-top:5px;">
+                        <input type="number" class="p-qty" placeholder="จำนวน" value="${p.qty}">
+                        <input type="text" class="p-lot" placeholder="LOT" value="${p.lot}">
+                     </div>
+                     <div style="display:flex; gap:5px; margin-top:5px;">
+                        <input type="text" class="p-exp" placeholder="EXP" value="${p.exp}">
+                        <input type="text" class="p-reason" placeholder="สาเหตุ" value="${p.reason}">
+                     </div>`;
+    document.getElementById('product-container').appendChild(div);
+  };
+  window.toggleVendorFields = () => {
+    const v = document.getElementById('vendorType').value;
+    document.getElementById('vendor-extra').className = v === 'อื่นๆ' ? '' : 'hidden';
+  };
+  function showSuccess(type) {
+    const overlay = document.getElementById('fullscreen-alert');
+    overlay.style.display = 'flex';
+    document.getElementById('alert-text').innerText = type === 'close' ? 'ปิดเคสสำเร็จ' : 'พักบิลเรียบร้อย';
+    setTimeout(() => { overlay.style.display = 'none'; loadData(); switchPage('page-dashboard'); }, 2000);
+  }
+</script>
+</body>
+</html>
