@@ -4,71 +4,109 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบคืนสินค้า - คลินิคยา มอ ออ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* ... CSS ส่วนใหญ่เหมือนเดิม เพิ่มส่วน Filter Bar ... */
-    :root { --primary: #2563eb; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --background: #f8fafc; --surface: #ffffff; --border: #e2e8f0; }
-    body { font-family: 'Prompt', sans-serif; background-color: var(--background); margin: 0; padding: 0; }
-    .app-container { max-width: 900px; margin: 0 auto; padding: 15px; }
-    .page { display: none; animation: fadeIn 0.3s; }
-    .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* Filter Bar */
-    .filter-bar { 
-      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; 
-      background: var(--surface); padding: 15px; border-radius: 12px; 
-      margin-bottom: 15px; border: 1px solid var(--border);
+    :root { 
+      --primary: #2563eb; --primary-hover: #1d4ed8; 
+      --success: #059669; --warning: #d97706; --danger: #dc2626; 
+      --background: #f0fdf4; 
+      --surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0; 
     }
-    @media (max-width: 600px) { .filter-bar { grid-template-columns: 1fr; } }
-
-    .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Prompt'; font-weight: 500; }
-    .btn-primary { background: var(--primary); color: white; width: 100%; margin-bottom: 15px; }
-    .table-responsive { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
-    .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    .data-table th, .data-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
-    .data-table th { background: #f1f5f9; color: #64748b; }
     
-    .badge { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    body { font-family: 'Sarabun', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; }
+    .app-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .page { display: none; animation: fadeIn 0.4s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ================= การ์ดเลือกสาขา ================= */
+    .header-title { text-align: center; margin: 40px 0; }
+    .header-title h2 { color: var(--primary); font-size: 2.2rem; font-weight: 700; margin-bottom: 5px; }
+    .header-title p { color: var(--text-muted); font-size: 1.1rem; margin-top: 0; }
+    .branch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .branch-card { background: var(--surface); border-radius: 20px; padding: 30px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 10px 25px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .branch-card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px rgba(37,99,235,0.1); border-color: #bfdbfe; }
+    .branch-icon { font-size: 2.5rem; background: #eff6ff; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary); transition: all 0.3s; }
+    .branch-card:hover .branch-icon { background: var(--primary); color: white; transform: scale(1.1); }
+    .branch-name { font-size: 1.25rem; font-weight: 600; color: var(--text-main); }
+
+    /* ================= Top Nav & Buttons ================= */
+    .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 25px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+    .top-nav h3 { margin: 0; font-size: 1.2rem; font-weight: 600; color: var(--primary); }
+    .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Sarabun', sans-serif; font-weight: 600; font-size: 1rem; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:active { transform: scale(0.97); }
+    .btn-back { background: #f1f5f9; color: var(--text-main); }
+    .btn-back:hover { background: #e2e8f0; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%); color: white; width: 100%; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
+
+    /* ================= Dashboard Table & Filter ================= */
+    .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
+    .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem; }
+    .data-table th, .data-table td { padding: 15px 20px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+    .data-table tr:hover td { background: #f8fafc; }
+    .badge { padding: 6px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
-    
-    input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: 'Prompt'; box-sizing: border-box; }
-    .btn-action { padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; text-decoration: none; display: inline-block; }
-    .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
+    .btn-action { padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; border: none; cursor: pointer; font-family: 'Sarabun', sans-serif; font-weight: 500; transition: all 0.2s; }
+    .btn-edit { background: #e0f2fe; color: #0369a1; }
+    .btn-edit:hover { background: #bae6fd; }
     .btn-img { background: #f1f5f9; color: #475569; }
+    .btn-img:hover { background: #e2e8f0; }
+    .btn-delete { background: #fee2e2; color: #b91c1c; }
+    .btn-delete:hover { background: #fecaca; }
 
-    /* ฟอร์มและส่วนอื่นๆ คงเดิม */
-    .form-section { background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
+    /* ================= Form Elements ================= */
+    .form-section { background: var(--surface); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .form-section h3 { font-size: 1.15rem; color: var(--primary); margin-top: 0; border-bottom: 2px solid #eff6ff; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    label { display: block; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; margin-top: 15px; color: var(--text-main); }
+    input, select, textarea { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Sarabun', sans-serif; font-size: 1rem; box-sizing: border-box; background: #f8fafc; transition: all 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
+    .product-row { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 15px; margin-top: 12px; transition: all 0.2s; }
+    .product-row:hover { border-color: var(--primary); background: #ffffff; }
     .hidden { display: none !important; }
-    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
+
+    /* ================= Checkbox ยืนยัน (เอาส่วนนี้กลับมาและทำให้สวยขึ้น) ================= */
+    .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px 20px; border-radius: 12px; color: #92400e; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; font-size: 0.95rem; font-weight: 500; }
+    .notice-box input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; cursor: pointer; accent-color: var(--warning); }
+    .notice-box span { cursor: pointer; }
+
+    /* ================= Fullscreen Alert ================= */
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+    .alert-icon-box { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px; color: white; margin-bottom: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    #alert-text { font-size: 2rem; color: var(--text-main); font-weight: 700; margin: 0; }
   </style>
 </head>
 <body>
 
 <div class="app-container">
+
   <div id="page-home" class="page active">
-    <div style="text-align:center; margin: 40px 0;">
-      <h2 style="color:var(--primary);">คลินิคยา มอ ออ</h2>
-      <p style="color:#64748b;">ระบบจัดการส่งคืนสินค้า (Firebase Version)</p>
+    <div class="header-title">
+      <h2>คลินิคยา มอ ออ</h2>
+      <p>ระบบบันทึกและจัดการข้อมูลการคืนสินค้า</p>
     </div>
-    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px;" id="branch-grid"></div>
+    <div class="branch-grid" id="branch-grid"></div>
   </div>
 
   <div id="page-dashboard" class="page">
     <div class="top-nav">
-      <button class="btn" style="background:#f1f5f9;" onclick="goHome()">◀ หน้าแรก</button>
-      <h3 id="dash-title" style="margin:0; color:var(--primary);">Dashboard</h3>
-      <div style="width:70px;"></div>
+      <button class="btn btn-back" onclick="goHome()">◀ กลับหน้าแรก</button>
+      <h3 id="dash-title">Dashboard</h3>
+      <div style="width:110px;"></div>
     </div>
 
-    <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
+    <button class="btn btn-primary" onclick="openFormNew()">
+      <span style="font-size:1.2rem;">+</span> สร้างรายการคืนสินค้าใหม่
+    </button>
 
     <div class="filter-bar">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท / เลขบิล..." onkeyup="applyFilters()">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาชื่อบริษัท หรือ เลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
@@ -81,18 +119,20 @@
       </select>
     </div>
 
-    <div id="loading-msg" style="text-align:center; padding:30px;">กำลังโหลดข้อมูล...</div>
+    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted); font-size:1.1rem;">
+      กำลังโหลดข้อมูล...
+    </div>
 
     <div class="table-responsive" id="table-container" style="display:none;">
       <table class="data-table">
         <thead>
           <tr>
-            <th>วันที่</th>
+            <th>วันที่แจ้ง</th>
             <th>สาขา</th>
             <th>บริษัทจำหน่าย</th>
-            <th>เลขบิล</th>
+            <th>เลขบิล SRN</th>
             <th>สถานะ</th>
-            <th>จัดการ</th>
+            <th style="text-align:center;">จัดการ</th>
           </tr>
         </thead>
         <tbody id="dashboard-tbody"></tbody>
@@ -102,69 +142,92 @@
 
   <div id="page-form" class="page">
     <div class="top-nav">
-      <button class="btn" style="background:#f1f5f9;" onclick="switchPage('page-dashboard')">◀ กลับ</button>
-      <h3 id="form-title">แบบฟอร์ม</h3>
-      <div style="width:70px;"></div>
+      <button class="btn btn-back" onclick="switchPage('page-dashboard')">◀ ยกเลิก</button>
+      <h3 id="form-title">สร้างรายการใหม่</h3>
+      <div style="width:85px;"></div>
     </div>
+    
     <form id="returnForm">
       <input type="hidden" id="docId">
       <input type="hidden" id="oldPhotoUrl">
+      
       <div class="form-section">
-        <h3>1. การแจ้งคืน</h3>
+        <h3>📝 1. ข้อมูลการแจ้งคืน</h3>
         <label>สาขาที่ดำเนินการ</label>
-        <input type="text" id="form-branch" name="branch" readonly style="background:#f1f5f9; font-weight:bold;">
+        <input type="text" id="form-branch" name="branch" readonly style="background:#e2e8f0; font-weight:700; color:var(--primary);">
+        
         <label>วันที่แจ้ง</label>
         <input type="date" name="notifyDate" id="notifyDate">
+        
         <label>บริษัทจำหน่าย</label>
         <select name="vendorType" id="vendorType" onchange="toggleVendorFields()">
           <option value="คลินิคยา มอ ออ 3">คลินิคยา มอ ออ 3</option>
           <option value="อื่นๆ">อื่นๆ</option>
         </select>
+        
         <div id="vendor-extra" class="hidden">
-          <input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท">
+          <input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท (กรณีเลือกอื่นๆ)" style="margin-top:10px;">
         </div>
-        <label id="doc-label">เลขที่บิลคืน SRN</label>
-        <input type="text" name="docNumber" required>
+        
+        <label id="doc-label">เลขที่บิลที่คืน SRN</label>
+        <input type="text" name="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
+        
+        <div class="notice-box">
+          <input type="checkbox" id="confirmStep1"> 
+          <label for="confirmStep1" id="confirm-text" style="margin:0; font-weight:500; font-size:0.95rem; cursor:pointer;">
+            ข้าพเจ้ายืนยันว่า ได้ทำสำเนา 2 ชุด เก็บไว้หน้าสาขา 1 ชุด และส่งคืนคลัง 1 ชุด เรียบร้อยแล้ว
+          </label>
+        </div>
+        
         <div id="product-container"></div>
-        <button type="button" class="btn" style="background:#334155; color:white; width:100%; margin-top:10px;" onclick="addProductRow()">+ เพิ่มสินค้า</button>
+        <button type="button" class="btn" style="background:#f1f5f9; color:var(--text-main); width:100%; margin-top:15px; border:1px dashed #cbd5e1;" onclick="addProductRow()">+ เพิ่มรายการสินค้าอีก</button>
       </div>
       
       <div class="form-section">
-        <h3>2. การรับคืน</h3>
-        <input type="date" name="returnDate" placeholder="วันที่รับคืน">
-        <input type="text" name="returnStaff" placeholder="ลงชื่อผู้ส่งคืน" style="margin-top:10px;">
-        <label style="margin-top:10px;">รูปถ่ายหลักฐาน</label>
-        <input type="file" id="photoInput" accept="image/*" capture="camera">
+        <h3>📦 2. ข้อมูลการรับคืน</h3>
+        <label>วันที่รับคืน</label>
+        <input type="date" name="returnDate">
+        <label>ลงชื่อผู้ส่งคืน</label>
+        <input type="text" name="returnStaff" placeholder="ระบุชื่อพนักงานผู้ส่งคืน">
+        <label>ถ่ายรูปผู้รับคืน / เอกสารแนบ</label>
+        <input type="file" id="photoInput" accept="image/*" capture="camera" style="background: white;">
       </div>
 
       <div class="form-section">
-        <h3>3. ผลดำเนินการ</h3>
-        <textarea name="actionResult" placeholder="บันทึกผลการดำเนินการ"></textarea>
-        <select name="returnType" style="margin-top:10px;">
+        <h3>✅ 3. ผลการดำเนินการ</h3>
+        <label>บันทึกผลการติดตาม</label>
+        <textarea name="actionResult" placeholder="ระบุรายละเอียดความคืบหน้า..."></textarea>
+        
+        <label>สถานะการรับคืน</label>
+        <select name="returnType">
           <option value="">-- เลือกสถานะ --</option>
-          <option value="ได้รับใบลดหนี้">ได้รับใบลดหนี้</option>
-          <option value="เปลี่ยนสินค้า">เปลี่ยนสินค้าเรียบร้อย</option>
-          <option value="คืนเงินสด">คืนเงินสดเรียบร้อย</option>
+          <option value="ได้รับใบลดหนี้">ได้รับใบลดหนี้แล้ว</option>
+          <option value="เปลี่ยนสินค้า">ได้รับการเปลี่ยนสินค้าเรียบร้อย</option>
+          <option value="คืนเงินสด">ได้รับคืนเป็นเงินสดเรียบร้อย</option>
         </select>
-        <input type="text" name="creditNoteNo" placeholder="เลขใบลดหนี้" style="margin-top:10px;">
+        
+        <label>เลขใบลดหนี้ (ถ้ามี)</label>
+        <input type="text" name="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้">
       </div>
 
-      <div style="display:flex; gap:10px; margin-bottom:50px;">
-        <button type="button" class="btn" style="background:var(--warning); color:white; flex:1;" onclick="submitForm('park')">พักบิล</button>
-        <button type="button" class="btn" style="background:var(--success); color:white; flex:1;" onclick="submitForm('close')">ปิดเคส</button>
+      <div style="display:flex; gap:15px; margin-bottom:50px;">
+        <button type="button" class="btn" style="background:var(--warning); color:white; flex:1; font-size:1.1rem; padding:15px;" onclick="submitForm('park')" id="btn-park">⏳ พักบิล</button>
+        <button type="button" class="btn" style="background:var(--success); color:white; flex:1; font-size:1.1rem; padding:15px;" onclick="submitForm('close')" id="btn-close">✔️ ปิดเคส</button>
       </div>
     </form>
   </div>
 </div>
 
 <div class="fullscreen-overlay" id="fullscreen-alert">
-  <div style="font-size:50px;" id="alert-icon">✔️</div>
+  <div class="alert-icon-box" id="alert-icon-box" style="background:var(--success);">
+    <span id="alert-icon">✓</span>
+  </div>
   <h2 id="alert-text">บันทึกสำเร็จ</h2>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
   const firebaseConfig = {
@@ -180,12 +243,24 @@
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  // --- Logic การทำงาน ---
   let allData = [];
 
+  const grid = document.getElementById('branch-grid');
+  for(let i=1; i<=9; i++) {
+    grid.innerHTML += `<div class="branch-card" onclick="openDashboard('สาขา ${i}')"><div class="branch-icon">🏥</div><div class="branch-name">สาขา ${i}</div></div>`;
+  }
+
+  window.switchPage = (id) => { 
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  };
+  window.goHome = () => switchPage('page-home');
+
   window.openDashboard = async function(branchName) {
-    document.getElementById('dash-title').innerText = "Dashboard - " + branchName;
-    document.getElementById('filterBranch').value = branchName; // ล็อคสาขาเบื้องต้น
+    document.getElementById('dash-title').innerText = "ข้อมูล " + branchName;
+    document.getElementById('filterBranch').value = branchName;
+    document.getElementById('form-branch').value = branchName;
     switchPage('page-dashboard');
     await loadData();
   };
@@ -193,12 +268,12 @@
   async function loadData() {
     document.getElementById('loading-msg').style.display = 'block';
     document.getElementById('table-container').style.display = 'none';
-    
-    const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
-    const snap = await getDocs(q);
-    allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
-    applyFilters();
+    try {
+      const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
+      const snap = await getDocs(q);
+      allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      applyFilters();
+    } catch(e) { console.error(e); document.getElementById('loading-msg').innerText = "เกิดข้อผิดพลาดในการโหลดข้อมูล"; }
   }
 
   window.applyFilters = function() {
@@ -207,13 +282,12 @@
     const branch = document.getElementById('filterBranch').value;
 
     const filtered = allData.filter(item => {
-      const vendor = (item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType).toLowerCase();
-      const matchSearch = vendor.includes(search) || item.docNumber.toLowerCase().includes(search);
+      const vendor = (item.vendorType === 'อื่นๆ' ? (item.vendorName||'') : item.vendorType).toLowerCase();
+      const matchSearch = vendor.includes(search) || (item.docNumber||'').toLowerCase().includes(search);
       const matchStatus = status === "" || item.status === status;
       const matchBranch = branch === "" || item.branch === branch;
       return matchSearch && matchStatus && matchBranch;
     });
-
     renderTable(filtered);
   };
 
@@ -223,46 +297,157 @@
     document.getElementById('loading-msg').style.display = 'none';
     document.getElementById('table-container').style.display = 'block';
 
+    if(data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">ไม่มีรายการข้อมูล</td></tr>';
+      return;
+    }
+
     data.forEach(item => {
-      const statusClass = item.status === "ปิดเคสแล้ว" ? "badge-green" : (item.status === "รอรับคืน" ? "badge-red" : "badge-yellow");
+      let badgeClass = "badge-red"; let icon = "🔴";
+      if(item.status === "ปิดเคสแล้ว") { badgeClass = "badge-green"; icon = "🟢"; }
+      else if(item.status === "ส่งคืนแล้วรอปิดเคส") { badgeClass = "badge-yellow"; icon = "🟡"; }
+
+      const vendorDisplay = item.vendorType === 'อื่นๆ' ? (item.vendorName || 'อื่นๆ') : item.vendorType;
+
       tbody.innerHTML += `
         <tr>
-          <td>${item.notifyDate}</td>
-          <td><small>${item.branch}</small></td>
-          <td><b>${item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType}</b></td>
-          <td>${item.docNumber}</td>
-          <td><span class="badge ${statusClass}">${item.status}</span></td>
-          <td>
-            <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">แก้ไข</button>
-            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-action btn-img">รูป</a>` : ''}
+          <td style="color:var(--text-muted); font-size:0.9rem;">${item.notifyDate || '-'}</td>
+          <td><b>${item.branch}</b></td>
+          <td style="font-weight:600; color:var(--primary);">${vendorDisplay}</td>
+          <td>${item.docNumber || '-'}</td>
+          <td><span class="badge ${badgeClass}">${icon} ${item.status}</span></td>
+          <td style="display:flex; gap:5px; justify-content:center;">
+            <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️ แก้ไข</button>
+            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-action btn-img">📸 รูป</a>` : ''}
+            <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️ ลบ</button>
           </td>
         </tr>
       `;
     });
   }
 
-  // --- ฟังก์ชันเสริม (เหมือนเดิม) ---
+  window.deleteRecord = async function(docId) {
+    if(confirm("⚠️ คุณแน่ใจหรือไม่ที่จะลบรายการนี้?\nข้อมูลที่ถูกลบจะไม่สามารถกู้คืนได้")) {
+      try {
+        await deleteDoc(doc(db, "returns", docId));
+        alert("ลบข้อมูลสำเร็จเรียบร้อยแล้ว");
+        await loadData();
+      } catch(error) { alert("เกิดข้อผิดพลาดในการลบข้อมูล: " + error.message); }
+    }
+  };
+
+  window.openFormNew = () => { 
+    document.getElementById('form-title').innerText = "สร้างรายการใหม่";
+    document.getElementById('returnForm').reset();
+    document.getElementById('docId').value = "";
+    document.getElementById('oldPhotoUrl').value = "";
+    document.getElementById('notifyDate').valueAsDate = new Date();
+    document.getElementById('confirmStep1').checked = false; // รีเซ็ต Checkbox
+    document.getElementById('product-container').innerHTML = "";
+    addProductRow();
+    toggleVendorFields();
+    switchPage('page-form'); 
+  };
+
+  window.openFormEdit = (id) => {
+    const item = allData.find(d => d.id === id);
+    if(!item) return;
+    document.getElementById('form-title').innerText = "แก้ไขรายการ";
+    document.getElementById('docId').value = item.id;
+    document.getElementById('oldPhotoUrl').value = item.photoUrl || "";
+    document.getElementById('form-branch').value = item.branch;
+    document.getElementById('notifyDate').value = item.notifyDate || "";
+    document.getElementById('vendorType').value = item.vendorType || "";
+    document.getElementsByName('vendorName')[0].value = item.vendorName || "";
+    document.getElementsByName('docNumber')[0].value = item.docNumber || "";
+    
+    // *** ดึงข้อมูล Checkbox กลับมาแสดง ***
+    document.getElementById('confirmStep1').checked = (item.confirmStep1 === "YES");
+    
+    document.getElementsByName('returnDate')[0].value = item.returnDate || "";
+    document.getElementsByName('returnStaff')[0].value = item.returnStaff || "";
+    document.getElementsByName('actionResult')[0].value = item.actionResult || "";
+    document.getElementsByName('returnType')[0].value = item.returnType || "";
+    document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
+    
+    toggleVendorFields();
+    const container = document.getElementById('product-container');
+    container.innerHTML = "";
+    if (item.products && item.products.length > 0) {
+      item.products.forEach(p => addProductRow(p));
+    } else { addProductRow(); }
+    
+    switchPage('page-form');
+  };
+
+  window.addProductRow = (p={name:'',qty:'',lot:'',exp:'',reason:''}) => {
+    const div = document.createElement('div');
+    div.className = 'product-row';
+    div.innerHTML = `
+      <input type="text" class="p-name" placeholder="ชื่อสินค้า" value="${p.name}">
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <input type="number" class="p-qty" placeholder="จำนวน" value="${p.qty}" style="flex:1;">
+        <input type="text" class="p-lot" placeholder="LOT" value="${p.lot}" style="flex:2;">
+      </div>
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <input type="text" class="p-exp" placeholder="วันหมดอายุ (EXP)" value="${p.exp}" style="flex:1;">
+        <input type="text" class="p-reason" placeholder="สาเหตุ" value="${p.reason}" style="flex:2;">
+      </div>`;
+    document.getElementById('product-container').appendChild(div);
+  };
+
+  // *** นำ Logic เปลี่ยนข้อความ Checkbox กลับมา ***
+  window.toggleVendorFields = () => {
+    const v = document.getElementById('vendorType').value;
+    const extra = document.getElementById('vendor-extra');
+    const label = document.getElementById('doc-label');
+    const confirmText = document.getElementById('confirm-text');
+    
+    if(v === 'อื่นๆ') {
+      extra.classList.remove('hidden'); 
+      label.innerText = 'เลขที่บิลซื้อ';
+      confirmText.innerText = 'ข้าพเจ้ายืนยันว่า ได้แยกบิลที่มีปัญหานี้ไว้ และไม่จัดเก็บเข้าแฟ้มจนกว่าการทำคืนจะสำเร็จ';
+    } else {
+      extra.classList.add('hidden'); 
+      label.innerText = 'เลขที่บิลที่คืน SRN';
+      confirmText.innerText = 'ข้าพเจ้ายืนยันว่า ได้ทำสำเนา 2 ชุด เก็บไว้หน้าสาขา 1 ชุด และส่งคืนคลัง 1 ชุด เรียบร้อยแล้ว';
+    }
+  };
+
   window.submitForm = async function(type) {
     const form = document.getElementById('returnForm');
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
-    const docId = document.getElementById('docId').value;
+    const docId = data.docId;
     
-    // จัดการสินค้า
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
       data.products.push({
-        name: row.querySelector('.p-name').value,
-        qty: row.querySelector('.p-qty').value,
-        lot: row.querySelector('.p-lot').value,
-        exp: row.querySelector('.p-exp').value,
+        name: row.querySelector('.p-name').value, qty: row.querySelector('.p-qty').value,
+        lot: row.querySelector('.p-lot').value, exp: row.querySelector('.p-exp').value,
         reason: row.querySelector('.p-reason').value
       });
     });
 
-    // สถานะ
+    // *** เก็บค่า Checkbox ลงฐานข้อมูล ***
+    data.confirmStep1 = document.getElementById('confirmStep1').checked ? "YES" : "NO";
+
     data.status = type === 'close' ? "ปิดเคสแล้ว" : (data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน");
     
+    if(type === 'close') {
+      if(!data.actionResult || !data.returnType) {
+        alert("⚠️ กรุณากรอกผลการดำเนินการในส่วนที่ 3 ให้ครบถ้วนก่อนปิดเคส"); 
+        return;
+      }
+      // *** นำ Pop-up ยืนยันการปิดเคสกลับมา ***
+      if(!confirm("⚠️ ยืนยันว่าได้สำเนาใบลดหนี้ 2 ชุด (ตัวจริงส่งกลับคลัง สำเนาเก็บคู่บิลเข้าแฟ้ม) เรียบร้อยแล้ว?")) {
+        return;
+      }
+    }
+
+    document.getElementById('btn-park').disabled = true;
+    document.getElementById('btn-close').disabled = true;
+
     try {
       const file = document.getElementById('photoInput').files[0];
       let url = document.getElementById('oldPhotoUrl').value;
@@ -273,66 +458,53 @@
       }
       data.photoUrl = url;
 
+      const saveData = {
+        branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
+        vendorName: data.vendorName, docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
+        returnDate: data.returnDate, returnStaff: data.returnStaff, photoUrl: data.photoUrl, 
+        actionResult: data.actionResult, returnType: data.returnType, creditNoteNo: data.creditNoteNo, 
+        products: data.products, status: data.status
+      };
+
       if(docId) {
-        await updateDoc(doc(db, "returns", docId), data);
+        await updateDoc(doc(db, "returns", docId), saveData);
       } else {
-        data.timestamp = serverTimestamp();
-        await addDoc(collection(db, "returns"), data);
+        saveData.timestamp = serverTimestamp();
+        await addDoc(collection(db, "returns"), saveData);
       }
       
       showSuccess(type);
-    } catch (e) { alert("Error: " + e.message); }
+    } catch (e) { 
+      alert("Error: " + e.message); 
+      document.getElementById('btn-park').disabled = false;
+      document.getElementById('btn-close').disabled = false;
+    }
   };
 
-  // ปุ่มสาขาหน้าแรก
-  const grid = document.getElementById('branch-grid');
-  for(let i=1; i<=9; i++) {
-    grid.innerHTML += `<div class="branch-card" onclick="openDashboard('สาขา ${i}')">สาขา ${i}</div>`;
-  }
-
-  window.switchPage = (id) => { 
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  };
-  window.goHome = () => switchPage('page-home');
-  window.openFormNew = () => { 
-    document.getElementById('returnForm').reset();
-    document.getElementById('docId').value = "";
-    document.getElementById('product-container').innerHTML = "";
-    addProductRow();
-    switchPage('page-form'); 
-  };
-  window.openFormEdit = (id) => {
-    const item = allData.find(d => d.id === id);
-    // วนลูปหยอดข้อมูลลงฟอร์ม...
-    document.getElementById('docId').value = item.id;
-    document.getElementById('oldPhotoUrl').value = item.photoUrl || "";
-    // (หยอดข้อมูลอื่นๆ จนครบ)
-    switchPage('page-form');
-  };
-  window.addProductRow = (p={name:'',qty:'',lot:'',exp:'',reason:''}) => {
-    const div = document.createElement('div');
-    div.className = 'product-row';
-    div.innerHTML = `<input type="text" class="p-name" placeholder="ชื่อสินค้า" value="${p.name}" style="margin-top:5px;">
-                     <div style="display:flex; gap:5px; margin-top:5px;">
-                        <input type="number" class="p-qty" placeholder="จำนวน" value="${p.qty}">
-                        <input type="text" class="p-lot" placeholder="LOT" value="${p.lot}">
-                     </div>
-                     <div style="display:flex; gap:5px; margin-top:5px;">
-                        <input type="text" class="p-exp" placeholder="EXP" value="${p.exp}">
-                        <input type="text" class="p-reason" placeholder="สาเหตุ" value="${p.reason}">
-                     </div>`;
-    document.getElementById('product-container').appendChild(div);
-  };
-  window.toggleVendorFields = () => {
-    const v = document.getElementById('vendorType').value;
-    document.getElementById('vendor-extra').className = v === 'อื่นๆ' ? '' : 'hidden';
-  };
   function showSuccess(type) {
     const overlay = document.getElementById('fullscreen-alert');
+    const iconBox = document.getElementById('alert-icon-box');
+    const icon = document.getElementById('alert-icon');
+    const text = document.getElementById('alert-text');
+
+    if(type === 'close') {
+      iconBox.style.background = "var(--success)";
+      icon.innerText = "✓";
+      text.innerText = "ปิดเคสสำเร็จ";
+    } else {
+      iconBox.style.background = "var(--warning)";
+      icon.innerText = "⏳";
+      text.innerText = "พักบิลเรียบร้อย";
+    }
+
     overlay.style.display = 'flex';
-    document.getElementById('alert-text').innerText = type === 'close' ? 'ปิดเคสสำเร็จ' : 'พักบิลเรียบร้อย';
-    setTimeout(() => { overlay.style.display = 'none'; loadData(); switchPage('page-dashboard'); }, 2000);
+    setTimeout(async () => { 
+      overlay.style.display = 'none'; 
+      document.getElementById('btn-park').disabled = false;
+      document.getElementById('btn-close').disabled = false;
+      await loadData(); 
+      switchPage('page-dashboard'); 
+    }, 2000);
   }
 </script>
 </body>
