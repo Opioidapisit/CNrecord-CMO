@@ -388,8 +388,7 @@
     document.getElementById('detail-content').innerHTML = html;
     document.getElementById('detail-modal').style.display = 'flex';
   };
-  };
-
+  
   window.deleteRecord = async (id) => {
     if(confirm("ลบรายการนี้ใช่หรือไม่? ข้อมูลจะหายถาวร")) {
       await deleteDoc(doc(db, "returns", id));
