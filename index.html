@@ -164,7 +164,15 @@
         <input type="text" name="returnStaff" placeholder="ระบุชื่อพนักงาน">
         <label>ถ่ายรูปผู้รับคืน / เอกสาร</label>
         <input type="file" id="photoInput" accept="image/*" capture="camera" style="background:white;">
-      </div>
+
+        <div id="current-photo-container" class="hidden" style="margin-top: 15px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 12px;">
+           <div style="font-weight: 700; color: #166534; margin-bottom: 8px;">✅ มีรูปภาพหลักฐานแนบไว้แล้ว</div>
+           <a id="current-photo-link" href="#" target="_blank" style="display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; padding: 10px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: bold; font-size: 1.1rem;">
+              👁️ คลิกเพื่อดูรูปภาพปัจจุบันใน Drive
+           </a>
+           <div style="font-size: 0.85rem; color: #15803d; margin-top: 8px; text-align: center;">* หากไม่ต้องการเปลี่ยนรูปใหม่ <b>ไม่ต้องเลือกไฟล์ใดๆ</b> ระบบจะใช้รูปเดิม</div>
+        </div>
+        </div>
 
       <div class="form-section">
         <h3>✅ 3. ผลการดำเนินการ</h3>
@@ -365,7 +373,6 @@
     }
   };
 
-  // --- Logic สลับข้อความ Checkbox ส่วนที่ 1 ---
   window.toggleVendorFields = () => {
     const v = document.getElementById('vendorType').value;
     const label = document.getElementById('doc-label');
@@ -400,8 +407,13 @@
     document.getElementById('notifyDate').valueAsDate = new Date();
     document.getElementById('product-container').innerHTML = "";
     document.getElementById('step3-notice-box').classList.add('hidden');
+    
+    // รีเซ็ตช่องเลือกไฟล์และซ่อนกล่องรูปภาพสำหรับรายการใหม่
+    document.getElementById('photoInput').value = ""; 
+    document.getElementById('current-photo-container').classList.add('hidden');
+
     addProductRow();
-    toggleVendorFields(); // รีเซ็ตข้อความ checkbox
+    toggleVendorFields();
     switchPage('page-form');
   };
 
@@ -428,6 +440,18 @@
     document.getElementById('product-container').innerHTML = "";
     if (item.products) item.products.forEach(p => addProductRow(p));
     else addProductRow();
+
+    // เช็คและแสดงลิงก์รูปภาพในกรณีที่กดเข้ามาแก้ไขบิล
+    document.getElementById('photoInput').value = ""; 
+    const photoContainer = document.getElementById('current-photo-container');
+    const photoLink = document.getElementById('current-photo-link');
+    if (item.photoUrl && item.photoUrl.trim() !== "") {
+        photoContainer.classList.remove('hidden');    
+        photoLink.href = item.photoUrl;               
+    } else {
+        photoContainer.classList.add('hidden');       
+    }
+
     switchPage('page-form');
   };
 
@@ -484,6 +508,7 @@
       let url = document.getElementById('oldPhotoUrl').value;
       let finalFileName = document.getElementById('oldFileName').value;
 
+      // ถ้ามีการเลือกไฟล์ใหม่ ถึงจะทำการอัพโหลด
       if(file) {
         bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
