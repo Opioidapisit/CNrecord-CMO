@@ -12,20 +12,17 @@
       --success: #059669; --warning: #d97706; --danger: #dc2626; 
       --background: #f8fafc; --surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0; 
     }
-    
     body { font-family: 'Sarabun', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; }
     .app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
     .page { display: none; animation: fadeIn 0.4s ease; }
     .page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Login Section */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 70vh; }
     .login-box { background: var(--surface); width: 100%; max-width: 450px; padding: 45px 35px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
     .login-box h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 5px; font-weight: 700; }
-    .login-box select { font-size: 1.2rem; padding: 15px; margin: 25px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; width: 100%; box-sizing: border-box; outline: none; color: var(--text-main); font-weight: 600; }
+    .login-box select { font-size: 1.2rem; padding: 15px; margin: 25px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; width: 100%; box-sizing: border-box; font-weight: 600; }
 
-    /* Nav & Filter */
     .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
     .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
     .btn-primary { background: var(--primary); color: white; width: 100%; margin-bottom: 20px; font-size: 1.1rem; }
@@ -36,7 +33,6 @@
     .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
     @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
     
-    /* Table */
     .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; }
     .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
     .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -46,13 +42,12 @@
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
 
-    .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; }
+    .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; text-decoration: none; }
     .btn-view { background: #f1f5f9; color: #475569; margin-right: 5px; }
     .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
-    .btn-img { background: #ecfdf5; color: #059669; text-decoration: none; margin-right: 5px; padding: 6px 10px; border-radius: 8px; }
+    .btn-img { background: #ecfdf5; color: #059669; margin-right: 5px; font-size: 1rem; padding: 6px 10px; font-weight: bold; }
     .btn-delete { background: #fee2e2; color: #b91c1c; }
 
-    /* Form Styles */
     .form-section { background: var(--surface); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
     .form-section h3 { font-size: 1.2rem; color: var(--primary); margin: 0 0 20px 0; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; }
     label { display: block; font-weight: 700; margin-bottom: 8px; margin-top: 15px; }
@@ -61,12 +56,13 @@
     .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 12px; display: flex; gap: 10px; color: #92400e; font-weight: 600; font-size: 0.9rem; }
     .hidden { display: none !important; }
 
-    /* Modals */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .modal-card { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+    .modal-card { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); }
     .detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
     .detail-label { font-weight: 700; color: var(--text-muted); min-width: 140px; }
     .detail-value { text-align: right; color: var(--text-main); font-weight: 500; }
+    
+    .btn-full-img { background: var(--primary); color: white; padding: 12px; width: 100%; margin-top: 10px; text-decoration: none; border-radius: 10px; font-weight: bold; display: block; text-align: center; }
   </style>
 </head>
 <body>
@@ -77,7 +73,7 @@
     <div class="login-container">
       <div class="login-box">
         <h2>คลินิคยา มอ ออ</h2>
-        <p>ระบบบันทึกข้อมูลการส่งคืนสินค้า</p>
+        <p style="color:var(--text-muted);">ระบบบันทึกข้อมูลการส่งคืนสินค้า</p>
         <select id="main-branch-select">
           <option value="">-- กรุณาเลือกสาขาที่ดำเนินการ --</option>
           <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
@@ -110,7 +106,7 @@
       </select>
     </div>
 
-    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted);">กำลังโหลดข้อมูล...</div>
+    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted); font-size:1.1rem;">กำลังโหลดข้อมูล...</div>
 
     <div class="table-responsive" id="table-container" style="display:none;">
       <table class="data-table">
@@ -186,13 +182,18 @@
       <div class="form-section">
         <h3>✅ 3. ผลการดำเนินการ</h3>
         <textarea name="actionResult" placeholder="บันทึกผลการติดตาม..."></textarea>
-        <select name="returnType" style="margin-top:15px;">
+        <select name="returnType" id="returnType" style="margin-top:15px;" onchange="toggleStep3Notice()">
           <option value="">-- เลือกสถานะ --</option>
           <option value="ได้รับใบลดหนี้">ได้รับใบลดหนี้แล้ว</option>
           <option value="เปลี่ยนสินค้า">ได้รับการเปลี่ยนสินค้าเรียบร้อย</option>
           <option value="คืนเงินสด">ได้รับคืนเป็นเงินสดเรียบร้อย</option>
         </select>
         <input type="text" name="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" style="margin-top:15px;">
+        
+        <div id="step3-notice-box" class="notice-box hidden">
+          <input type="checkbox" id="confirmStep3" style="width:18px; height:18px;"> 
+          <span onclick="document.getElementById('confirmStep3').click()" style="cursor:pointer;">ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขาร่วมกับบิลที่คืน) เรียบร้อยแล้ว</span>
+        </div>
       </div>
 
       <div style="display:flex; gap:15px; margin-bottom:50px;">
@@ -206,7 +207,7 @@
 <div class="fullscreen-overlay" id="confirm-login-modal">
   <div class="modal-card" style="max-width:350px; text-align:center;">
     <h3 style="margin-top:0;">ยืนยันการเข้าสู่ระบบ</h3>
-    <p>คุณต้องการเข้าสู่ระบบงานของ <br><b id="display-selected-branch" style="color:var(--primary); font-size:1.3rem;"></b> ใช่หรือไม่?</p>
+    <p>คุณต้องการเข้าสู่ <b id="display-selected-branch" style="color:var(--primary); font-size:1.2rem;"></b> ใช่หรือไม่?</p>
     <div style="display:flex; gap:10px; margin-top:25px;">
       <button class="btn btn-back" style="flex:1;" onclick="closeModal('confirm-login-modal')">ยกเลิก</button>
       <button class="btn btn-primary" style="flex:1; margin:0;" onclick="doLogin()">ยืนยัน</button>
@@ -216,7 +217,7 @@
 
 <div class="fullscreen-overlay" id="detail-modal">
   <div class="modal-card">
-    <h3 style="color:var(--primary); margin-top:0; border-bottom:2px solid var(--primary); padding-bottom:10px;">รายละเอียดข้อมูลทั้งหมด</h3>
+    <h3 style="color:var(--primary); margin-top:0; border-bottom:2px solid var(--primary); padding-bottom:10px;">รายละเอียดข้อมูลการคืน</h3>
     <div id="detail-content"></div>
     <div style="margin-top:25px; text-align:right;">
       <button class="btn btn-back" onclick="closeModal('detail-modal')">ปิดหน้าต่าง</button>
@@ -254,7 +255,6 @@
     document.getElementById(id).classList.add('active');
     window.scrollTo(0,0);
   };
-
   window.goHome = () => switchPage('page-home');
   window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
@@ -327,7 +327,7 @@
           <td style="text-align:center; white-space:nowrap;">
             <button class="btn-action btn-view" onclick="showDetails('${item.id}')">👁️</button>
             <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>
-            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-img">📸</a>` : ''}
+            ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-action btn-img">📸</a>` : ''}
             <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️</button>
           </td>
         </tr>
@@ -335,7 +335,6 @@
     });
   }
 
-  // --- ฟังก์ชันแสดงรายละเอียดข้อมูล + รูปประกอบ ---
   window.showDetails = (id) => {
     const item = allData.find(d => d.id === id);
     if(!item) return;
@@ -352,13 +351,8 @@
     if (item.photoUrl) {
       photoHtml = `
         <div style="margin-top:10px; text-align:center;">
-          <a href="${item.photoUrl}" target="_blank">
-            <img src="${item.photoUrl}" style="max-width:100%; max-height:220px; border-radius:12px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.1);" alt="หลักฐาน">
-          </a>
-          <br>
-          <a href="${item.photoUrl}" target="_blank" style="display:inline-block; margin-top:10px; color:var(--primary); font-weight:700; text-decoration:none; font-size:0.9rem;">
-            🔗 คลิกเปิดดูรูปขนาดเต็ม
-          </a>
+          <a href="${item.photoUrl}" target="_blank" class="btn-full-img">📂 คลิกเปิดดูรูปภาพจาก Google Drive</a>
+          <small style="display:block; margin-top:5px; color:#666;">(ระบบเปิดลิ้งก์ให้โดยตรงเพื่อความเสถียร)</small>
         </div>
       `;
     }
@@ -370,7 +364,7 @@
       <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
       <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value">${item.status}</span></div>
       
-      <div style="margin-top:20px; padding:15px; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">
+      <div style="margin-top:15px; padding:15px; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">
         <label style="margin-top:0; color:var(--primary);">📸 หลักฐานรูปถ่าย:</label>
         ${photoHtml}
       </div>
@@ -378,13 +372,13 @@
       <div style="margin-top:15px;"><label>รายการสินค้าที่คืน:</label>${prodHtml}</div>
       <div style="margin-top:15px;"><label>หมายเหตุแจ้งคืน:</label><div style="background:#fffbeb; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #fde68a;">${item.notifyNote || '-'}</div></div>
       
-      <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
-        <div class="detail-item"><span class="detail-label">วันที่ฝ่ายคลังรับคืน:</span><span class="detail-value">${item.returnDate || '-'}</span></div>
-        <div class="detail-item"><span class="detail-label">ชื่อพนักงานผู้ส่งคืน:</span><span class="detail-value">${item.returnStaff || '-'}</span></div>
+      <div style="margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+        <div class="detail-item"><span class="detail-label">วันที่รับคืน:</span><span class="detail-value">${item.returnDate || '-'}</span></div>
+        <div class="detail-item"><span class="detail-label">ผู้ส่งคืน:</span><span class="detail-value">${item.returnStaff || '-'}</span></div>
       </div>
       
-      <div style="margin-top:15px;"><label>บันทึกผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
-      <div class="detail-item"><span class="detail-label">ผลสรุปการคืน:</span><span class="detail-value">${item.returnType || '-'}</span></div>
+      <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
+      <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
     `;
     
@@ -393,14 +387,13 @@
   };
 
   window.deleteRecord = async (id) => {
-    if(confirm("⚠️ ลบรายการนี้ใช่หรือไม่? ข้อมูลจะหายถาวร")) {
+    if(confirm("ลบรายการนี้ใช่หรือไม่? ข้อมูลจะหายถาวร")) {
       await deleteDoc(doc(db, "returns", id));
       await loadData();
     }
   };
 
   window.openFormNew = () => {
-    document.getElementById('form-title').innerText = "สร้างรายการใหม่";
     const b = document.getElementById('filterBranch').value || currentBranch;
     document.getElementById('returnForm').reset();
     document.getElementById('form-branch').value = b;
@@ -408,6 +401,7 @@
     document.getElementById('oldPhotoUrl').value = "";
     document.getElementById('notifyDate').valueAsDate = new Date();
     document.getElementById('product-container').innerHTML = "";
+    document.getElementById('step3-notice-box').classList.add('hidden'); // ซ่อน checkbox ส่วนที่ 3
     addProductRow();
     toggleVendorFields();
     switchPage('page-form');
@@ -428,9 +422,13 @@
     document.getElementsByName('returnDate')[0].value = item.returnDate || "";
     document.getElementsByName('returnStaff')[0].value = item.returnStaff || "";
     document.getElementsByName('actionResult')[0].value = item.actionResult || "";
-    document.getElementsByName('returnType')[0].value = item.returnType || "";
+    document.getElementById('returnType').value = item.returnType || "";
     document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
     
+    // ตรวจสอบสถานะส่วนที่ 3 ตอนแก้ไข
+    toggleStep3Notice();
+    if(item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
+
     toggleVendorFields();
     document.getElementById('product-container').innerHTML = "";
     if (item.products) item.products.forEach(p => addProductRow(p));
@@ -464,7 +462,19 @@
       confirmText.innerText = 'ยืนยันแยกบิลและยังไม่จัดเก็บเข้าแฟ้มจนกว่าจะสำเร็จ';
     } else {
       extra.classList.add('hidden'); label.innerText = 'เลขที่บิลคืน SRN';
-      confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (คลัง/สาขา) เรียบร้อยแล้ว';
+      confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว';
+    }
+  };
+
+  // ฟังก์ชันใหม่สำหรับคุมการแสดงผล Checkbox ส่วนที่ 3
+  window.toggleStep3Notice = () => {
+    const type = document.getElementById('returnType').value;
+    const box = document.getElementById('step3-notice-box');
+    if(type === 'ได้รับใบลดหนี้') {
+      box.classList.remove('hidden');
+    } else {
+      box.classList.add('hidden');
+      document.getElementById('confirmStep3').checked = false;
     }
   };
 
@@ -484,11 +494,23 @@
     });
 
     data.confirmStep1 = document.getElementById('confirmStep1').checked ? "YES" : "NO";
+    
+    // ตรวจสอบ checkbox ส่วนที่ 3
+    const isCreditNote = document.getElementById('returnType').value === 'ได้รับใบลดหนี้';
+    const isStep3Checked = document.getElementById('confirmStep3').checked;
+    data.confirmStep3 = isStep3Checked ? "YES" : "NO";
+
     data.status = type === 'close' ? "ปิดเคสแล้ว" : (data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน");
     
     if(type === 'close') {
-      if(!data.actionResult || !data.returnType) return alert("⚠️ กรุณากรอกส่วนที่ 3 ให้ครบก่อนปิดเคส");
-      if(!confirm("⚠️ ยืนยันจัดการเอกสารใบลดหนี้เข้าแฟ้มเรียบร้อยแล้ว?")) return;
+      if(!data.actionResult || !data.returnType) return alert("กรุณากรอกผลดำเนินการให้ครบถ้วน");
+      
+      // เงื่อนไขบังคับติ๊กถ้าได้รับใบลดหนี้
+      if(isCreditNote && !isStep3Checked) {
+        return alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคสครับ");
+      }
+
+      if(!confirm("ยืนยันจัดการเอกสารใบลดหนี้เข้าแฟ้มเรียบร้อยแล้ว?")) return;
     }
 
     const bPark = document.getElementById('btn-park');
@@ -502,33 +524,40 @@
       const file = photoInput.files[0];
       let url = document.getElementById('oldPhotoUrl').value;
 
-      // อัพโหลดรูปใหม่เฉพาะเมื่อมีการเลือกไฟล์
       if(file) {
         bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
           const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file);
         });
 
+        const branchName = data.branch.replace(/\s+/g, '');
+        const dateStr = data.notifyDate.split('-').reverse().join(''); 
+        const cleanDocNum = data.docNumber.replace(/[^a-zA-Z0-9]/g, '');
+        const fileName = `${branchName}-${dateStr}-${cleanDocNum}.jpg`;
+
         const response = await fetch(GAS_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ base64: base64, fileName: "IMG_" + Date.now() + ".jpg" })
+          body: JSON.stringify({ base64: base64, fileName: fileName })
         });
         
         const txt = await response.text();
         const resData = JSON.parse(txt);
         if(resData.status === 'success') {
           url = resData.url;
-          photoInput.value = ""; // ล้างค่ากันส่งซ้ำ
+          photoInput.value = "";
         }
       }
 
+      bPark.innerText = "บันทึกฐานข้อมูล...";
       const saveData = {
         branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
         vendorName: data.vendorName, docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
-        notifyNote: data.notifyNote, returnDate: data.returnDate, returnStaff: data.returnStaff, 
-        photoUrl: url, actionResult: data.actionResult, returnType: data.returnType, 
-        creditNoteNo: data.creditNoteNo, products: data.products, status: data.status
+        confirmStep3: data.confirmStep3 || "NO", // เก็บสถานะ checkbox ใหม่
+        notifyNote: data.notifyNote || "", returnDate: data.returnDate || "", 
+        returnStaff: data.returnStaff || "", photoUrl: url, actionResult: data.actionResult || "", 
+        returnType: data.returnType || "", creditNoteNo: data.creditNoteNo || "", 
+        products: data.products, status: data.status
       };
 
       if(docId && docId !== "") {
