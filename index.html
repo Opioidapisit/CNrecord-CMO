@@ -347,12 +347,15 @@
       </div>
     `).join('');
 
-    let photoHtml = `<div style="color:var(--text-muted); font-style:italic; font-size:0.9rem; text-align:center;">(ไม่มีรูปภาพประกอบ)</div>`;
+    // ปรับปรุงส่วนรูปภาพ: แสดงเป็นปุ่มลิงก์ที่ชัดเจนแทนการโหลดรูปตัวอย่าง
+    let photoHtml = `<div style="color:var(--text-muted); font-style:italic; font-size:0.9rem; text-align:center; padding:10px; border:1px dashed #ccc; border-radius:10px;">(ไม่มีรูปภาพประกอบในรายการนี้)</div>`;
     if (item.photoUrl) {
       photoHtml = `
         <div style="margin-top:10px; text-align:center;">
-          <a href="${item.photoUrl}" target="_blank" class="btn-full-img">📂 คลิกเปิดดูรูปภาพจาก Google Drive</a>
-          <small style="display:block; margin-top:5px; color:#666;">(ระบบเปิดลิ้งก์ให้โดยตรงเพื่อความเสถียร)</small>
+          <a href="${item.photoUrl}" target="_blank" class="btn-full-img" style="background:#059669; color:white; text-decoration:none; padding:15px; border-radius:12px; display:block; font-weight:bold; box-shadow:0 4px 10px rgba(5,150,105,0.2);">
+            📂 คลิกเพื่อเปิดดูรูปภาพหลักฐาน (Google Drive)
+          </a>
+          <small style="display:block; margin-top:8px; color:var(--text-muted);">* ระบบจะเปิดรูปภาพในหน้าต่างใหม่เพื่อให้เห็นรายละเอียดชัดเจน</small>
         </div>
       `;
     }
@@ -364,8 +367,8 @@
       <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
       <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value">${item.status}</span></div>
       
-      <div style="margin-top:15px; padding:15px; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">
-        <label style="margin-top:0; color:var(--primary);">📸 หลักฐานรูปถ่าย:</label>
+      <div style="margin-top:20px; padding:15px; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">
+        <label style="margin-top:0; color:var(--primary); display:block; margin-bottom:10px;">📸 หลักฐานรูปถ่าย:</label>
         ${photoHtml}
       </div>
 
@@ -384,6 +387,7 @@
     
     document.getElementById('detail-content').innerHTML = html;
     document.getElementById('detail-modal').style.display = 'flex';
+  };
   };
 
   window.deleteRecord = async (id) => {
