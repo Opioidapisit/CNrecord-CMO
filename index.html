@@ -14,48 +14,43 @@
     }
     
     body { font-family: 'Sarabun', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; }
-    .app-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    .app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
     .page { display: none; animation: fadeIn 0.4s ease; }
     .page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-    .header-title { text-align: center; margin: 40px 0; }
-    .header-title h2 { color: var(--primary); font-size: 2.2rem; font-weight: 700; margin-bottom: 5px; }
-    .header-title p { color: var(--text-muted); font-size: 1.1rem; margin-top: 0; }
+    /* ================= หน้าแรก: Dropdown & Login ================= */
+    .login-container { display: flex; justify-content: center; align-items: center; min-height: 70vh; }
+    .login-box { background: var(--surface); width: 100%; max-width: 450px; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid rgba(255,255,255,0.8); }
+    .login-box h2 { color: var(--primary); font-size: 2rem; margin-bottom: 10px; }
+    .login-box select { font-size: 1.2rem; padding: 15px; margin: 20px 0; border-radius: 12px; border: 2px solid var(--border); font-family: 'Sarabun'; font-weight: 600; color: var(--primary); outline: none; }
+    .login-box select:focus { border-color: var(--primary); }
 
-    /* ================= Dropdown หน้าแรก ================= */
-    .login-box { background: var(--surface); max-width: 450px; margin: 0 auto; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(255,255,255,0.8); }
-    .login-box select { font-size: 1.2rem; padding: 15px; margin-top: 20px; text-align: center; font-weight: 600; color: var(--primary); cursor: pointer; }
-
-    /* Layout & Navigation */
+    /* Dashboard & Filter */
     .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 15px 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .top-nav h3 { margin: 0; color: var(--primary); font-weight: 700; }
-    
-    .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
-    .btn:active { transform: scale(0.97); }
+    .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
     .btn-primary { background: var(--primary); color: white; width: 100%; margin-bottom: 20px; font-size: 1.1rem; }
     .btn-back { background: #f1f5f9; color: var(--text-main); }
     .btn-warning { background: var(--warning); color: white; flex: 1; }
     .btn-success { background: var(--success); color: white; flex: 1; }
 
-    /* Dashboard & Table */
     .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
     @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
     
-    .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; }
-    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem; }
-    .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .data-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; white-space: nowrap; }
+    .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { background: #f8fafc; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; white-space: nowrap; }
     .data-table tr:hover td { background: #f8fafc; }
     
-    .badge { padding: 6px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .badge { padding: 6px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
 
-    .btn-action { padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; border: none; cursor: pointer; font-family: 'Sarabun'; font-weight: 500; }
-    .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 4px; }
-    .btn-img { background: #f1f5f9; color: #475569; text-decoration: none; margin-right: 4px; display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem;}
+    .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; }
+    .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
+    .btn-img { background: #f1f5f9; color: #475569; text-decoration: none; margin-right: 5px; font-size: 1.2rem; padding: 5px 10px; border-radius: 8px; }
     .btn-delete { background: #fee2e2; color: #b91c1c; }
 
     /* Form Styles */
@@ -65,15 +60,12 @@
     input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Sarabun'; font-size: 1rem; box-sizing: border-box; background: #f8fafc; }
     .product-row { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 15px; margin-top: 12px; }
     .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 12px; display: flex; gap: 10px; color: #92400e; font-weight: 500; }
-    .notice-box input { width: 22px; height: 22px; cursor: pointer; }
     .hidden { display: none !important; }
 
-    /* Overlay Modal & Alert */
+    /* Overlay / Modals */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
-    .alert-icon-box { width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; color: white; margin-bottom: 20px; }
-    #alert-text { font-size: 1.8rem; font-weight: 700; }
-    
-    .modal-box { background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 350px; width: 90%; border: 1px solid var(--border); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+    .modal-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; border: 1px solid var(--border); }
+    .alert-icon { width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; color: white; margin-bottom: 20px; }
   </style>
 </head>
 <body>
@@ -81,19 +73,19 @@
 <div class="app-container">
 
   <div id="page-home" class="page active">
-    <div class="header-title">
-      <h2>คลินิคยา มอ ออ</h2>
-      <p>ระบบบันทึกและจัดการข้อมูลการคืนสินค้า</p>
-    </div>
-    
-    <div class="login-box">
-      <div style="font-size: 50px; margin-bottom: 10px;">🏥</div>
-      <label style="font-size: 1.2rem; color: var(--text-main);">เลือกสาขาของคุณเพื่อเข้าใช้งาน</label>
-      <select id="main-branch-select">
-        <option value="">-- กรุณาเลือกสาขา --</option>
-        <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
-      </select>
-      <button class="btn btn-primary" style="margin-top: 25px; padding: 15px; font-size: 1.15rem;" onclick="promptBranchConfirm()">เข้าสู่ระบบ</button>
+    <div class="login-container">
+      <div class="login-box">
+        <div style="font-size: 60px; margin-bottom: 10px;">🏥</div>
+        <h2>คลินิคยา มอ ออ</h2>
+        <p style="color:var(--text-muted);">ระบบบันทึกการส่งคืนสินค้า</p>
+        
+        <select id="main-branch-select">
+          <option value="">-- กรุณาเลือกสาขา --</option>
+          <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
+        </select>
+        
+        <button class="btn btn-primary" style="padding:15px; font-size:1.2rem;" onclick="confirmLogin()">เข้าสู่ระบบ</button>
+      </div>
     </div>
   </div>
 
@@ -107,7 +99,7 @@
     <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
 
     <div class="filter-bar">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาชื่อบริษัท, สินค้า หรือ เลขบิล..." onkeyup="applyFilters()">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
@@ -120,7 +112,7 @@
       </select>
     </div>
 
-    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted);">กำลังโหลดข้อมูล...</div>
+    <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted); font-size:1.1rem;">กำลังโหลดข้อมูล...</div>
 
     <div class="table-responsive" id="table-container" style="display:none;">
       <table class="data-table">
@@ -130,8 +122,8 @@
             <th>สาขา</th>
             <th>บริษัทจำหน่าย</th>
             <th>เลขบิล</th>
-            <th>สินค้าที่คืน</th>
-            <th style="text-align:center;">จำนวนรวม</th>
+            <th>รายการสินค้าที่คืน</th>
+            <th style="text-align:center;">จำนวน</th>
             <th>สถานะ</th>
             <th style="text-align:center;">จัดการ</th>
           </tr>
@@ -144,18 +136,17 @@
   <div id="page-form" class="page">
     <div class="top-nav">
       <button class="btn btn-back" onclick="switchPage('page-dashboard')">◀ ยกเลิก</button>
-      <h3 id="form-title">สร้างรายการใหม่</h3>
+      <h3 id="form-title">แบบฟอร์ม</h3>
       <div style="width:80px;"></div>
     </div>
     
     <form id="returnForm">
-      <input type="hidden" id="docId" name="docId">
-      <input type="hidden" id="oldPhotoUrl" name="oldPhotoUrl">
+      <input type="hidden" name="docId" id="docId"> <input type="hidden" name="oldPhotoUrl" id="oldPhotoUrl">
       
       <div class="form-section">
         <h3>📝 1. ข้อมูลการแจ้งคืน</h3>
         <label>สาขา</label>
-        <input type="text" id="form-branch" name="branch" readonly style="color:var(--primary); font-weight:700;">
+        <input type="text" id="form-branch" name="branch" readonly style="color:var(--primary); font-weight:700; background:#f1f5f9;">
         
         <label>วันที่แจ้ง</label>
         <input type="date" name="notifyDate" id="notifyDate">
@@ -167,17 +158,15 @@
         </select>
         
         <div id="vendor-extra" class="hidden">
-          <input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท (กรณีเลือกอื่นๆ)" style="margin-top:10px;">
+          <input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท" style="margin-top:10px;">
         </div>
         
         <label id="doc-label">เลขที่บิลที่คืน SRN</label>
         <input type="text" name="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
         
         <div class="notice-box">
-          <input type="checkbox" id="confirmStep1"> 
-          <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">
-            ข้าพเจ้ายืนยันว่า ได้ทำสำเนา 2 ชุด เก็บไว้หน้าสาขา 1 ชุด และส่งคืนคลัง 1 ชุด เรียบร้อยแล้ว
-          </span>
+          <input type="checkbox" id="confirmStep1" style="width:20px; height:20px;"> 
+          <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันการจัดการเอกสารสำเนาเรียบร้อยแล้ว</span>
         </div>
         
         <div id="product-container"></div>
@@ -214,30 +203,29 @@
   </div>
 </div>
 
-<div class="fullscreen-overlay" id="branch-confirm-modal">
-  <div class="modal-box">
-    <div style="font-size: 50px; margin-bottom: 10px;">🏥</div>
-    <h3 style="margin-top:0; color:var(--text-main);">ยืนยันการเข้าสู่ระบบ</h3>
-    <p style="font-size: 1.1rem; color:var(--text-muted);">คุณต้องการเข้าสู่ <b id="confirm-branch-name" style="color:var(--primary); font-size:1.2rem;"></b> ใช่หรือไม่?</p>
-    <div style="display: flex; gap: 10px; margin-top: 25px;">
-      <button class="btn btn-back" style="flex:1;" onclick="closeBranchConfirm()">ยกเลิก</button>
-      <button class="btn btn-primary" style="margin-bottom:0; flex:1;" onclick="proceedToDashboard()">ยืนยัน</button>
+<div class="fullscreen-overlay" id="confirm-login-modal">
+  <div class="modal-card">
+    <div style="font-size: 50px;">🏥</div>
+    <h3>ยืนยันการเข้าใช้งาน</h3>
+    <p>คุณต้องการเข้าสู่ระบบในนาม <br><b id="display-selected-branch" style="color:var(--primary); font-size:1.3rem;"></b> ใช่หรือไม่?</p>
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button class="btn btn-back" style="flex:1;" onclick="closeModal('confirm-login-modal')">ยกเลิก</button>
+      <button class="btn btn-primary" style="flex:1; margin:0;" onclick="doLogin()">ยืนยัน</button>
     </div>
   </div>
 </div>
 
 <div class="fullscreen-overlay" id="fullscreen-alert">
-  <div class="alert-icon-box" id="alert-icon-box">✓</div>
-  <h2 id="alert-text">บันทึกสำเร็จ</h2>
+  <div class="alert-icon" id="alert-icon-box">✓</div>
+  <h2 id="alert-text">สำเร็จ</h2>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-  // *** ใส่ Firebase Config ของคุณตรงนี้ ***
   const firebaseConfig = {
- apiKey: "AIzaSyAv0-NKFMbUUS8UXaKFR-mju1qAdtSdG9s",
+    apiKey: "AIzaSyAv0-NKFMbUUS8UXaKFR-mju1qAdtSdG9s",
     authDomain: "cmo-cn-record.firebaseapp.com",
     projectId: "cmo-cn-record",
     storageBucket: "cmo-cn-record.firebasestorage.app",
@@ -247,37 +235,35 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  
-  // *** ใส่ URL ของ Google Apps Script ของคุณตรงนี้ ***
   const GAS_URL = "https://script.google.com/macros/s/AKfycbzkBVH5MaM--bi-zqwaLJYq34uKppcyx720i_eU4y8QzCqk140MSO-2PQ1Kfn1eKfod/exec";
 
   let allData = [];
-  let selectedBranchToEnter = "";
+  let currentBranch = "";
 
   window.switchPage = (id) => { 
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo(0,0);
   };
+
   window.goHome = () => switchPage('page-home');
+  window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-  // --- ระบบ Pop-up ยืนยันเข้าสาขา ---
-  window.promptBranchConfirm = () => {
+  // --- ระบบ Login ---
+  window.confirmLogin = () => {
     const sel = document.getElementById('main-branch-select').value;
-    if(!sel) { alert("กรุณาเลือกสาขาก่อนครับ"); return; }
-    selectedBranchToEnter = sel;
-    document.getElementById('confirm-branch-name').innerText = sel;
-    document.getElementById('branch-confirm-modal').style.display = 'flex';
-  };
-  window.closeBranchConfirm = () => {
-    document.getElementById('branch-confirm-modal').style.display = 'none';
-  };
-  window.proceedToDashboard = () => {
-    closeBranchConfirm();
-    openDashboard(selectedBranchToEnter);
+    if(!sel) return alert("กรุณาเลือกสาขา");
+    currentBranch = sel;
+    document.getElementById('display-selected-branch').innerText = sel;
+    document.getElementById('confirm-login-modal').style.display = 'flex';
   };
 
-  window.openDashboard = async function(branchName) {
+  window.doLogin = () => {
+    closeModal('confirm-login-modal');
+    openDashboard(currentBranch);
+  };
+
+  window.openDashboard = async (branchName) => {
     document.getElementById('dash-title').innerText = "ข้อมูล " + branchName;
     document.getElementById('filterBranch').value = branchName;
     document.getElementById('form-branch').value = branchName;
@@ -288,26 +274,21 @@
   async function loadData() {
     document.getElementById('loading-msg').style.display = 'block';
     document.getElementById('table-container').style.display = 'none';
-    try {
-      const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
-      const snap = await getDocs(q);
-      allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      applyFilters();
-    } catch(e) { document.getElementById('loading-msg').innerText = "Error: " + e.message; }
+    const q = query(collection(db, "returns"), orderBy("timestamp", "desc"));
+    const snap = await getDocs(q);
+    allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    applyFilters();
   }
 
-  window.applyFilters = function() {
+  window.applyFilters = () => {
     const search = document.getElementById('filterSearch').value.toLowerCase();
     const status = document.getElementById('filterStatus').value;
     const branch = document.getElementById('filterBranch').value;
 
     const filtered = allData.filter(item => {
       const vendor = (item.vendorType === 'อื่นๆ' ? (item.vendorName||'') : item.vendorType).toLowerCase();
-      // ค้นหาจากชื่อบริษัท, เลขบิล หรือ ชื่อสินค้า
-      let productsStr = "";
-      if(item.products) productsStr = item.products.map(p => p.name).join(' ').toLowerCase();
-      
-      const matchSearch = vendor.includes(search) || (item.docNumber||'').toLowerCase().includes(search) || productsStr.includes(search);
+      const pNames = item.products ? item.products.map(p => p.name).join(' ').toLowerCase() : "";
+      const matchSearch = vendor.includes(search) || (item.docNumber||'').toLowerCase().includes(search) || pNames.includes(search);
       const matchStatus = status === "" || item.status === status;
       const matchBranch = branch === "" || item.branch === branch;
       return matchSearch && matchStatus && matchBranch;
@@ -316,29 +297,21 @@
   };
 
   function renderTable(data) {
-    const tbody = document.getElementById('dashboard-tbody');
-    tbody.innerHTML = '';
     document.getElementById('loading-msg').style.display = 'none';
     document.getElementById('table-container').style.display = 'block';
-
-    if(data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px;">ไม่มีข้อมูล</td></tr>';
-      return;
-    }
-
+    const tbody = document.getElementById('dashboard-tbody');
+    tbody.innerHTML = '';
+    
     data.forEach(item => {
-      let badge = "badge-red"; let icon = "🔴";
-      if(item.status === "ปิดเคสแล้ว") { badge = "badge-green"; icon = "🟢"; }
-      else if(item.status === "ส่งคืนแล้วรอปิดเคส") { badge = "badge-yellow"; icon = "🟡"; }
-
+      const badge = item.status === "ปิดเคสแล้ว" ? "badge-green" : (item.status === "ส่งคืนแล้วรอปิดเคส" ? "badge-yellow" : "badge-red");
+      const dot = item.status === "ปิดเคสแล้ว" ? "🟢" : (item.status === "ส่งคืนแล้วรอปิดเคส" ? "🟡" : "🔴");
       const vendor = item.vendorType === 'อื่นๆ' ? (item.vendorName || '-') : item.vendorType;
       
-      // คำนวณสินค้ารวม
-      let productNames = "-";
-      let totalQty = 0;
+      // สรุปสินค้า
+      let pList = "-"; let total = 0;
       if(item.products && item.products.length > 0) {
-        productNames = item.products.map(p => p.name).join(', ');
-        totalQty = item.products.reduce((sum, p) => sum + (Number(p.qty) || 0), 0);
+        pList = item.products.map(p => p.name).join(', ');
+        total = item.products.reduce((sum, p) => sum + (Number(p.qty) || 0), 0);
       }
 
       tbody.innerHTML += `
@@ -347,9 +320,9 @@
           <td><b>${item.branch}</b></td>
           <td>${vendor}</td>
           <td>${item.docNumber || '-'}</td>
-          <td><div style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--primary);" title="${productNames}">${productNames}</div></td>
-          <td style="text-align:center; font-weight:bold;">${totalQty}</td>
-          <td><span class="badge ${badge}">${icon} ${item.status}</span></td>
+          <td><div style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--primary); font-weight:500;">${pList}</div></td>
+          <td style="text-align:center; font-weight:700;">${total}</td>
+          <td><span class="badge ${badge}">${dot} ${item.status}</span></td>
           <td style="text-align:center; white-space:nowrap;">
             <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>
             ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="btn-img">📸</a>` : ''}
@@ -360,17 +333,18 @@
     });
   }
 
-  window.deleteRecord = async function(id) {
-    if(confirm("คุณแน่ใจหรือไม่ที่จะลบรายการนี้? ข้อมูลที่ลบจะไม่สามารถกู้คืนได้")) {
+  window.deleteRecord = async (id) => {
+    if(confirm("ลบรายการนี้ใช่หรือไม่?")) {
       await deleteDoc(doc(db, "returns", id));
       await loadData();
     }
   };
 
   window.openFormNew = () => {
-    const currentBranch = document.getElementById('filterBranch').value || document.getElementById('form-branch').value;
+    document.getElementById('form-title').innerText = "สร้างรายการใหม่";
+    const b = document.getElementById('filterBranch').value || currentBranch;
     document.getElementById('returnForm').reset();
-    document.getElementById('form-branch').value = currentBranch;
+    document.getElementById('form-branch').value = b;
     document.getElementById('docId').value = "";
     document.getElementById('oldPhotoUrl').value = "";
     document.getElementById('notifyDate').valueAsDate = new Date();
@@ -382,6 +356,7 @@
 
   window.openFormEdit = (id) => {
     const item = allData.find(d => d.id === id);
+    document.getElementById('form-title').innerText = "แก้ไขรายการ";
     document.getElementById('docId').value = item.id;
     document.getElementById('oldPhotoUrl').value = item.photoUrl || "";
     document.getElementById('form-branch').value = item.branch;
@@ -426,18 +401,18 @@
     const confirmText = document.getElementById('confirm-text');
     if(v === 'อื่นๆ') {
       extra.classList.remove('hidden'); label.innerText = 'เลขที่บิลซื้อ';
-      confirmText.innerText = 'ยืนยันว่า ได้แยกบิลที่มีปัญหานี้ไว้ และไม่จัดเก็บเข้าแฟ้มจนกว่าการทำคืนจะสำเร็จ';
+      confirmText.innerText = 'ยืนยันแยกบิลและยังไม่จัดเก็บเข้าแฟ้มจนกว่าจะสำเร็จ';
     } else {
-      extra.classList.add('hidden'); label.innerText = 'เลขที่บิลที่คืน SRN';
-      confirmText.innerText = 'ยืนยันว่า ได้ทำสำเนา 2 ชุด เก็บไว้หน้าสาขา 1 ชุด และส่งคืนคลัง 1 ชุด เรียบร้อยแล้ว';
+      extra.classList.add('hidden'); label.innerText = 'เลขที่บิลคืน SRN';
+      confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (คลัง/สาขา) เรียบร้อยแล้ว';
     }
   };
 
-  window.submitForm = async function(type) {
+  window.submitForm = async (type) => {
     const form = document.getElementById('returnForm');
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
-    const docId = data.docId; // ตอนนี้จะอ่านเจอแล้วเพราะเราเติม name="docId" ไปแล้วครับ!
+    const docId = data.docId; // ตอนนี้จะอ่านได้แล้วเพราะมี name="docId"
     
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
@@ -452,38 +427,39 @@
     data.status = type === 'close' ? "ปิดเคสแล้ว" : (data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน");
     
     if(type === 'close') {
-      if(!data.actionResult || !data.returnType) { alert("กรุณากรอกผลดำเนินการให้ครบถ้วน"); return; }
-      if(!confirm("ยืนยันว่าจัดการเอกสารเข้าแฟ้มเรียบร้อยแล้ว?")) return;
+      if(!data.actionResult || !data.returnType) return alert("กรุณากรอกผลดำเนินการให้ครบถ้วน");
+      if(!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้ว?")) return;
     }
 
-    const btnPark = document.getElementById('btn-park');
-    const btnClose = document.getElementById('btn-close');
-    btnPark.disabled = true; btnClose.disabled = true;
-    const originalText = btnPark.innerText;
-    btnPark.innerText = "กำลังบันทึก...";
+    const bPark = document.getElementById('btn-park');
+    const bClose = document.getElementById('btn-close');
+    bPark.disabled = true; bClose.disabled = true;
+    const oldTxt = bPark.innerText;
+    bPark.innerText = "กำลังบันทึก...";
 
     try {
       const file = document.getElementById('photoInput').files[0];
       let url = document.getElementById('oldPhotoUrl').value;
 
       if(file) {
-        btnPark.innerText = "กำลังอัพโหลดรูป...";
+        bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
           const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file);
         });
 
-        // ส่งรูปลง Google Drive ผ่าน GAS
-        const res = await fetch(GAS_URL, {
+        // ส่งรูปลง Drive (แก้ปัญหา CORS Error ด้วยการรับแบบ Text ก่อน)
+        const response = await fetch(GAS_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ base64: base64, fileName: "IMG_" + Date.now() + ".jpg" })
         });
-        const resData = await res.json();
+        
+        const txt = await response.text();
+        const resData = JSON.parse(txt);
         if(resData.status === 'success') url = resData.url;
-        else throw new Error("อัพรูปไม่สำเร็จ: " + resData.message);
       }
 
-      btnPark.innerText = "กำลังบันทึกข้อมูล...";
+      bPark.innerText = "บันทึกฐานข้อมูล...";
       const saveData = {
         branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
         vendorName: data.vendorName, docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
@@ -492,25 +468,23 @@
         products: data.products, status: data.status
       };
 
-      if(docId) {
-        // อัปเดตข้อมูลเดิม
+      if(docId && docId !== "") {
         await updateDoc(doc(db, "returns", docId), saveData);
       } else {
-        // สร้างข้อมูลใหม่
         saveData.timestamp = serverTimestamp();
         await addDoc(collection(db, "returns"), saveData);
       }
       showSuccess(type);
-    } catch (e) { alert("Error: " + e.message); }
-    btnPark.disabled = false; btnClose.disabled = false; btnPark.innerText = originalText;
+    } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+    bPark.disabled = false; bClose.disabled = false; bPark.innerText = oldTxt;
   };
 
   function showSuccess(type) {
     const overlay = document.getElementById('fullscreen-alert');
-    const iconBox = document.getElementById('alert-icon-box');
+    const icon = document.getElementById('alert-icon-box');
     const text = document.getElementById('alert-text');
-    if(type === 'close') { iconBox.style.background = "var(--success)"; text.innerText = "ปิดเคสสำเร็จ"; }
-    else { iconBox.style.background = "var(--warning)"; text.innerText = "พักบิลเรียบร้อย"; }
+    if(type === 'close') { icon.style.background = "var(--success)"; text.innerText = "ปิดเคสสำเร็จ"; }
+    else { icon.style.background = "var(--warning)"; text.innerText = "พักบิลเรียบร้อย"; }
     overlay.style.display = 'flex';
     setTimeout(async () => { 
       overlay.style.display = 'none'; 
