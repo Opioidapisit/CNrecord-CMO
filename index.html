@@ -32,7 +32,7 @@
     .btn-warning { background: var(--warning); color: white; flex: 1; }
     .btn-success { background: var(--success); color: white; flex: 1; }
 
-    /* Table & Filter */
+    /* Table */
     .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
     @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
     .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; }
@@ -49,7 +49,7 @@
     .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
     .btn-delete { background: #fee2e2; color: #b91c1c; }
 
-    /* Form Styles */
+    /* Form Section */
     .form-section { background: var(--surface); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
     .form-section h3 { font-size: 1.2rem; color: var(--primary); margin: 0 0 20px 0; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; }
     label { display: block; font-weight: 700; margin-bottom: 8px; margin-top: 15px; }
@@ -62,9 +62,8 @@
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
     .modal-card { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); }
     .detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-    .detail-label { font-weight: 700; color: var(--text-muted); min-width: 160px; }
+    .detail-label { font-weight: 700; color: var(--text-muted); min-width: 140px; }
     .detail-value { text-align: right; color: var(--text-main); font-weight: 500; }
-    .btn-open-file { background: var(--success); color: white; padding: 12px; width: 100%; text-decoration: none; border-radius: 10px; font-weight: bold; display: block; text-align: center; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -93,7 +92,7 @@
     </div>
     <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
     <div class="filter-bar">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาชื่อบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
@@ -139,13 +138,16 @@
         <h3>📝 1. ข้อมูลการแจ้งคืน</h3>
         <label>สาขา</label>
         <input type="text" id="form-branch" name="branch" readonly style="color:var(--primary); font-weight:700; background:#f1f5f9;">
+        
         <label>วันที่แจ้ง</label>
         <input type="date" name="notifyDate" id="notifyDate">
+        
         <label>บริษัทจำหน่าย</label>
         <select name="vendorType" id="vendorType" onchange="toggleVendorFields()">
           <option value="คลินิคยา มอ ออ 3">คลินิคยา มอ ออ 3</option>
           <option value="อื่นๆ">อื่นๆ</option>
         </select>
+        
         <div id="vendor-extra" class="hidden"><input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท"></div>
         <label id="doc-label">เลขที่บิลคืน SRN</label>
         <input type="text" name="docNumber" id="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
@@ -168,9 +170,9 @@
         <label>ลงชื่อผู้ส่งคืน</label>
         <input type="text" name="returnStaff" placeholder="ระบุชื่อพนักงาน">
         
-        <label>ถ่ายรูปผู้รับคืน / เอกสาร <span id="photo-status" style="color:var(--success); font-weight:normal; font-size:0.85rem; margin-left:10px;"></span></label>
+        <label>ถ่ายรูปผู้รับคืน / เอกสาร <span id="photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
         <input type="file" id="photoInput" accept="image/*" capture="camera" style="background:white;">
-        <p id="old-photo-hint" style="color:var(--text-muted); font-size:0.8rem; margin-top:5px; display:none;">* มีรูปเดิมในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่</p>
+        <p id="old-photo-hint" style="color:var(--warning); font-size:0.85rem; margin-top:5px; display:none; font-weight:600;">⚠️ มีรูปเดิมในระบบแล้ว หากไม่ต้องการเปลี่ยนไฟล์ ไม่ต้องเลือกไฟล์ใหม่</p>
       </div>
 
       <div class="form-section">
@@ -201,7 +203,7 @@
 
 <div class="fullscreen-overlay" id="confirm-login-modal">
   <div class="modal-card" style="max-width:350px; text-align:center;">
-    <h3>ยืนยันการเข้าสู่ระบบ</h3>
+    <h3 style="margin-top:0;">ยืนยันการเข้าสู่ระบบ</h3>
     <p>คุณต้องการเข้าสู่ระบบในนาม <br><b id="display-selected-branch" style="color:var(--primary); font-size:1.2rem;"></b> ใช่หรือไม่?</p>
     <div style="display:flex; gap:10px; margin-top:25px;">
       <button class="btn btn-back" style="flex:1;" onclick="closeModal('confirm-login-modal')">ยกเลิก</button>
@@ -212,7 +214,7 @@
 
 <div class="fullscreen-overlay" id="detail-modal">
   <div class="modal-card">
-    <h3 style="color:var(--primary); margin-top:0; border-bottom:2px solid var(--primary); padding-bottom:10px;">รายละเอียดข้อมูลทั้งหมด</h3>
+    <h3 style="color:var(--primary); margin-top:0; border-bottom:2px solid var(--primary); padding-bottom:10px;">รายละเอียดข้อมูลการคืน</h3>
     <div id="detail-content"></div>
     <div style="margin-top:25px; text-align:right;">
       <button class="btn btn-back" onclick="closeModal('detail-modal')">ปิดหน้าต่าง</button>
@@ -302,6 +304,7 @@
     document.getElementById('table-container').style.display = 'block';
     const tbody = document.getElementById('dashboard-tbody');
     tbody.innerHTML = '';
+    
     data.forEach(item => {
       const badge = item.status === "ปิดเคสแล้ว" ? "badge-green" : (item.status === "ส่งคืนแล้วรอปิดเคส" ? "badge-yellow" : "badge-red");
       const vendor = item.vendorType === 'อื่นๆ' ? (item.vendorName || '-') : item.vendorType;
@@ -324,6 +327,7 @@
     });
   }
 
+  // --- หน้าต่างดูรายละเอียด (👁️) แก้ไขส่วนรูปลิงก์ให้โชว์ครบถ้วน ---
   window.showDetails = (id) => {
     const item = allData.find(d => d.id === id);
     if(!item) return;
@@ -335,13 +339,27 @@
       </div>`).join('');
 
     let fileInfoHtml = `<div style="color:var(--text-muted); font-style:italic; padding:10px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;">(ยังไม่มีไฟล์อัพโหลด)</div>`;
+    
+    // เงื่อนไขที่ 1: มีทั้งชื่อและ URL ครบถ้วน (โชว์ปุ่มน้ำเงิน)
     if (item.photoUrl && item.photoUrl.trim() !== "" && item.photoUrl !== "undefined") {
       fileInfoHtml = `
-        <div style="background:#eff6ff; padding:15px; border-radius:12px; border:1px solid #bfdbfe; display:flex; flex-direction:column; gap:10px; align-items:flex-start;">
-          <div style="color:var(--primary); font-weight:600; font-size:1rem; word-break: break-all;">📄 ${item.fileName || 'ไฟล์รูปถ่ายหลักฐาน'}</div>
-          <a href="${item.photoUrl}" target="_blank" style="background:var(--primary); color:white; padding:10px 20px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; font-weight:600; font-size:0.95rem; box-shadow:0 4px 6px rgba(37,99,235,0.2);">
+        <div style="background:#eff6ff; padding:15px; border-radius:12px; border:1px solid #bfdbfe;">
+          <div style="color:var(--primary); font-weight:600; font-size:1rem; margin-bottom:10px; word-break: break-all;">📄 ${item.fileName || 'ไฟล์รูปถ่ายหลักฐาน'}</div>
+          <a href="${item.photoUrl}" target="_blank" style="background:var(--primary); color:white; padding:10px 15px; border-radius:8px; text-decoration:none; display:inline-block; font-weight:600; font-size:0.95rem;">
             🔗 คลิกลิงก์เพื่อเปิดดูรูปภาพ
           </a>
+        </div>`;
+    } 
+    // เงื่อนไขที่ 2: มีชื่อไฟล์ แต่ URL บันทึกไม่ติด (โชว์ปุ่มเหลืองให้ค้นหา)
+    else if (item.fileName && item.fileName.trim() !== "" && item.fileName !== "undefined") {
+      const searchUrl = `https://drive.google.com/drive/u/0/search?q=${encodeURIComponent(item.fileName)}`;
+      fileInfoHtml = `
+        <div style="background:#fefce8; padding:15px; border-radius:12px; border:1px solid #fde047;">
+          <div style="color:#ca8a04; font-weight:600; font-size:1rem; margin-bottom:10px; word-break: break-all;">📄 ${item.fileName}</div>
+          <a href="${searchUrl}" target="_blank" style="background:#ca8a04; color:white; padding:10px 15px; border-radius:8px; text-decoration:none; display:inline-block; font-weight:600; font-size:0.95rem;">
+            🔍 ค้นหารูปนี้ใน Google Drive
+          </a>
+          <div style="font-size:0.8rem; color:#a16207; margin-top:8px;">* หมายเหตุ: ไม่พบลิงก์ตรง แต่สามารถกดค้นหาไฟล์นี้ใน Drive ได้</div>
         </div>`;
     }
 
@@ -350,9 +368,15 @@
       <div class="detail-item"><span class="detail-label">สาขา:</span><span class="detail-value">${item.branch}</span></div>
       <div class="detail-item"><span class="detail-label">บริษัทจำหน่าย:</span><span class="detail-value">${item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType}</span></div>
       <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
-      <div style="margin-top:20px; border-top:2px dashed #eee; padding-top:15px;"><label style="margin:0 0 10px 0; color:var(--primary); display:block;">ชื่อไฟล์รูปถ่ายหลักฐาน:</label>${fileInfoHtml}</div>
+      
+      <div style="margin-top:20px; border-top:1px dashed #cbd5e1; padding-top:15px;">
+        <label style="margin:0 0 10px 0; color:var(--primary); display:block;">ชื่อไฟล์รูปถ่ายหลักฐาน:</label>
+        ${fileInfoHtml}
+      </div>
+
       <div style="margin-top:15px;"><label>รายการสินค้าที่คืน:</label>${prodHtml}</div>
       <div style="margin-top:15px;"><label>หมายเหตุแจ้งคืน:</label><div style="background:#fffbeb; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #fde68a;">${item.notifyNote || '-'}</div></div>
+      
       <div style="margin-top:20px; border-top:1px dashed #cbd5e1; padding-top:15px;">
         <div class="detail-item"><span class="detail-label">วันที่รับคืน:</span><span class="detail-value">${item.returnDate || '-'}</span></div>
         <div class="detail-item"><span class="detail-label">ผู้ส่งคืน:</span><span class="detail-value">${item.returnStaff || '-'}</span></div>
@@ -360,7 +384,8 @@
       <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
       <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
-      <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value"><b>${item.status}</b></span></div>`;
+      <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value"><b>${item.status}</b></span></div>
+    `;
     document.getElementById('detail-content').innerHTML = html;
     document.getElementById('detail-modal').style.display = 'flex';
   };
@@ -372,43 +397,61 @@
     }
   };
 
+  // --- Logic สลับข้อความ Checkbox ---
   window.toggleVendorFields = () => {
     const v = document.getElementById('vendorType').value;
-    const label = document.getElementById('doc-label');
     const extra = document.getElementById('vendor-extra');
+    const label = document.getElementById('doc-label');
     const confirmText = document.getElementById('confirm-text');
-    if(v === 'อื่นๆ') { extra.classList.remove('hidden'); label.innerText = 'เลขที่บิลซื้อ'; confirmText.innerText = 'ยืนยันแยกเอกสารเอาไว้จนกว่าจะดำเนินการคืนสำเร็จ'; }
-    else { extra.classList.add('hidden'); label.innerText = 'เลขที่บิลคืน SRN'; confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว'; }
+    
+    if(v === 'อื่นๆ') { 
+      extra.classList.remove('hidden'); 
+      label.innerText = 'เลขที่บิลซื้อ'; 
+      if(confirmText) confirmText.innerText = 'ยืนยันแยกเอกสารเอาไว้จนกว่าจะดำเนินการคืนสำเร็จ';
+    } else { 
+      extra.classList.add('hidden'); 
+      label.innerText = 'เลขที่บิลคืน SRN'; 
+      if(confirmText) confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว';
+    }
   };
 
   window.toggleStep3Notice = () => {
     const val = document.getElementById('returnType').value;
     const box = document.getElementById('step3-notice-box');
-    if(val === 'ได้รับใบลดหนี้') box.classList.remove('hidden');
-    else { box.classList.add('hidden'); document.getElementById('confirmStep3').checked = false; }
+    if(val === 'ได้รับใบลดหนี้') {
+      box.classList.remove('hidden');
+    } else { 
+      box.classList.add('hidden'); 
+      document.getElementById('confirmStep3').checked = false; 
+    }
   };
 
   window.openFormNew = () => {
-    document.getElementById('returnForm').reset();
     const b = document.getElementById('filterBranch').value || currentBranch;
+    document.getElementById('returnForm').reset();
+    
+    // เคลียร์ค่าซ่อน
     document.getElementById('form-branch').value = b;
     document.getElementById('docId').value = "";
     document.getElementById('oldPhotoUrl').value = "";
     document.getElementById('oldFileName').value = "";
-    document.getElementById('notifyDate').valueAsDate = new Date();
-    document.getElementById('product-container').innerHTML = "";
+    
+    // เคลียร์ UI สถานะรูปภาพ
     document.getElementById('photo-status').innerText = "";
     document.getElementById('old-photo-hint').style.display = "none";
     document.getElementById('step3-notice-box').classList.add('hidden');
+
+    document.getElementById('notifyDate').valueAsDate = new Date();
+    document.getElementById('product-container').innerHTML = "";
     addProductRow();
     toggleVendorFields();
     switchPage('page-form');
   };
 
-  // --- ปรับปรุงฟังก์ชันเปิดหน้าแก้ไข (ป้องกันรูปซ้ำ) ---
+  // --- ตอนแก้ไขบิล แสดงตัวบอกสถานะรูปภาพ ---
   window.openFormEdit = (id) => {
     const item = allData.find(d => d.id === id);
-    document.getElementById('returnForm').reset(); // ล้างไฟล์ที่อาจค้างใน input
+    document.getElementById('returnForm').reset(); // สำคัญมาก: ล้างไฟล์ที่เลือกค้างไว้
     
     document.getElementById('docId').value = item.id;
     document.getElementById('oldPhotoUrl').value = item.photoUrl || "";
@@ -425,21 +468,23 @@
     document.getElementsByName('actionResult')[0].value = item.actionResult || "";
     document.getElementById('returnType').value = item.returnType || "";
     document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
+    
+    // เช็ค checkbox ส่วน 3
+    toggleStep3Notice();
     if(item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
 
-    // แสดงสถานะรูปภาพเดิม
+    // เช็คข้อความสถานะรูปภาพ
     const hint = document.getElementById('old-photo-hint');
-    const status = document.getElementById('photo-status');
-    if(item.photoUrl) {
-       status.innerText = "(มีรูปเดิมแล้ว)";
+    const statusText = document.getElementById('photo-status');
+    if(item.photoUrl || item.fileName) {
+       statusText.innerText = "(มีรูปเดิมในระบบแล้ว)";
        hint.style.display = "block";
     } else {
-       status.innerText = "";
+       statusText.innerText = "";
        hint.style.display = "none";
     }
 
     toggleVendorFields();
-    toggleStep3Notice();
     document.getElementById('product-container').innerHTML = "";
     if (item.products) item.products.forEach(p => addProductRow(p));
     else addProductRow();
@@ -496,16 +541,19 @@
     try {
       const fileInput = document.getElementById('photoInput');
       const file = fileInput.files[0];
+      
+      // เก็บค่าเก่าไว้ก่อน ถ้าไม่มีไฟล์ใหม่ จะใช้ตัวนี้บันทึกซ้ำลงไป (จะได้ไม่หาย)
       let url = document.getElementById('oldPhotoUrl').value || "";
       let finalFileName = document.getElementById('oldFileName').value || "";
 
-      // --- อัปโหลดใหม่เฉพาะเมื่อมีการเลือกไฟล์จริงๆ เท่านั้น ---
+      // ถ้าเลือกไฟล์รูปใหม่
       if(file) {
         bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
           const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file);
         });
 
+        // จัดการชื่อไฟล์
         const branchClean = data.branch ? data.branch.replace(/\s+/g, '') : 'Branch';
         const dateClean = data.notifyDate ? data.notifyDate.split('-').reverse().join('') : 'NoDate';
         const docClean = data.docNumber ? data.docNumber.replace(/[^a-zA-Z0-9]/g, '') : 'NoDoc';
@@ -524,6 +572,7 @@
         }
       }
 
+      bPark.innerText = "บันทึกฐานข้อมูล...";
       const saveData = {
         branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
         vendorName: data.vendorName || "", docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
@@ -540,7 +589,7 @@
         await addDoc(collection(db, "returns"), saveData);
       }
       showSuccess(type);
-    } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+    } catch (e) { alert("Error: " + e.message); }
     bPark.disabled = false; bClose.disabled = false; bPark.innerText = "⏳ พักบิล";
   };
 
