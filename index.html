@@ -321,7 +321,9 @@
           <td><span class="badge ${badge}">${item.status}</span></td>
           <td style="text-align:center; white-space:nowrap;">
             <button class="btn-action btn-view" onclick="showDetails('${item.id}')">👁️</button>
-            <button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>
+            ${item.status === "ปิดเคสแล้ว"
+              ? `<button class="btn-action btn-edit" disabled title="เคสนี้ปิดแล้ว ไม่สามารถแก้ไขได้" style="opacity:0.4; cursor:not-allowed;">🔒</button>`
+              : `<button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>`}
             <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️</button>
           </td>
         </tr>`;
@@ -452,6 +454,10 @@
   // --- ตอนแก้ไขบิล แสดงตัวบอกสถานะรูปภาพ ---
   window.openFormEdit = (id) => {
     const item = allData.find(d => d.id === id);
+    if(item.status === "ปิดเคสแล้ว") {
+      alert("🔒 เคสนี้ถูกปิดเรียบร้อยแล้ว ไม่สามารถแก้ไขข้อมูลได้อีก");
+      return;
+    }
     document.getElementById('returnForm').reset(); // สำคัญมาก: ล้างไฟล์ที่เลือกค้างไว้
     
     document.getElementById('docId').value = item.id;
@@ -513,6 +519,15 @@
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
     const docId = data.docId;
+
+    // ป้องกันการบันทึกทับเคสที่ปิดไปแล้ว (กันกรณีเปิดฟอร์มค้างไว้ก่อนที่เคสจะถูกปิด)
+    if(docId) {
+      const existing = allData.find(d => d.id === docId);
+      if(existing && existing.status === "ปิดเคสแล้ว") {
+        alert("🔒 เคสนี้ถูกปิดเรียบร้อยแล้ว ไม่สามารถบันทึกการแก้ไขได้");
+        return;
+      }
+    }
     
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
