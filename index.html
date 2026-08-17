@@ -847,14 +847,31 @@
   document.addEventListener('DOMContentLoaded', initSignaturePad);
 
   // ================= LINE notification (แจ้งเตือนคลังให้เข้ามาอนุมัติ) =================
-  async function notifyLineApprovalNeeded(caseId, docNumber, branch, destLabel) {
+  async function notifyLineApprovalNeeded(caseId, docNumber, branch, destLabel, products) {
     try {
       const link = `${window.location.origin}${window.location.pathname}?case=${caseId}`;
+
+      // สร้างรายการสินค้า พร้อมจำนวน / LOT / EXP สำหรับแจ้งเตือน LINE
+      const productList = (products && products.length)
+        ? products.map((p, index) => {
+            return (
+              `${index + 1}. ${p.name || '-'}\n` +
+              `   จำนวน: ${p.qty || '-'}\n` +
+              `   LOT: ${p.lot || '-'}\n` +
+              `   EXP: ${p.exp || '-'}`
+            );
+          }).join('\n\n')
+        : 'ไม่มีข้อมูลสินค้า';
+
       const message =
-        `📋 มีคำขอคืนสินค้าใหม่ รอ "คลัง" อนุมัติ\n` +
-        `จากสาขา: ${branch}\n` +
+        `📋 มีคำขอคืนสินค้าใหม่ รอ "คลัง" อนุมัติ\n\n` +
+        `จากสาขา: ${branch || '-'}\n` +
         `ปลายทาง: ${destLabel || '-'}\n` +
         `เลขที่บิล: ${docNumber || '-'}\n\n` +
+        `📦 รายการสินค้า\n` +
+        `━━━━━━━━━━━━━━\n` +
+        `${productList}\n` +
+        `━━━━━━━━━━━━━━\n\n` +
         `กดลิงก์เพื่อเข้าสู่ระบบ (ต้อง login คลัง) แล้วกดอนุมัติ:\n${link}`;
 
       await fetch(GAS_URL, {
@@ -987,7 +1004,13 @@
 
       if (type === 'request' && approverBranch === 'คลัง') {
         const destLabelForMsg = destType === 'บริษัท' ? (vendorTypeVal === 'อื่นๆ' ? vendorNameVal : vendorTypeVal) : destName;
-        notifyLineApprovalNeeded(savedDocId, data.docNumber, data.branch, destLabelForMsg);
+        notifyLineApprovalNeeded(
+          savedDocId,
+          data.docNumber,
+          data.branch,
+          destLabelForMsg,
+          data.products
+        );
       }
 
       showSuccess(type);
