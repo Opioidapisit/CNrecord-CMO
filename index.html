@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบคืนสินค้า - คลินิคยา มอ ออ</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <style>
-    :root { 
-      --primary: #2563eb; --primary-hover: #1e40af; 
-      --success: #059669; --warning: #d97706; --danger: #dc2626; 
-      --background: #f8fafc; --surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0; 
+    :root {
+      --primary: #2563eb; --primary-hover: #1e40af;
+      --success: #059669; --warning: #d97706; --danger: #dc2626; --purple: #7c3aed;
+      --background: #f8fafc; --surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
     }
     body { font-family: 'Sarabun', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; }
     .app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -32,9 +32,15 @@
     .btn-warning { background: var(--warning); color: white; flex: 1; }
     .btn-success { background: var(--success); color: white; flex: 1; }
 
+    /* Tabs */
+    .tab-bar { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .tab-btn { padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-weight: 700; color: var(--text-muted); font-family: 'Sarabun'; font-size: 0.95rem; position: relative; }
+    .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .tab-badge { background: var(--danger); color: white; border-radius: 20px; padding: 1px 8px; font-size: 0.75rem; margin-left: 6px; }
+
     /* Table */
-    .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
-    @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr; } }
+    .filter-bar { display: grid; gap: 15px; background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
+    @media (max-width: 768px) { .filter-bar { grid-template-columns: 1fr !important; } }
     .table-responsive { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; }
     .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
     .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -43,11 +49,13 @@
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-purple { background: #ede9fe; color: #5b21b6; }
 
     .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; }
     .btn-view { background: #f1f5f9; color: #475569; margin-right: 5px; }
     .btn-edit { background: #e0f2fe; color: #0369a1; margin-right: 5px; }
     .btn-delete { background: #fee2e2; color: #b91c1c; }
+    .btn-approve { background: #dcfce7; color: #15803d; margin-right: 5px; }
 
     /* Form Section */
     .form-section { background: var(--surface); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
@@ -58,12 +66,21 @@
     .notice-box { margin-top: 15px; background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 12px; display: flex; gap: 10px; color: #92400e; font-weight: 600; font-size: 0.9rem; }
     .hidden { display: none !important; }
 
+    .approval-banner { background: #ede9fe; border: 1px solid #c4b5fd; color: #5b21b6; padding: 15px; border-radius: 12px; font-weight: 700; margin-bottom: 12px; }
+
+    /* Signature Pad */
+    .signature-canvas { border: 2px dashed #cbd5e1; border-radius: 12px; width: 100%; height: 180px; touch-action: none; background: #fff; display: block; }
+    .btn-clear-sig { margin-top: 10px; background: #f1f5f9; color: var(--text-main); padding: 8px 16px; font-size: 0.85rem; }
+
     /* Modals */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
     .modal-card { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 600px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); }
     .detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
     .detail-label { font-weight: 700; color: var(--text-muted); min-width: 140px; }
     .detail-value { text-align: right; color: var(--text-main); font-weight: 500; }
+
+    /* Consolidate page */
+    .consolidate-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; }
   </style>
 </head>
 <body>
@@ -76,8 +93,9 @@
         <h2>คลินิคยา มอ ออ</h2>
         <p style="color:var(--text-muted);">ระบบบันทึกข้อมูลการส่งคืนสินค้า</p>
         <select id="main-branch-select">
-          <option value="">-- กรุณาเลือกสาขาที่ดำเนินการ --</option>
+          <option value="">-- กรุณาเลือกหน่วยงานที่ดำเนินการ --</option>
           <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
+          <option value="คลัง">🏢 คลัง (ส่วนกลาง)</option>
         </select>
         <button class="btn btn-primary" style="padding:15px;" onclick="confirmLogin()">เข้าสู่ระบบ</button>
       </div>
@@ -88,20 +106,24 @@
     <div class="top-nav">
       <button class="btn btn-back" onclick="goHome()">◀ หน้าแรก</button>
       <h3 id="dash-title">Dashboard</h3>
-      <div style="width:100px;"></div>    
+      <div style="width:100px;"></div>
     </div>
     <button class="btn btn-primary" onclick="openFormNew()">+ สร้างรายการคืนสินค้าใหม่</button>
-    <div class="filter-bar">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาบริษัท, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
+    <button class="btn" style="background:#eef2ff; color:var(--primary); width:100%; margin-bottom:20px; border:1px solid #c7d2fe;" onclick="openConsolidate()">📊 สรุปคืนบริษัท (รวมทุกสาขา/คลัง)</button>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-mine" onclick="switchTab('mine')">📋 รายการของฉัน</button>
+      <button class="tab-btn" id="tab-approve" onclick="switchTab('approve')">🔔 รออนุมัติจากฉัน <span id="approve-badge" class="tab-badge hidden">0</span></button>
+    </div>
+
+    <div class="filter-bar" style="grid-template-columns: 2fr 1fr;">
+      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาปลายทาง, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
+        <option value="รอปลายทางอนุมัติ">🟣 รอปลายทางอนุมัติ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
         <option value="ส่งคืนแล้วรอปิดเคส">🟡 รอปิดเคส</option>
         <option value="ปิดเคสแล้ว">🟢 ปิดเคสแล้ว</option>
-      </select>
-      <select id="filterBranch" onchange="applyFilters()">
-        <option value="">ทุกสาขา</option>
-        <script>for(let i=1; i<=9; i++) document.write(`<option value="สาขา ${i}">สาขา ${i}</option>`);</script>
       </select>
     </div>
     <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted);">กำลังโหลดข้อมูล...</div>
@@ -110,7 +132,7 @@
         <thead>
           <tr>
             <th>วันที่แจ้ง</th>
-            <th>บริษัทจำหน่าย</th>
+            <th>ปลายทาง</th>
             <th>เลขบิล</th>
             <th>รายการสินค้า</th>
             <th style="text-align:center;">จำนวน</th>
@@ -133,49 +155,90 @@
       <input type="hidden" name="docId" id="docId">
       <input type="hidden" name="oldPhotoUrl" id="oldPhotoUrl">
       <input type="hidden" name="oldFileName" id="oldFileName">
+      <input type="hidden" name="oldSignatureData" id="oldSignatureData">
 
       <div class="form-section">
         <h3>📝 1. ข้อมูลการแจ้งคืน</h3>
-        <label>สาขา</label>
+        <label>สาขา/หน่วยงานต้นทาง</label>
         <input type="text" id="form-branch" name="branch" readonly style="color:var(--primary); font-weight:700; background:#f1f5f9;">
-        
+
         <label>วันที่แจ้ง</label>
         <input type="date" name="notifyDate" id="notifyDate">
-        
-        <label>บริษัทจำหน่าย</label>
-        <select name="vendorType" id="vendorType" onchange="toggleVendorFields()">
-          <option value="คลินิคยา มอ ออ 3">คลินิคยา มอ ออ 3</option>
-          <option value="อื่นๆ">อื่นๆ</option>
+
+        <label>ประเภทปลายทาง</label>
+        <select id="destinationType" onchange="toggleDestinationFields()">
+          <option value="">-- เลือกประเภทปลายทาง --</option>
+          <option value="สาขา">🏬 สาขา (ส่งต่อระหว่างสาขา)</option>
+          <option value="ปั๊ว">🚚 ปั๊ว (ร้านขายส่งยา)</option>
+          <option value="คลัง">🏢 คลัง (ส่วนกลาง)</option>
+          <option value="บริษัท">🏭 บริษัทจำหน่าย (คืนตรงบริษัท)</option>
         </select>
-        
-        <div id="vendor-extra" class="hidden"><input type="text" name="vendorName" placeholder="ระบุชื่อบริษัท"></div>
-        <label id="doc-label">เลขที่บิลคืน SRN</label>
-        <input type="text" name="docNumber" id="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
-        
-        <div class="notice-box">
-          <input type="checkbox" id="confirmStep1" style="width:18px; height:18px;"> 
-          <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว</span>
+        <p id="dest-locked-note" class="hidden" style="color:var(--text-muted); font-size:0.85rem; margin-top:6px; font-weight:600;">🔒 ปลายทางนี้ได้รับการอนุมัติแล้ว ไม่สามารถแก้ไขประเภท/ชื่อปลายทางได้อีก</p>
+
+        <div id="dest-branch-wrap" class="hidden">
+          <label>สาขาปลายทาง</label>
+          <select id="destBranchSel"></select>
         </div>
-        
+
+        <div id="dest-pump-wrap" class="hidden">
+          <label>ชื่อปั๊ว / ร้านขายส่งยา</label>
+          <input type="text" id="destPumpName" placeholder="ระบุชื่อปั๊ว/ร้านขายส่งยาปลายทาง">
+        </div>
+
+        <div id="dest-warehouse-wrap" class="hidden">
+          <label>ปลายทาง</label>
+          <input type="text" value="คลัง (ส่วนกลาง)" readonly style="background:#f1f5f9; font-weight:700;">
+        </div>
+
+        <div id="dest-company-wrap" class="hidden">
+          <label>บริษัทจำหน่าย</label>
+          <select id="vendorType" name="vendorType" onchange="toggleCompanyFields()">
+            <option value="คลินิคยา มอ ออ 3">คลินิคยา มอ ออ 3</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
+          <div id="vendor-extra" class="hidden"><input type="text" name="vendorName" id="vendorName" placeholder="ระบุชื่อบริษัท"></div>
+        </div>
+
+        <label id="doc-label">เลขที่บิล/เอกสารอ้างอิง</label>
+        <input type="text" name="docNumber" id="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
+
+        <div class="notice-box">
+          <input type="checkbox" id="confirmStep1" style="width:18px; height:18px;">
+          <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันทำสำเนา 2 ชุด (เก็บไว้หน้าสาขา 1 ชุด และแนบส่งพร้อมสินค้า 1 ชุด) เรียบร้อยแล้ว</span>
+        </div>
+
         <div id="product-container"></div>
         <button type="button" class="btn" style="background:#f1f5f9; width:100%; margin-top:15px; border:1px dashed #cbd5e1; color:var(--text-main);" onclick="addProductRow()">+ เพิ่มรายการสินค้าอีก</button>
         <label>หมายเหตุเพิ่มเติม</label>
         <textarea name="notifyNote" placeholder="ระบุหมายเหตุ..."></textarea>
+
+        <div class="notice-box">
+          <input type="checkbox" id="confirmReceivedDest" style="width:18px; height:18px;">
+          <span onclick="document.getElementById('confirmReceivedDest').click()" style="cursor:pointer;">รับเข้าปลายทางแล้ว</span>
+        </div>
       </div>
 
-      <div class="form-section">
+      <div class="form-section" id="part2-section">
         <h3>📦 2. ข้อมูลการรับคืน</h3>
         <label>วันที่รับคืน</label>
         <input type="date" name="returnDate">
         <label>ลงชื่อผู้ส่งคืน</label>
         <input type="text" name="returnStaff" placeholder="ระบุชื่อพนักงาน">
-        
+
         <label>ถ่ายรูปผู้รับคืน / เอกสาร <span id="photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
         <input type="file" id="photoInput" accept="image/*" capture="camera" style="background:white;">
         <p id="old-photo-hint" style="color:var(--warning); font-size:0.85rem; margin-top:5px; display:none; font-weight:600;">⚠️ มีรูปเดิมในระบบแล้ว หากไม่ต้องการเปลี่ยนไฟล์ ไม่ต้องเลือกไฟล์ใหม่</p>
+
+        <label>ลายเซ็นต์ผู้รับคืน</label>
+        <div id="old-signature-hint" style="display:none; margin-bottom:8px;">
+          <img id="old-signature-preview" src="" style="max-height:80px; border:1px solid var(--border); border-radius:8px; padding:5px; background:#fff; display:block; margin-bottom:6px;">
+          <p style="color:var(--warning); font-size:0.85rem; font-weight:600; margin:0;">⚠️ มีลายเซ็นเดิมในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องวาดใหม่</p>
+        </div>
+        <canvas id="signaturePad" class="signature-canvas" width="600" height="200"></canvas>
+        <button type="button" class="btn btn-clear-sig" onclick="clearSignaturePad()">🧹 ล้างลายเซ็น</button>
       </div>
 
-      <div class="form-section">
+      <div class="form-section" id="part3-section">
         <h3>✅ 3. ผลการดำเนินการ</h3>
         <textarea name="actionResult" placeholder="บันทึกผลการติดตาม..."></textarea>
         <label>สถานะสรุป</label>
@@ -187,18 +250,33 @@
           <option value="คืนเงินสด">ได้รับคืนเป็นเงินสดเรียบร้อย</option>
         </select>
         <input type="text" name="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" style="margin-top:15px;">
-        
+
         <div id="step3-notice-box" class="notice-box hidden">
-          <input type="checkbox" id="confirmStep3" style="width:18px; height:18px;"> 
+          <input type="checkbox" id="confirmStep3" style="width:18px; height:18px;">
           <span onclick="document.getElementById('confirmStep3').click()" style="cursor:pointer;">ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขาร่วมกับบิลที่คืน) เรียบร้อยแล้ว</span>
         </div>
       </div>
 
-      <div style="display:flex; gap:15px; margin-bottom:50px;">
+      <div id="actions-pending" class="hidden" style="margin-bottom:50px;">
+        <div id="approval-banner" class="approval-banner hidden"></div>
+        <div id="approve-btn-wrap" class="hidden" style="margin-bottom:12px;"></div>
+        <button type="button" class="btn btn-primary" style="margin:0;" id="btn-request" onclick="submitForm('request')">📨 ส่งคำขอ / บันทึกส่วนที่ 1</button>
+      </div>
+
+      <div id="actions-normal" class="hidden" style="display:flex; gap:15px; margin-bottom:50px;">
         <button type="button" class="btn btn-warning" id="btn-park" onclick="submitForm('park')">⏳ พักบิล</button>
         <button type="button" class="btn btn-success" id="btn-close" onclick="submitForm('close')">✔️ ปิดเคส</button>
       </div>
     </form>
+  </div>
+
+  <div id="page-consolidate" class="page">
+    <div class="top-nav">
+      <button class="btn btn-back" onclick="switchPage('page-dashboard')">◀ กลับ</button>
+      <h3>📊 สรุปคืนบริษัท (รวมทุกสาขา/คลัง)</h3>
+      <div style="width:80px;"></div>
+    </div>
+    <div id="consolidate-container"></div>
   </div>
 </div>
 
@@ -209,6 +287,19 @@
     <div style="display:flex; gap:10px; margin-top:25px;">
       <button class="btn btn-back" style="flex:1;" onclick="closeModal('confirm-login-modal')">ยกเลิก</button>
       <button class="btn btn-primary" style="flex:1; margin:0;" onclick="doLogin()">ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<div class="fullscreen-overlay" id="warehouse-password-modal">
+  <div class="modal-card" style="max-width:350px; text-align:center;">
+    <h3 style="margin-top:0;">🔒 เข้าสู่ระบบคลัง (ส่วนกลาง)</h3>
+    <p style="color:var(--text-muted);">กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบในนามคลัง</p>
+    <input type="password" id="warehouse-password-input" placeholder="รหัสผ่าน" style="text-align:center; font-size:1.1rem; margin-top:10px;" onkeydown="if(event.key==='Enter') checkWarehousePassword()">
+    <p id="warehouse-password-error" class="hidden" style="color:var(--danger); font-weight:600; font-size:0.9rem; margin:10px 0 0;">❌ รหัสผ่านไม่ถูกต้อง</p>
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button class="btn btn-back" style="flex:1;" onclick="closeModal('warehouse-password-modal')">ยกเลิก</button>
+      <button class="btn btn-primary" style="flex:1; margin:0;" onclick="checkWarehousePassword()">ยืนยัน</button>
     </div>
   </div>
 </div>
@@ -245,23 +336,55 @@
   const db = getFirestore(app);
   const GAS_URL = "https://script.google.com/macros/s/AKfycbzkBVH5MaM--bi-zqwaLJYq34uKppcyx720i_eU4y8QzCqk140MSO-2PQ1Kfn1eKfod/exec";
 
+  const BRANCHES = Array.from({ length: 9 }, (_, i) => `สาขา ${i + 1}`);
+  const WAREHOUSE_PASSWORD = "WHcmo1292";
+
   let allData = [];
   let currentBranch = "";
+  let activeTab = "mine";
+  let pendingCaseId = null;
 
-  window.switchPage = (id) => { 
+  // อ่านลิงก์ ?case=DOCID ที่แนบมากับข้อความแจ้งเตือน LINE (ต้อง login ก่อนเสมอ)
+  (function checkDeepLink() {
+    const params = new URLSearchParams(window.location.search);
+    const c = params.get('case');
+    if (c) pendingCaseId = c;
+  })();
+
+  // ================= Navigation =================
+  window.switchPage = (id) => {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
   };
   window.goHome = () => switchPage('page-home');
   window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
   window.confirmLogin = () => {
     const sel = document.getElementById('main-branch-select').value;
-    if(!sel) return alert("กรุณาเลือกสาขาก่อนครับ");
+    if (!sel) return alert("กรุณาเลือกหน่วยงานก่อนครับ");
+
+    if (sel === 'คลัง') {
+      document.getElementById('warehouse-password-input').value = '';
+      document.getElementById('warehouse-password-error').classList.add('hidden');
+      document.getElementById('warehouse-password-modal').style.display = 'flex';
+      setTimeout(() => document.getElementById('warehouse-password-input').focus(), 100);
+      return;
+    }
+
     currentBranch = sel;
     document.getElementById('display-selected-branch').innerText = sel;
     document.getElementById('confirm-login-modal').style.display = 'flex';
+  };
+
+  window.checkWarehousePassword = () => {
+    const pw = document.getElementById('warehouse-password-input').value;
+    if (pw === WAREHOUSE_PASSWORD) {
+      closeModal('warehouse-password-modal');
+      openDashboard('คลัง');
+    } else {
+      document.getElementById('warehouse-password-error').classList.remove('hidden');
+    }
   };
 
   window.doLogin = () => {
@@ -270,13 +393,36 @@
   };
 
   window.openDashboard = async (branchName) => {
+    currentBranch = branchName;
     document.getElementById('dash-title').innerText = "ข้อมูล " + branchName;
-    document.getElementById('filterBranch').value = branchName;
     document.getElementById('form-branch').value = branchName;
+    activeTab = 'mine';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-mine').classList.add('active');
     switchPage('page-dashboard');
     await loadData();
+
+    if (pendingCaseId) {
+      const targetId = pendingCaseId;
+      pendingCaseId = null;
+      window.history.replaceState({}, '', window.location.pathname);
+      const item = allData.find(d => d.id === targetId);
+      if (item) {
+        openFormEdit(targetId);
+      } else {
+        alert('ไม่พบเคสที่ระบุในลิงก์ (อาจถูกลบหรืออนุมัติไปแล้วโดยผู้อื่น)');
+      }
+    }
   };
 
+  window.switchTab = (tab) => {
+    activeTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    applyFilters();
+  };
+
+  // ================= Data loading =================
   async function loadData() {
     document.getElementById('loading-msg').style.display = 'block';
     document.getElementById('table-container').style.display = 'none';
@@ -285,41 +431,74 @@
       const snap = await getDocs(q);
       allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       applyFilters();
-    } catch(e) { document.getElementById('loading-msg').innerText = "Error: " + e.message; }
+    } catch (e) { document.getElementById('loading-msg').innerText = "Error: " + e.message; }
   }
 
   window.applyFilters = () => {
     const search = document.getElementById('filterSearch').value.toLowerCase();
     const status = document.getElementById('filterStatus').value;
-    const branch = document.getElementById('filterBranch').value;
-    const filtered = allData.filter(item => {
-      const vendor = (item.vendorType === 'อื่นๆ' ? (item.vendorName||'') : item.vendorType).toLowerCase();
+
+    let base;
+    if (activeTab === 'approve') {
+      base = allData.filter(item => item.approverBranch === currentBranch && item.status === 'รอปลายทางอนุมัติ');
+    } else {
+      base = allData.filter(item => item.branch === currentBranch);
+    }
+
+    const filtered = base.filter(item => {
+      const destLabel = (item.destinationName || (item.vendorType === 'อื่นๆ' ? (item.vendorName || '') : item.vendorType) || '').toLowerCase();
       const pNames = item.products ? item.products.map(p => p.name).join(' ').toLowerCase() : "";
-      return (vendor.includes(search) || (item.docNumber||'').toLowerCase().includes(search) || pNames.includes(search)) && (status === "" || item.status === status) && (branch === "" || item.branch === branch);
+      return (destLabel.includes(search) || (item.docNumber || '').toLowerCase().includes(search) || pNames.includes(search))
+        && (status === "" || item.status === status);
     });
     renderTable(filtered);
+    updateApproveBadge();
   };
+
+  function updateApproveBadge() {
+    const count = allData.filter(item => item.approverBranch === currentBranch && item.status === 'รอปลายทางอนุมัติ').length;
+    const badgeEl = document.getElementById('approve-badge');
+    if (count > 0) { badgeEl.innerText = count; badgeEl.classList.remove('hidden'); }
+    else badgeEl.classList.add('hidden');
+  }
+
+  function badgeClassFor(status) {
+    if (status === "ปิดเคสแล้ว") return "badge-green";
+    if (status === "ส่งคืนแล้วรอปิดเคส") return "badge-yellow";
+    if (status === "รอปลายทางอนุมัติ") return "badge-purple";
+    return "badge-red";
+  }
 
   function renderTable(data) {
     document.getElementById('loading-msg').style.display = 'none';
     document.getElementById('table-container').style.display = 'block';
     const tbody = document.getElementById('dashboard-tbody');
     tbody.innerHTML = '';
-    
+
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">ไม่มีรายการในหมวดนี้</td></tr>';
+      return;
+    }
+
     data.forEach(item => {
-      const badge = item.status === "ปิดเคสแล้ว" ? "badge-green" : (item.status === "ส่งคืนแล้วรอปิดเคส" ? "badge-yellow" : "badge-red");
-      const vendor = item.vendorType === 'อื่นๆ' ? (item.vendorName || '-') : item.vendorType;
+      const badge = badgeClassFor(item.status);
+      const destLabel = item.destinationName
+        ? `${item.destinationType || ''} • ${item.destinationName}`
+        : (item.vendorType === 'อื่นๆ' ? (item.vendorName || '-') : (item.vendorType || '-'));
       const pSummary = item.products ? item.products.map(p => p.name).join(', ') : "-";
       const total = item.products ? item.products.reduce((sum, p) => sum + (Number(p.qty) || 0), 0) : 0;
+      const canApprove = item.approverBranch === currentBranch && item.status === 'รอปลายทางอนุมัติ';
+
       tbody.innerHTML += `
         <tr>
           <td><small>${item.notifyDate || '-'}</small></td>
-          <td>${vendor}</td>
+          <td>${destLabel}</td>
           <td>${item.docNumber || '-'}</td>
           <td><div style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--primary); font-weight:600;">${pSummary}</div></td>
           <td style="text-align:center; font-weight:700;">${total}</td>
           <td><span class="badge ${badge}">${item.status}</span></td>
           <td style="text-align:center; white-space:nowrap;">
+            ${canApprove ? `<button class="btn-action btn-approve" onclick="approveCase('${item.id}')" title="อนุมัติ">✅</button>` : ''}
             <button class="btn-action btn-view" onclick="showDetails('${item.id}')">👁️</button>
             ${item.status === "ปิดเคสแล้ว"
               ? `<button class="btn-action btn-edit" disabled title="เคสนี้ปิดแล้ว ไม่สามารถแก้ไขได้" style="opacity:0.4; cursor:not-allowed;">🔒</button>`
@@ -330,10 +509,24 @@
     });
   }
 
-  // --- หน้าต่างดูรายละเอียด (👁️) แก้ไขส่วนรูปลิงก์ให้โชว์ครบถ้วน ---
+  // ================= Approve =================
+  window.approveCase = async (id) => {
+    if (!confirm('ยืนยันอนุมัติคำขอนี้ใช่หรือไม่? สาขาต้นทางจะสามารถดำเนินการรับคืนต่อได้ทันที')) return;
+    await updateDoc(doc(db, "returns", id), {
+      status: 'รอรับคืน',
+      approvedBy: currentBranch,
+      approvedAt: serverTimestamp()
+    });
+    await loadData();
+    if (document.getElementById('docId').value === id) {
+      switchPage('page-dashboard');
+    }
+  };
+
+  // ================= Detail Modal =================
   window.showDetails = (id) => {
     const item = allData.find(d => d.id === id);
-    if(!item) return;
+    if (!item) return;
 
     let prodHtml = item.products.map(p => `
       <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--primary); font-size:0.9rem;">
@@ -342,8 +535,6 @@
       </div>`).join('');
 
     let fileInfoHtml = `<div style="color:var(--text-muted); font-style:italic; padding:10px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;">(ยังไม่มีไฟล์อัพโหลด)</div>`;
-    
-    // เงื่อนไขที่ 1: มีทั้งชื่อและ URL ครบถ้วน (โชว์ปุ่มน้ำเงิน)
     if (item.photoUrl && item.photoUrl.trim() !== "" && item.photoUrl !== "undefined") {
       fileInfoHtml = `
         <div style="background:#eff6ff; padding:15px; border-radius:12px; border:1px solid #bfdbfe;">
@@ -352,9 +543,7 @@
             🔗 คลิกลิงก์เพื่อเปิดดูรูปภาพ
           </a>
         </div>`;
-    } 
-    // เงื่อนไขที่ 2: มีชื่อไฟล์ แต่ URL บันทึกไม่ติด (โชว์ปุ่มเหลืองให้ค้นหา)
-    else if (item.fileName && item.fileName.trim() !== "" && item.fileName !== "undefined") {
+    } else if (item.fileName && item.fileName.trim() !== "" && item.fileName !== "undefined") {
       const searchUrl = `https://drive.google.com/drive/u/0/search?q=${encodeURIComponent(item.fileName)}`;
       fileInfoHtml = `
         <div style="background:#fefce8; padding:15px; border-radius:12px; border:1px solid #fde047;">
@@ -366,12 +555,19 @@
         </div>`;
     }
 
+    let sigHtml = `<div style="color:var(--text-muted); font-style:italic; padding:10px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;">(ยังไม่มีลายเซ็น)</div>`;
+    if (item.signatureData) {
+      sigHtml = `<img src="${item.signatureData}" style="max-width:100%; border:1px solid var(--border); border-radius:8px; background:#fff; padding:8px;">`;
+    }
+
     const html = `
       <div class="detail-item"><span class="detail-label">วันที่แจ้งคืน:</span><span class="detail-value">${item.notifyDate}</span></div>
-      <div class="detail-item"><span class="detail-label">สาขา:</span><span class="detail-value">${item.branch}</span></div>
-      <div class="detail-item"><span class="detail-label">บริษัทจำหน่าย:</span><span class="detail-value">${item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType}</span></div>
+      <div class="detail-item"><span class="detail-label">ต้นทาง:</span><span class="detail-value">${item.branch}</span></div>
+      <div class="detail-item"><span class="detail-label">ประเภทปลายทาง:</span><span class="detail-value">${item.destinationType || '-'}</span></div>
+      <div class="detail-item"><span class="detail-label">ปลายทาง:</span><span class="detail-value">${item.destinationName || (item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType) || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
-      
+      ${item.approvedBy ? `<div class="detail-item"><span class="detail-label">อนุมัติโดย:</span><span class="detail-value">${item.approvedBy}</span></div>` : ''}
+
       <div style="margin-top:20px; border-top:1px dashed #cbd5e1; padding-top:15px;">
         <label style="margin:0 0 10px 0; color:var(--primary); display:block;">ชื่อไฟล์รูปถ่ายหลักฐาน:</label>
         ${fileInfoHtml}
@@ -379,11 +575,13 @@
 
       <div style="margin-top:15px;"><label>รายการสินค้าที่คืน:</label>${prodHtml}</div>
       <div style="margin-top:15px;"><label>หมายเหตุแจ้งคืน:</label><div style="background:#fffbeb; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #fde68a;">${item.notifyNote || '-'}</div></div>
-      
+      <div class="detail-item"><span class="detail-label">รับเข้าปลายทางแล้ว:</span><span class="detail-value">${item.confirmReceivedDest === 'YES' ? '✅ ใช่' : '❌ ยังไม่ยืนยัน'}</span></div>
+
       <div style="margin-top:20px; border-top:1px dashed #cbd5e1; padding-top:15px;">
         <div class="detail-item"><span class="detail-label">วันที่รับคืน:</span><span class="detail-value">${item.returnDate || '-'}</span></div>
         <div class="detail-item"><span class="detail-label">ผู้ส่งคืน:</span><span class="detail-value">${item.returnStaff || '-'}</span></div>
       </div>
+      <div style="margin-top:15px;"><label>ลายเซ็นต์ผู้รับคืน:</label>${sigHtml}</div>
       <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
       <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
@@ -394,111 +592,206 @@
   };
 
   window.deleteRecord = async (id) => {
-    if(confirm("⚠️ ลบรายการนี้ใช่หรือไม่?")) {
+    if (confirm("⚠️ ลบรายการนี้ใช่หรือไม่?")) {
       await deleteDoc(doc(db, "returns", id));
       await loadData();
     }
   };
 
-  // --- Logic สลับข้อความ Checkbox ---
-  window.toggleVendorFields = () => {
+  // ================= Destination field toggling =================
+  window.toggleDestinationFields = () => {
+    const type = document.getElementById('destinationType').value;
+    document.getElementById('dest-branch-wrap').classList.toggle('hidden', type !== 'สาขา');
+    document.getElementById('dest-pump-wrap').classList.toggle('hidden', type !== 'ปั๊ว');
+    document.getElementById('dest-warehouse-wrap').classList.toggle('hidden', type !== 'คลัง');
+    document.getElementById('dest-company-wrap').classList.toggle('hidden', type !== 'บริษัท');
+
+    if (type === 'บริษัท') {
+      toggleCompanyFields();
+    } else {
+      document.getElementById('doc-label').innerText = 'เลขที่บิล/เอกสารอ้างอิง';
+      document.getElementById('confirm-text').innerText = 'ยืนยันทำสำเนา 2 ชุด (เก็บไว้หน้าสาขา 1 ชุด และแนบส่งพร้อมสินค้า 1 ชุด) เรียบร้อยแล้ว';
+    }
+    if (type === 'สาขา') refreshDestBranchOptions();
+  };
+
+  function refreshDestBranchOptions() {
+    const sel = document.getElementById('destBranchSel');
+    const origin = document.getElementById('form-branch').value;
+    sel.innerHTML = '<option value="">-- เลือกสาขาปลายทาง --</option>' +
+      BRANCHES.filter(b => b !== origin).map(b => `<option value="${b}">${b}</option>`).join('');
+  }
+
+  window.toggleCompanyFields = () => {
     const v = document.getElementById('vendorType').value;
     const extra = document.getElementById('vendor-extra');
+    extra.classList.toggle('hidden', v !== 'อื่นๆ');
     const label = document.getElementById('doc-label');
     const confirmText = document.getElementById('confirm-text');
-    
-    if(v === 'อื่นๆ') { 
-      extra.classList.remove('hidden'); 
-      label.innerText = 'เลขที่บิลซื้อ'; 
-      if(confirmText) confirmText.innerText = 'ยืนยันแยกเอกสารเอาไว้จนกว่าจะดำเนินการคืนสำเร็จ';
-    } else { 
-      extra.classList.add('hidden'); 
-      label.innerText = 'เลขที่บิลคืน SRN'; 
-      if(confirmText) confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว';
+    if (v === 'อื่นๆ') {
+      label.innerText = 'เลขที่บิลซื้อ';
+      confirmText.innerText = 'ยืนยันแยกเอกสารเอาไว้จนกว่าจะดำเนินการคืนสำเร็จ';
+    } else {
+      label.innerText = 'เลขที่บิลคืน SRN';
+      confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว';
     }
   };
 
   window.toggleStep3Notice = () => {
     const val = document.getElementById('returnType').value;
     const box = document.getElementById('step3-notice-box');
-    if(val === 'ได้รับใบลดหนี้') {
+    if (val === 'ได้รับใบลดหนี้') {
       box.classList.remove('hidden');
-    } else { 
-      box.classList.add('hidden'); 
-      document.getElementById('confirmStep3').checked = false; 
+    } else {
+      box.classList.add('hidden');
+      document.getElementById('confirmStep3').checked = false;
     }
   };
 
+  // ================= Form stage (pending approval vs normal) =================
+  function setDestinationLock(locked) {
+    const ids = ['destinationType', 'destBranchSel', 'destPumpName', 'vendorType', 'vendorName'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = locked;
+    });
+    const note = document.getElementById('dest-locked-note');
+    if (note) note.classList.toggle('hidden', !locked);
+  }
+
+  function setFormStage(stage, item) {
+    const part2 = document.getElementById('part2-section');
+    const part3 = document.getElementById('part3-section');
+    const actionsPending = document.getElementById('actions-pending');
+    const actionsNormal = document.getElementById('actions-normal');
+    const approveBtnWrap = document.getElementById('approve-btn-wrap');
+    const banner = document.getElementById('approval-banner');
+
+    if (stage === 'new' || stage === 'pending') {
+      setDestinationLock(false);
+      part2.classList.add('hidden');
+      part3.classList.add('hidden');
+      actionsNormal.classList.add('hidden');
+      actionsPending.classList.remove('hidden');
+
+      if (stage === 'pending' && item) {
+        banner.classList.remove('hidden');
+        banner.innerText = `⏳ กำลังรอ "${item.approverBranch}" อนุมัติคำขอนี้ก่อน จึงจะบันทึกส่วนที่ 2 และ 3 ต่อได้`;
+        if (item.approverBranch === currentBranch) {
+          approveBtnWrap.classList.remove('hidden');
+          approveBtnWrap.innerHTML = `<button type="button" class="btn" style="background:#16a34a; color:white; width:100%; margin:0;" onclick="approveCase('${item.id}')">✅ อนุมัติคำขอนี้ ในนาม ${currentBranch}</button>`;
+        } else {
+          approveBtnWrap.classList.add('hidden');
+        }
+      } else {
+        banner.classList.add('hidden');
+        approveBtnWrap.classList.add('hidden');
+      }
+    } else {
+      // ปั๊วไม่มีขั้นตอนอนุมัติ จึงไม่ล็อกปลายทาง ให้แก้ไขได้เสมอ
+      const destType = item ? item.destinationType : document.getElementById('destinationType').value;
+      setDestinationLock(destType !== 'ปั๊ว');
+      part2.classList.remove('hidden');
+      part3.classList.remove('hidden');
+      actionsNormal.classList.remove('hidden');
+      actionsPending.classList.add('hidden');
+      banner.classList.add('hidden');
+      approveBtnWrap.classList.add('hidden');
+    }
+  }
+
+  // ================= Open form (new/edit) =================
   window.openFormNew = () => {
-    const b = document.getElementById('filterBranch').value || currentBranch;
     document.getElementById('returnForm').reset();
-    
-    // เคลียร์ค่าซ่อน
-    document.getElementById('form-branch').value = b;
+    document.getElementById('form-branch').value = currentBranch;
     document.getElementById('docId').value = "";
     document.getElementById('oldPhotoUrl').value = "";
     document.getElementById('oldFileName').value = "";
-    
-    // เคลียร์ UI สถานะรูปภาพ
+    document.getElementById('oldSignatureData').value = "";
+
     document.getElementById('photo-status').innerText = "";
     document.getElementById('old-photo-hint').style.display = "none";
+    document.getElementById('old-signature-hint').style.display = "none";
     document.getElementById('step3-notice-box').classList.add('hidden');
 
     document.getElementById('notifyDate').valueAsDate = new Date();
     document.getElementById('product-container').innerHTML = "";
     addProductRow();
-    toggleVendorFields();
+
+    document.getElementById('destinationType').value = "";
+    toggleDestinationFields();
+    clearSignaturePad();
+
+    setFormStage('new');
+    document.getElementById('form-title').innerText = "สร้างรายการใหม่";
     switchPage('page-form');
   };
 
-  // --- ตอนแก้ไขบิล แสดงตัวบอกสถานะรูปภาพ ---
   window.openFormEdit = (id) => {
     const item = allData.find(d => d.id === id);
-    if(item.status === "ปิดเคสแล้ว") {
+    if (item.status === "ปิดเคสแล้ว") {
       alert("🔒 เคสนี้ถูกปิดเรียบร้อยแล้ว ไม่สามารถแก้ไขข้อมูลได้อีก");
       return;
     }
-    document.getElementById('returnForm').reset(); // สำคัญมาก: ล้างไฟล์ที่เลือกค้างไว้
-    
+    document.getElementById('returnForm').reset();
+
     document.getElementById('docId').value = item.id;
     document.getElementById('oldPhotoUrl').value = item.photoUrl || "";
     document.getElementById('oldFileName').value = item.fileName || "";
+    document.getElementById('oldSignatureData').value = item.signatureData || "";
     document.getElementById('form-branch').value = item.branch;
     document.getElementById('notifyDate').value = item.notifyDate || "";
-    document.getElementById('vendorType').value = item.vendorType || "";
-    document.getElementsByName('vendorName')[0].value = item.vendorName || "";
+
+    document.getElementById('destinationType').value = item.destinationType || "";
+    toggleDestinationFields();
+    if (item.destinationType === 'สาขา') document.getElementById('destBranchSel').value = item.destinationName || "";
+    if (item.destinationType === 'ปั๊ว') document.getElementById('destPumpName').value = item.destinationName || "";
+    if (item.destinationType === 'บริษัท') {
+      document.getElementById('vendorType').value = item.vendorType || 'คลินิคยา มอ ออ 3';
+      document.getElementById('vendorName').value = item.vendorName || "";
+      toggleCompanyFields();
+    }
+
     document.getElementById('docNumber').value = item.docNumber || "";
     document.getElementById('confirmStep1').checked = (item.confirmStep1 === "YES");
+    document.getElementById('confirmReceivedDest').checked = (item.confirmReceivedDest === "YES");
     document.getElementsByName('notifyNote')[0].value = item.notifyNote || "";
     document.getElementsByName('returnDate')[0].value = item.returnDate || "";
     document.getElementsByName('returnStaff')[0].value = item.returnStaff || "";
     document.getElementsByName('actionResult')[0].value = item.actionResult || "";
     document.getElementById('returnType').value = item.returnType || "";
     document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
-    
-    // เช็ค checkbox ส่วน 3
-    toggleStep3Notice();
-    if(item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
 
-    // เช็คข้อความสถานะรูปภาพ
+    toggleStep3Notice();
+    if (item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
+
     const hint = document.getElementById('old-photo-hint');
     const statusText = document.getElementById('photo-status');
-    if(item.photoUrl || item.fileName) {
-       statusText.innerText = "(มีรูปเดิมในระบบแล้ว)";
-       hint.style.display = "block";
+    if (item.photoUrl || item.fileName) { statusText.innerText = "(มีรูปเดิมในระบบแล้ว)"; hint.style.display = "block"; }
+    else { statusText.innerText = ""; hint.style.display = "none"; }
+
+    const sigHint = document.getElementById('old-signature-hint');
+    if (item.signatureData) {
+      document.getElementById('old-signature-preview').src = item.signatureData;
+      sigHint.style.display = "block";
     } else {
-       statusText.innerText = "";
-       hint.style.display = "none";
+      sigHint.style.display = "none";
     }
 
-    toggleVendorFields();
     document.getElementById('product-container').innerHTML = "";
     if (item.products) item.products.forEach(p => addProductRow(p));
     else addProductRow();
+
+    clearSignaturePad();
+    document.getElementById('form-title').innerText = "แก้ไขรายการ";
+
+    const stage = item.status === 'รอปลายทางอนุมัติ' ? 'pending' : 'approved';
+    setFormStage(stage, item);
+
     switchPage('page-form');
   };
 
-  window.addProductRow = (p={name:'',qty:'',lot:'',exp:'',reason:''}) => {
+  window.addProductRow = (p = { name: '', qty: '', lot: '', exp: '', reason: '' }) => {
     const div = document.createElement('div');
     div.className = 'product-row';
     div.innerHTML = `
@@ -514,21 +807,98 @@
     document.getElementById('product-container').appendChild(div);
   };
 
+  // ================= Signature Pad =================
+  let sigCtx = null, isDrawingSig = false, hasSigDrawn = false;
+
+  function initSignaturePad() {
+    const canvas = document.getElementById('signaturePad');
+    if (!canvas) return;
+    sigCtx = canvas.getContext('2d');
+    sigCtx.lineWidth = 2.5;
+    sigCtx.lineCap = 'round';
+    sigCtx.strokeStyle = '#1e293b';
+
+    const getPos = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: (clientX - rect.left) * (canvas.width / rect.width), y: (clientY - rect.top) * (canvas.height / rect.height) };
+    };
+    const start = (e) => { isDrawingSig = true; hasSigDrawn = true; const p = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); e.preventDefault(); };
+    const move = (e) => { if (!isDrawingSig) return; const p = getPos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); e.preventDefault(); };
+    const end = () => { isDrawingSig = false; };
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove', move, { passive: false });
+    canvas.addEventListener('touchend', end);
+  }
+
+  window.clearSignaturePad = () => {
+    const canvas = document.getElementById('signaturePad');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSigDrawn = false;
+  };
+
+  document.addEventListener('DOMContentLoaded', initSignaturePad);
+
+  // ================= LINE notification (แจ้งเตือนคลังให้เข้ามาอนุมัติ) =================
+  async function notifyLineApprovalNeeded(caseId, docNumber, branch, destLabel) {
+    try {
+      const link = `${window.location.origin}${window.location.pathname}?case=${caseId}`;
+      const message =
+        `📋 มีคำขอคืนสินค้าใหม่ รอ "คลัง" อนุมัติ\n` +
+        `จากสาขา: ${branch}\n` +
+        `ปลายทาง: ${destLabel || '-'}\n` +
+        `เลขที่บิล: ${docNumber || '-'}\n\n` +
+        `กดลิงก์เพื่อเข้าสู่ระบบ (ต้อง login คลัง) แล้วกดอนุมัติ:\n${link}`;
+
+      await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'notifyLine', message: message })
+      });
+    } catch (e) {
+      // ไม่ block การบันทึกเคสหลัก หากแจ้งเตือน LINE ล้มเหลว
+      console.error('LINE notify failed:', e);
+    }
+  }
+
+  // ================= Submit form =================
   window.submitForm = async (type) => {
     const form = document.getElementById('returnForm');
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
     const docId = data.docId;
 
-    // ป้องกันการบันทึกทับเคสที่ปิดไปแล้ว (กันกรณีเปิดฟอร์มค้างไว้ก่อนที่เคสจะถูกปิด)
-    if(docId) {
-      const existing = allData.find(d => d.id === docId);
-      if(existing && existing.status === "ปิดเคสแล้ว") {
-        alert("🔒 เคสนี้ถูกปิดเรียบร้อยแล้ว ไม่สามารถบันทึกการแก้ไขได้");
-        return;
-      }
+    const existing = docId ? allData.find(d => d.id === docId) : null;
+    if (existing && existing.status === "ปิดเคสแล้ว") {
+      alert("🔒 เคสนี้ถูกปิดเรียบร้อยแล้ว ไม่สามารถบันทึกการแก้ไขได้");
+      return;
     }
-    
+
+    const destType = document.getElementById('destinationType').value;
+    if (!destType) { alert("กรุณาเลือกประเภทปลายทาง"); return; }
+
+    let destName = '';
+    const vendorTypeVal = document.getElementById('vendorType').value;
+    const vendorNameVal = document.getElementById('vendorName').value.trim();
+    if (destType === 'สาขา') destName = document.getElementById('destBranchSel').value;
+    else if (destType === 'ปั๊ว') destName = document.getElementById('destPumpName').value.trim();
+    else if (destType === 'คลัง') destName = 'คลัง';
+    else if (destType === 'บริษัท') destName = vendorTypeVal === 'อื่นๆ' ? vendorNameVal : vendorTypeVal;
+
+    if (destType === 'สาขา' && !destName) { alert("กรุณาเลือกสาขาปลายทาง"); return; }
+    if (destType === 'ปั๊ว' && !destName) { alert("กรุณาระบุชื่อปั๊ว/ร้านขายส่งยา"); return; }
+    if (destType === 'บริษัท' && !destName) { alert("กรุณาระบุชื่อบริษัท"); return; }
+
+    // ปั๊วไม่ต้องรออนุมัติจากคลัง — สร้างเคสแล้วไปรอรับคืนได้เลย
+    const approverBranch = destType === 'สาขา' ? destName : (destType === 'ปั๊ว' ? '' : 'คลัง');
+
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
       data.products.push({
@@ -539,37 +909,41 @@
     });
 
     data.confirmStep1 = document.getElementById('confirmStep1').checked ? "YES" : "NO";
+    data.confirmReceivedDest = document.getElementById('confirmReceivedDest').checked ? "YES" : "NO";
     const isStep3Checked = document.getElementById('confirmStep3').checked;
     data.confirmStep3 = isStep3Checked ? "YES" : "NO";
-    data.status = type === 'close' ? "ปิดเคสแล้ว" : (data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน");
-    
-    if(type === 'close') {
-      if(!data.actionResult || !data.returnType) return alert("กรุณากรอกผลดำเนินการให้ครบถ้วน");
-      if(document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !isStep3Checked) return alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส");
-      if(!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้วใช่หรือไม่?")) return;
+
+    if (type === 'request') {
+      // ปั๊วไม่ต้องรออนุมัติ — ข้ามสถานะ "รอปลายทางอนุมัติ" ไปที่ "รอรับคืน" ได้เลย
+      data.status = destType === 'ปั๊ว' ? "รอรับคืน" : "รอปลายทางอนุมัติ";
+    } else if (type === 'close') {
+      if (!data.actionResult || !data.returnType) { alert("กรุณากรอกผลดำเนินการให้ครบถ้วน"); return; }
+      if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !isStep3Checked) { alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส"); return; }
+      if (!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้วใช่หรือไม่?")) return;
+      data.status = "ปิดเคสแล้ว";
+    } else {
+      data.status = data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน";
     }
 
+    const btnRequest = document.getElementById('btn-request');
     const bPark = document.getElementById('btn-park');
     const bClose = document.getElementById('btn-close');
-    bPark.disabled = true; bClose.disabled = true;
-    bPark.innerText = "กำลังบันทึก...";
+    [btnRequest, bPark, bClose].forEach(b => b && (b.disabled = true));
+    if (bPark) bPark.innerText = "กำลังบันทึก...";
+    if (btnRequest) btnRequest.innerText = "กำลังบันทึก...";
 
     try {
       const fileInput = document.getElementById('photoInput');
       const file = fileInput.files[0];
-      
-      // เก็บค่าเก่าไว้ก่อน ถ้าไม่มีไฟล์ใหม่ จะใช้ตัวนี้บันทึกซ้ำลงไป (จะได้ไม่หาย)
+
       let url = document.getElementById('oldPhotoUrl').value || "";
       let finalFileName = document.getElementById('oldFileName').value || "";
 
-      // ถ้าเลือกไฟล์รูปใหม่
-      if(file) {
-        bPark.innerText = "กำลังอัพโหลดรูป...";
+      if (file) {
+        if (bPark) bPark.innerText = "กำลังอัพโหลดรูป...";
         const base64 = await new Promise(r => {
           const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file);
         });
-
-        // จัดการชื่อไฟล์
         const branchClean = data.branch ? data.branch.replace(/\s+/g, '') : 'Branch';
         const dateClean = data.notifyDate ? data.notifyDate.split('-').reverse().join('') : 'NoDate';
         const docClean = data.docNumber ? data.docNumber.replace(/[^a-zA-Z0-9]/g, '') : 'NoDoc';
@@ -580,43 +954,100 @@
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ base64: base64, fileName: finalFileName, branch: data.branch, year: data.notifyDate ? data.notifyDate.split('-')[0] : new Date().getFullYear().toString() })
         });
-        
         const txt = await response.text();
         const resData = JSON.parse(txt);
-        if(resData.status === 'success') {
-          url = resData.url || "";
-        }
+        if (resData.status === 'success') url = resData.url || "";
       }
 
-      bPark.innerText = "บันทึกฐานข้อมูล...";
+      let signatureData = document.getElementById('oldSignatureData').value || "";
+      if (hasSigDrawn) {
+        signatureData = document.getElementById('signaturePad').toDataURL('image/png');
+      }
+
       const saveData = {
-        branch: data.branch, notifyDate: data.notifyDate, vendorType: data.vendorType,
-        vendorName: data.vendorName || "", docNumber: data.docNumber, confirmStep1: data.confirmStep1, 
-        confirmStep3: data.confirmStep3, notifyNote: data.notifyNote || "", returnDate: data.returnDate || "", 
-        returnStaff: data.returnStaff || "", photoUrl: url, fileName: finalFileName, 
-        actionResult: data.actionResult || "", returnType: data.returnType || "", creditNoteNo: data.creditNoteNo || "", 
+        branch: data.branch, notifyDate: data.notifyDate,
+        destinationType: destType, destinationName: destName, approverBranch: approverBranch,
+        vendorType: destType === 'บริษัท' ? vendorTypeVal : '',
+        vendorName: destType === 'บริษัท' ? vendorNameVal : '',
+        docNumber: data.docNumber, confirmStep1: data.confirmStep1, confirmReceivedDest: data.confirmReceivedDest, confirmStep3: data.confirmStep3,
+        notifyNote: data.notifyNote || "", returnDate: data.returnDate || "",
+        returnStaff: data.returnStaff || "", photoUrl: url, fileName: finalFileName, signatureData: signatureData,
+        actionResult: data.actionResult || "", returnType: data.returnType || "", creditNoteNo: data.creditNoteNo || "",
         products: data.products, status: data.status
       };
 
-      if(docId && docId !== "") {
+      let savedDocId = docId;
+      if (docId && docId !== "") {
         await updateDoc(doc(db, "returns", docId), saveData);
       } else {
         saveData.timestamp = serverTimestamp();
-        await addDoc(collection(db, "returns"), saveData);
+        const newRef = await addDoc(collection(db, "returns"), saveData);
+        savedDocId = newRef.id;
       }
+
+      if (type === 'request' && approverBranch === 'คลัง') {
+        const destLabelForMsg = destType === 'บริษัท' ? (vendorTypeVal === 'อื่นๆ' ? vendorNameVal : vendorTypeVal) : destName;
+        notifyLineApprovalNeeded(savedDocId, data.docNumber, data.branch, destLabelForMsg);
+      }
+
       showSuccess(type);
     } catch (e) { alert("Error: " + e.message); }
-    bPark.disabled = false; bClose.disabled = false; bPark.innerText = "⏳ พักบิล";
+
+    [btnRequest, bPark, bClose].forEach(b => b && (b.disabled = false));
+    if (bPark) bPark.innerText = "⏳ พักบิล";
+    if (btnRequest) btnRequest.innerText = "📨 ส่งคำขอ / บันทึกส่วนที่ 1";
   };
 
   function showSuccess(type) {
     const overlay = document.getElementById('fullscreen-alert');
     const text = document.getElementById('alert-text');
-    if(type === 'close') { text.innerText = "ปิดเคสสำเร็จ"; }
-    else { text.innerText = "พักบิลเรียบร้อย"; }
+    if (type === 'close') text.innerText = "ปิดเคสสำเร็จ";
+    else if (type === 'request') text.innerText = "ส่งคำขอเรียบร้อย รอปลายทางอนุมัติ";
+    else text.innerText = "พักบิลเรียบร้อย";
     overlay.style.display = 'flex';
     setTimeout(async () => { overlay.style.display = 'none'; await loadData(); switchPage('page-dashboard'); }, 1500);
   }
+
+  // ================= Consolidate (คืนบริษัท) =================
+  window.openConsolidate = () => {
+    const groups = {};
+    allData.filter(item => item.destinationType === 'บริษัท').forEach(item => {
+      const key = item.destinationName || '(ไม่ระบุชื่อบริษัท)';
+      if (!groups[key]) groups[key] = { cases: [], totalQty: 0, branches: new Set() };
+      const qty = item.products ? item.products.reduce((s, p) => s + (Number(p.qty) || 0), 0) : 0;
+      groups[key].cases.push(item);
+      groups[key].totalQty += qty;
+      groups[key].branches.add(item.branch);
+    });
+
+    const container = document.getElementById('consolidate-container');
+    const keys = Object.keys(groups);
+    if (keys.length === 0) {
+      container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:40px;">ยังไม่มีรายการคืนตรงบริษัทในระบบ</p>`;
+    } else {
+      container.innerHTML = keys.map(k => {
+        const g = groups[k];
+        const openCount = g.cases.filter(c => c.status !== 'ปิดเคสแล้ว').length;
+        const rows = g.cases.map(c => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f1f5f9; font-size:0.9rem;">
+            <span>${c.branch} • เลขบิล ${c.docNumber || '-'}</span>
+            <span class="badge ${badgeClassFor(c.status)}">${c.status}</span>
+          </div>`).join('');
+        return `
+          <div class="consolidate-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <h3 style="margin:0; color:var(--primary);">${k}</h3>
+              <span style="font-weight:700;">${g.totalQty} ชิ้น จาก ${g.cases.length} เคส (${g.branches.size} หน่วยงาน)</span>
+            </div>
+            ${openCount > 0
+              ? `<p style="color:var(--warning); font-weight:600; margin:0 0 10px;">⏳ ยังไม่ปิดเคส ${openCount} รายการ</p>`
+              : `<p style="color:var(--success); font-weight:600; margin:0 0 10px;">✅ ปิดเคสครบทุกรายการแล้ว</p>`}
+            ${rows}
+          </div>`;
+      }).join('');
+    }
+    switchPage('page-consolidate');
+  };
 </script>
 </body>
 </html>
