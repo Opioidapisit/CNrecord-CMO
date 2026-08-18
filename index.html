@@ -202,10 +202,12 @@
         <label id="doc-label">เลขที่บิล/เอกสารอ้างอิง</label>
         <input type="text" name="docNumber" id="docNumber" placeholder="ระบุเลขที่เอกสาร" required>
 
-        <div class="notice-box">
+        <div class="notice-box" id="step1-notice-box">
           <input type="checkbox" id="confirmStep1" style="width:18px; height:18px;">
           <span id="confirm-text" onclick="document.getElementById('confirmStep1').click()" style="cursor:pointer;">ยืนยันทำสำเนา 2 ชุด (เก็บไว้หน้าสาขา 1 ชุด และแนบส่งพร้อมสินค้า 1 ชุด) เรียบร้อยแล้ว</span>
         </div>
+
+        <p id="product-section-label" class="hidden" style="font-weight:700; margin-top:15px;">รายการสินค้า</p>
 
         <div id="product-container"></div>
         <button type="button" class="btn" style="background:#f1f5f9; width:100%; margin-top:15px; border:1px dashed #cbd5e1; color:var(--text-main);" onclick="addProductRow()">+ เพิ่มรายการสินค้าอีก</button>
@@ -608,7 +610,17 @@
 
     if (type === 'บริษัท') {
       toggleCompanyFields();
+    } else if (type === 'สาขา' || type === 'คลัง') {
+      // สาขา และ คลัง: ไม่ต้องกรอกเลขที่เอกสาร/ยืนยันสำเนา ให้ขึ้นหัวข้อ "รายการสินค้า" แทน
+      document.getElementById('doc-label').classList.add('hidden');
+      document.getElementById('docNumber').classList.add('hidden');
+      document.getElementById('step1-notice-box').classList.add('hidden');
+      document.getElementById('product-section-label').classList.remove('hidden');
     } else {
+      document.getElementById('doc-label').classList.remove('hidden');
+      document.getElementById('docNumber').classList.remove('hidden');
+      document.getElementById('step1-notice-box').classList.remove('hidden');
+      document.getElementById('product-section-label').classList.add('hidden');
       document.getElementById('doc-label').innerText = 'เลขที่บิล/เอกสารอ้างอิง';
       document.getElementById('confirm-text').innerText = 'ยืนยันทำสำเนา 2 ชุด (เก็บไว้หน้าสาขา 1 ชุด และแนบส่งพร้อมสินค้า 1 ชุด) เรียบร้อยแล้ว';
     }
@@ -627,13 +639,23 @@
     const extra = document.getElementById('vendor-extra');
     extra.classList.toggle('hidden', v !== 'อื่นๆ');
     const label = document.getElementById('doc-label');
+    const docInput = document.getElementById('docNumber');
+    const noticeBox = document.getElementById('step1-notice-box');
+    const productLabel = document.getElementById('product-section-label');
     const confirmText = document.getElementById('confirm-text');
     if (v === 'อื่นๆ') {
+      label.classList.remove('hidden');
+      docInput.classList.remove('hidden');
+      noticeBox.classList.remove('hidden');
+      productLabel.classList.add('hidden');
       label.innerText = 'เลขที่บิลซื้อ';
       confirmText.innerText = 'ยืนยันแยกเอกสารเอาไว้จนกว่าจะดำเนินการคืนสำเร็จ';
     } else {
-      label.innerText = 'เลขที่บิลคืน SRN';
-      confirmText.innerText = 'ยืนยันทำสำเนา 2 ชุด (ส่งคลัง/เก็บไว้หน้าสาขา) เรียบร้อยแล้ว';
+      // ปลายทาง มอ ออ 3: ไม่ต้องกรอกเลขบิล/ยืนยันสำเนา ให้ขึ้นหัวข้อ "รายการสินค้า" แทน
+      label.classList.add('hidden');
+      docInput.classList.add('hidden');
+      noticeBox.classList.add('hidden');
+      productLabel.classList.remove('hidden');
     }
   };
 
