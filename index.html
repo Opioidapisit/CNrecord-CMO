@@ -710,9 +710,8 @@
         approveBtnWrap.classList.add('hidden');
       }
     } else {
-      // ปั๊วไม่มีขั้นตอนอนุมัติ จึงไม่ล็อกปลายทาง ให้แก้ไขได้เสมอ
-      const destType = item ? item.destinationType : document.getElementById('destinationType').value;
-      setDestinationLock(destType !== 'ปั๊ว');
+      // อนุญาตให้แก้ไขปลายทางได้แม้อนุมัติแล้ว
+      setDestinationLock(false);
       part2.classList.remove('hidden');
       part3.classList.remove('hidden');
       actionsNormal.classList.remove('hidden');
