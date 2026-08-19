@@ -532,6 +532,7 @@
 
     let prodHtml = item.products.map(p => `
       <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--primary); font-size:0.9rem;">
+        ${(p.fromBranch || p.billNo) ? `<div style="color:var(--purple); font-weight:700; margin-bottom:4px;">จากสาขา: ${p.fromBranch || '-'} | เลขที่บิล: ${p.billNo || '-'}</div>` : ''}
         <b>📦 สินค้า: ${p.name}</b><br>
         จำนวน: ${p.qty} | LOT: ${p.lot} | EXP: ${p.exp} | สาเหตุ: ${p.reason}
       </div>`).join('');
@@ -625,7 +626,22 @@
       document.getElementById('confirm-text').innerText = 'ยืนยันทำสำเนา 2 ชุด (เก็บไว้หน้าสาขา 1 ชุด และแนบส่งพร้อมสินค้า 1 ชุด) เรียบร้อยแล้ว';
     }
     if (type === 'สาขา') refreshDestBranchOptions();
+    updateProductBillFieldsVisibility();
   };
+
+  // เฉพาะต้นทาง "คลัง" ที่คืนตรงไปยัง "บริษัท" -> "อื่นๆ" เท่านั้น ที่ต้องระบุ จากสาขา/เลขที่บิล แยกรายชิ้น
+  // (คลัง -> บริษัท -> คลินิคยา มอ ออ 3 ให้คงแบบเดิม ไม่ต้องมีช่องนี้)
+  function shouldShowBillFields() {
+    const origin = document.getElementById('form-branch').value;
+    const destType = document.getElementById('destinationType').value;
+    const vendorTypeVal = document.getElementById('vendorType') ? document.getElementById('vendorType').value : '';
+    return origin === 'คลัง' && destType === 'บริษัท' && vendorTypeVal === 'อื่นๆ';
+  }
+
+  function updateProductBillFieldsVisibility() {
+    const show = shouldShowBillFields();
+    document.querySelectorAll('#product-container .bill-fields-wrap').forEach(el => el.classList.toggle('hidden', !show));
+  }
 
   function refreshDestBranchOptions() {
     const sel = document.getElementById('destBranchSel');
@@ -643,7 +659,8 @@
     const noticeBox = document.getElementById('step1-notice-box');
     const productLabel = document.getElementById('product-section-label');
     const confirmText = document.getElementById('confirm-text');
-    if (v === 'อื่นๆ') {
+    const origin = document.getElementById('form-branch').value;
+    if (v === 'อื่นๆ' && origin !== 'คลัง') {
       label.classList.remove('hidden');
       docInput.classList.remove('hidden');
       noticeBox.classList.remove('hidden');
@@ -651,12 +668,14 @@
       label.innerText = 'เลขที่บิลซื้อ';
       confirmText.innerText = 'ยืนยันแยกเอกสารเอาไว้จนกว่าจะดำเนินการคืนสำเร็จ';
     } else {
-      // ปลายทาง มอ ออ 3: ไม่ต้องกรอกเลขบิล/ยืนยันสำเนา ให้ขึ้นหัวข้อ "รายการสินค้า" แทน
+      // ปลายทาง มอ ออ 3 (ทุกต้นทาง) หรือ ต้นทางคลัง -> บริษัท -> อื่นๆ (เลขที่บิลย้ายไปอยู่ในรายการสินค้าแทน)
+      // ไม่ต้องกรอกเลขบิล/ยืนยันสำเนาในช่องกลาง ให้ขึ้นหัวข้อ "รายการสินค้า" แทน
       label.classList.add('hidden');
       docInput.classList.add('hidden');
       noticeBox.classList.add('hidden');
       productLabel.classList.remove('hidden');
     }
+    updateProductBillFieldsVisibility();
   };
 
   window.toggleStep3Notice = () => {
@@ -710,8 +729,10 @@
         approveBtnWrap.classList.add('hidden');
       }
     } else {
-      // อนุญาตให้แก้ไขปลายทางได้แม้อนุมัติแล้ว
-      setDestinationLock(false);
+      // ปั๊ว และต้นทางคลัง ไม่มีขั้นตอนอนุมัติ จึงไม่ล็อกปลายทาง ให้แก้ไขได้เสมอ
+      const destType = item ? item.destinationType : document.getElementById('destinationType').value;
+      const originBranch = item ? item.branch : document.getElementById('form-branch').value;
+      setDestinationLock(destType !== 'ปั๊ว' && originBranch !== 'คลัง');
       part2.classList.remove('hidden');
       part3.classList.remove('hidden');
       actionsNormal.classList.remove('hidden');
@@ -812,10 +833,19 @@
     switchPage('page-form');
   };
 
-  window.addProductRow = (p = { name: '', qty: '', lot: '', exp: '', reason: '' }) => {
+  window.addProductRow = (p = { name: '', qty: '', lot: '', exp: '', reason: '', fromBranch: '', billNo: '' }) => {
     const div = document.createElement('div');
     div.className = 'product-row';
+    const showBill = shouldShowBillFields();
+    const fromBranchOptions = BRANCHES.map(b => `<option value="${b}" ${p.fromBranch === b ? 'selected' : ''}>${b}</option>`).join('');
     div.innerHTML = `
+      <div class="bill-fields-wrap${showBill ? '' : ' hidden'}" style="display:flex; gap:10px; margin-bottom:10px;">
+        <select class="p-frombranch" style="flex:1;">
+          <option value="">-- จากสาขา --</option>
+          ${fromBranchOptions}
+        </select>
+        <input type="text" class="p-billno" placeholder="เลขที่บิล" value="${p.billNo || ''}" style="flex:1;">
+      </div>
       <input type="text" class="p-name" placeholder="ชื่อสินค้า" value="${p.name}">
       <div style="display:flex; gap:10px; margin-top:10px;">
         <input type="number" class="p-qty" placeholder="จำนวน" value="${p.qty}" style="flex:1;">
@@ -934,15 +964,19 @@
     if (destType === 'ปั๊ว' && !destName) { alert("กรุณาระบุชื่อปั๊ว/ร้านขายส่งยา"); return; }
     if (destType === 'บริษัท' && !destName) { alert("กรุณาระบุชื่อบริษัท"); return; }
 
-    // ปั๊วไม่ต้องรออนุมัติจากคลัง — สร้างเคสแล้วไปรอรับคืนได้เลย
-    const approverBranch = destType === 'สาขา' ? destName : (destType === 'ปั๊ว' ? '' : 'คลัง');
+    // ปั๊วไม่ต้องรออนุมัติจากคลัง / ต้นทางคลังไม่ต้องขออนุมัติปลายทางทุกกรณี — สร้างเคสแล้วไปรอรับคืนได้เลย
+    const approverBranch = (data.branch === 'คลัง')
+      ? ''
+      : (destType === 'สาขา' ? destName : (destType === 'ปั๊ว' ? '' : 'คลัง'));
 
     data.products = [];
     document.querySelectorAll('.product-row').forEach(row => {
       data.products.push({
         name: row.querySelector('.p-name').value, qty: row.querySelector('.p-qty').value,
         lot: row.querySelector('.p-lot').value, exp: row.querySelector('.p-exp').value,
-        reason: row.querySelector('.p-reason').value
+        reason: row.querySelector('.p-reason').value,
+        fromBranch: row.querySelector('.p-frombranch') ? row.querySelector('.p-frombranch').value : '',
+        billNo: row.querySelector('.p-billno') ? row.querySelector('.p-billno').value : ''
       });
     });
 
@@ -952,8 +986,8 @@
     data.confirmStep3 = isStep3Checked ? "YES" : "NO";
 
     if (type === 'request') {
-      // ปั๊วไม่ต้องรออนุมัติ — ข้ามสถานะ "รอปลายทางอนุมัติ" ไปที่ "รอรับคืน" ได้เลย
-      data.status = destType === 'ปั๊ว' ? "รอรับคืน" : "รอปลายทางอนุมัติ";
+      // ปั๊ว หรือ ต้นทางคลัง ไม่ต้องรออนุมัติ — ข้ามสถานะ "รอปลายทางอนุมัติ" ไปที่ "รอรับคืน" ได้เลย
+      data.status = (destType === 'ปั๊ว' || data.branch === 'คลัง') ? "รอรับคืน" : "รอปลายทางอนุมัติ";
     } else if (type === 'close') {
       if (!data.actionResult || !data.returnType) { alert("กรุณากรอกผลดำเนินการให้ครบถ้วน"); return; }
       if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !isStep3Checked) { alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส"); return; }
