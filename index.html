@@ -104,7 +104,7 @@
 
   <div id="page-dashboard" class="page">
     <div class="top-nav">
-      <button class="btn btn-back" onclick="goHome()">◀ หน้าแรก</button>
+      <button class="btn btn-back" onclick="goHome()">🚪 ออกจากระบบ</button>
       <h3 id="dash-title">Dashboard</h3>
       <div style="width:100px;"></div>
     </div>
@@ -250,8 +250,12 @@
           <option value="ได้รับใบลดหนี้">ได้รับใบลดหนี้แล้ว</option>
           <option value="เปลี่ยนสินค้า">ได้รับการเปลี่ยนสินค้าเรียบร้อย</option>
           <option value="คืนเงินสด">ได้รับคืนเป็นเงินสดเรียบร้อย</option>
+          <option value="สาขาได้รับสินค้าหมุนเวียน">สาขาได้รับสินค้าหมุนเวียน</option>
+          <option value="สาขาขอแบ่ง">สาขาขอแบ่ง</option>
+          <option value="อื่นๆ(ระบุ)">อื่นๆ (ระบุ)</option>
         </select>
         <input type="text" name="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" style="margin-top:15px;">
+        <input type="text" name="returnTypeOther" id="returnTypeOther" placeholder="ระบุรายละเอียดเพิ่มเติม" class="hidden" style="margin-top:15px;">
 
         <div id="step3-notice-box" class="notice-box hidden">
           <input type="checkbox" id="confirmStep3" style="width:18px; height:18px;">
@@ -340,6 +344,7 @@
 
   const BRANCHES = Array.from({ length: 9 }, (_, i) => `สาขา ${i + 1}`);
   const WAREHOUSE_PASSWORD = "WHcmo1292";
+  const SESSION_KEY = "cmo_cn_session_branch";
 
   let allData = [];
   let currentBranch = "";
@@ -359,7 +364,15 @@
     document.getElementById(id).classList.add('active');
     window.scrollTo(0, 0);
   };
-  window.goHome = () => switchPage('page-home');
+
+  // "ออกจากระบบ" จริง ๆ: ล้าง session ที่บันทึกไว้ แล้วกลับหน้าแรกให้เลือกหน่วยงานใหม่
+  window.goHome = () => {
+    if (!confirm('ยืนยันออกจากระบบใช่หรือไม่? ครั้งถัดไปจะต้องเลือกหน่วยงานใหม่')) return;
+    localStorage.removeItem(SESSION_KEY);
+    currentBranch = "";
+    switchPage('page-home');
+  };
+
   window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
   window.confirmLogin = () => {
@@ -396,6 +409,9 @@
 
   window.openDashboard = async (branchName) => {
     currentBranch = branchName;
+    // บันทึกหน่วยงานที่ล็อกอินไว้ใน localStorage เพื่อให้ F5 แล้วไม่ต้องเข้าสู่ระบบใหม่
+    localStorage.setItem(SESSION_KEY, branchName);
+
     document.getElementById('dash-title').innerText = "ข้อมูล " + branchName;
     document.getElementById('form-branch').value = branchName;
     activeTab = 'mine';
@@ -586,7 +602,7 @@
       </div>
       <div style="margin-top:15px;"><label>ลายเซ็นต์ผู้รับคืน:</label>${sigHtml}</div>
       <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
-      <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}</span></div>
+      <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}${item.returnType === 'อื่นๆ(ระบุ)' && item.returnTypeOther ? ' (' + item.returnTypeOther + ')' : ''}</span></div>
       <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value"><b>${item.status}</b></span></div>
     `;
@@ -686,6 +702,14 @@
     } else {
       box.classList.add('hidden');
       document.getElementById('confirmStep3').checked = false;
+    }
+
+    const otherInput = document.getElementById('returnTypeOther');
+    if (val === 'อื่นๆ(ระบุ)') {
+      otherInput.classList.remove('hidden');
+    } else {
+      otherInput.classList.add('hidden');
+      otherInput.value = '';
     }
   };
 
@@ -805,6 +829,7 @@
     document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
 
     toggleStep3Notice();
+    document.getElementById('returnTypeOther').value = item.returnTypeOther || "";
     if (item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
 
     const hint = document.getElementById('old-photo-hint');
@@ -848,7 +873,7 @@
       </div>
       <input type="text" class="p-name" placeholder="ชื่อสินค้า" value="${p.name}">
       <div style="display:flex; gap:10px; margin-top:10px;">
-        <input type="number" class="p-qty" placeholder="จำนวน" value="${p.qty}" style="flex:1;">
+        <input type="text" inputmode="numeric" class="p-qty" placeholder="จำนวน" value="${p.qty}" style="flex:1;">
         <input type="text" class="p-lot" placeholder="LOT" value="${p.lot}" style="flex:2;">
       </div>
       <div style="display:flex; gap:10px; margin-top:10px;">
@@ -1044,7 +1069,7 @@
         docNumber: data.docNumber, confirmStep1: data.confirmStep1, confirmReceivedDest: data.confirmReceivedDest, confirmStep3: data.confirmStep3,
         notifyNote: data.notifyNote || "", returnDate: data.returnDate || "",
         returnStaff: data.returnStaff || "", photoUrl: url, fileName: finalFileName, signatureData: signatureData,
-        actionResult: data.actionResult || "", returnType: data.returnType || "", creditNoteNo: data.creditNoteNo || "",
+        actionResult: data.actionResult || "", returnType: data.returnType || "", returnTypeOther: data.returnTypeOther || "", creditNoteNo: data.creditNoteNo || "",
         products: data.products, status: data.status
       };
 
@@ -1126,6 +1151,19 @@
     }
     switchPage('page-consolidate');
   };
+
+  // ================= Restore session on load (F5 ไม่ต้องเข้าสู่ระบบใหม่) =================
+  (function restoreSession() {
+    const saved = localStorage.getItem(SESSION_KEY);
+    if (saved) {
+      // openDashboard ต้องรอให้ DOM พร้อมก่อน (ใช้ document.getElementById หลายจุด)
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => openDashboard(saved));
+      } else {
+        openDashboard(saved);
+      }
+    }
+  })();
 </script>
 </body>
 </html>
