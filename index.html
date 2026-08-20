@@ -254,7 +254,7 @@
           <option value="สาขาขอแบ่ง">สาขาขอแบ่ง</option>
           <option value="อื่นๆ(ระบุ)">อื่นๆ (ระบุ)</option>
         </select>
-        <input type="text" name="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" style="margin-top:15px;">
+        <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" class="hidden" style="margin-top:15px;">
         <input type="text" name="returnTypeOther" id="returnTypeOther" placeholder="ระบุรายละเอียดเพิ่มเติม" class="hidden" style="margin-top:15px;">
 
         <div id="step3-notice-box" class="notice-box hidden">
@@ -704,6 +704,14 @@
       document.getElementById('confirmStep3').checked = false;
     }
 
+    const creditInput = document.getElementById('creditNoteNo');
+    if (val === 'ได้รับใบลดหนี้') {
+      creditInput.classList.remove('hidden');
+    } else {
+      creditInput.classList.add('hidden');
+      creditInput.value = '';
+    }
+
     const otherInput = document.getElementById('returnTypeOther');
     if (val === 'อื่นๆ(ระบุ)') {
       otherInput.classList.remove('hidden');
@@ -826,9 +834,9 @@
     document.getElementsByName('returnStaff')[0].value = item.returnStaff || "";
     document.getElementsByName('actionResult')[0].value = item.actionResult || "";
     document.getElementById('returnType').value = item.returnType || "";
-    document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
 
     toggleStep3Notice();
+    document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
     document.getElementById('returnTypeOther').value = item.returnTypeOther || "";
     if (item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
 
