@@ -178,6 +178,8 @@
         <div id="dest-branch-wrap" class="hidden">
           <label>สาขาปลายทาง</label>
           <select id="destBranchSel"></select>
+          <label>เลขที่บิลส่งคืน (SRN)</label>
+          <input type="text" id="srnNumber" placeholder="ระบุเลขที่บิลส่งคืน SRN">
         </div>
 
         <div id="dest-pump-wrap" class="hidden">
@@ -585,6 +587,7 @@
       <div class="detail-item"><span class="detail-label">ประเภทปลายทาง:</span><span class="detail-value">${item.destinationType || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">ปลายทาง:</span><span class="detail-value">${item.destinationName || (item.vendorType === 'อื่นๆ' ? item.vendorName : item.vendorType) || '-'}</span></div>
       <div class="detail-item"><span class="detail-label">เลขที่บิล:</span><span class="detail-value">${item.docNumber}</span></div>
+      ${item.destinationType === 'สาขา' ? `<div class="detail-item"><span class="detail-label">เลขที่บิลส่งคืน (SRN):</span><span class="detail-value">${item.srnNumber || '-'}</span></div>` : ''}
       ${item.approvedBy ? `<div class="detail-item"><span class="detail-label">อนุมัติโดย:</span><span class="detail-value">${item.approvedBy}</span></div>` : ''}
 
       <div style="margin-top:20px; border-top:1px dashed #cbd5e1; padding-top:15px;">
@@ -818,7 +821,10 @@
 
     document.getElementById('destinationType').value = item.destinationType || "";
     toggleDestinationFields();
-    if (item.destinationType === 'สาขา') document.getElementById('destBranchSel').value = item.destinationName || "";
+    if (item.destinationType === 'สาขา') {
+      document.getElementById('destBranchSel').value = item.destinationName || "";
+      document.getElementById('srnNumber').value = item.srnNumber || "";
+    }
     if (item.destinationType === 'ปั๊ว') document.getElementById('destPumpName').value = item.destinationName || "";
     if (item.destinationType === 'บริษัท') {
       document.getElementById('vendorType').value = item.vendorType || 'คลินิคยา มอ ออ 3';
@@ -994,6 +1000,7 @@
     else if (destType === 'บริษัท') destName = vendorTypeVal === 'อื่นๆ' ? vendorNameVal : vendorTypeVal;
 
     if (destType === 'สาขา' && !destName) { alert("กรุณาเลือกสาขาปลายทาง"); return; }
+    const srnVal = document.getElementById('srnNumber') ? document.getElementById('srnNumber').value.trim() : '';
     if (destType === 'ปั๊ว' && !destName) { alert("กรุณาระบุชื่อปั๊ว/ร้านขายส่งยา"); return; }
     if (destType === 'บริษัท' && !destName) { alert("กรุณาระบุชื่อบริษัท"); return; }
 
@@ -1072,6 +1079,7 @@
       const saveData = {
         branch: data.branch, notifyDate: data.notifyDate,
         destinationType: destType, destinationName: destName, approverBranch: approverBranch,
+        srnNumber: destType === 'สาขา' ? srnVal : '',
         vendorType: destType === 'บริษัท' ? vendorTypeVal : '',
         vendorName: destType === 'บริษัท' ? vendorNameVal : '',
         docNumber: data.docNumber, confirmStep1: data.confirmStep1, confirmReceivedDest: data.confirmReceivedDest, confirmStep3: data.confirmStep3,
