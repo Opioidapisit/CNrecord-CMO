@@ -50,6 +50,15 @@
     .badge-yellow { background: #fef3c7; color: #92400e; }
     .badge-green { background: #d1fae5; color: #065f46; }
     .badge-purple { background: #ede9fe; color: #5b21b6; }
+    .badge-orange { background: #ffedd5; color: #9a3412; }
+    .p2-step.locked { opacity: .45; pointer-events: none; }
+    .p2-step-num { display:inline-flex; width:22px; height:22px; border-radius:50%; background:#e2e8f0; color:#475569; font-size:.8rem; font-weight:700; align-items:center; justify-content:center; margin-right:6px; }
+    .p2-step.done .p2-step-num { background: var(--success); color:#fff; }
+    .p2-status-box { margin-top:18px; padding:14px; border:1px solid var(--border); border-radius:12px; background:#f8fafc; }
+    .p2-status-box label.opt { display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:10px; cursor:pointer; font-weight:600; margin:0; }
+    .p2-status-box label.opt.disabled { opacity:.45; cursor:not-allowed; }
+    .p2-status-box input { width:18px; height:18px; margin-top:2px; flex-shrink:0; }
+    .p2-hint { font-size:.85rem; color:var(--text-muted); margin:6px 0 0 0; }
 
     .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; }
     .btn-view { background: #f1f5f9; color: #475569; margin-right: 5px; }
@@ -123,6 +132,7 @@
         <option value="รอปลายทางอนุมัติ">🟣 รอปลายทางอนุมัติ</option>
         <option value="รอรับคืน">🔴 รอรับคืน</option>
         <option value="ส่งคืนแล้วรอปิดเคส">🟡 รอปิดเคส</option>
+        <option value="ไม่รับคืนสินค้า">🟠 ไม่รับคืนสินค้า</option>
         <option value="ปิดเคสแล้ว">🟢 ปิดเคสแล้ว</option>
       </select>
       <select id="sortBy" onchange="applyFilters()">
@@ -231,22 +241,49 @@
 
       <div class="form-section" id="part2-section">
         <h3>📦 2. ข้อมูลการรับคืน</h3>
-        <label>วันที่รับคืน</label>
+        <p id="p2-flow-hint" class="p2-hint hidden" style="margin:-8px 0 12px 0;">กรอกทีละขั้นตามลำดับ ขั้นถัดไปจะเปิดเมื่อกรอกขั้นก่อนหน้าครบ</p>
+        <div class="p2-step" id="p2-step1">
+        <label><span class="p2-step-num">1</span>วันที่รับคืน</label>
         <input type="date" name="returnDate">
-        <label>ลงชื่อผู้ส่งคืน</label>
+        </div>
+        <div class="p2-step" id="p2-step2">
+        <label><span class="p2-step-num">2</span>ลงชื่อผู้ส่งคืน</label>
         <input type="text" name="returnStaff" placeholder="ระบุชื่อพนักงาน">
+        </div>
 
-        <label>ถ่ายรูปผู้รับคืน / เอกสาร <span id="photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
+        <div class="p2-step" id="p2-step3">
+        <label><span class="p2-step-num">3</span>ถ่ายรูปผู้รับคืน / เอกสาร <span id="photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
         <input type="file" id="photoInput" accept="image/*" style="background:white;">
         <p id="old-photo-hint" style="color:var(--warning); font-size:0.85rem; margin-top:5px; display:none; font-weight:600;">⚠️ มีรูปเดิมในระบบแล้ว หากไม่ต้องการเปลี่ยนไฟล์ ไม่ต้องเลือกไฟล์ใหม่</p>
 
-        <label>ลายเซ็นต์ผู้รับคืน</label>
+        </div>
+        <div class="p2-step" id="p2-step4">
+        <label><span class="p2-step-num">4</span>ลายเซ็นต์ผู้รับคืน</label>
         <div id="old-signature-hint" style="display:none; margin-bottom:8px;">
           <img id="old-signature-preview" src="" style="max-height:80px; border:1px solid var(--border); border-radius:8px; padding:5px; background:#fff; display:block; margin-bottom:6px;">
           <p style="color:var(--warning); font-size:0.85rem; font-weight:600; margin:0;">⚠️ มีลายเซ็นเดิมในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องวาดใหม่</p>
         </div>
         <canvas id="signaturePad" class="signature-canvas" width="600" height="200"></canvas>
         <button type="button" class="btn btn-clear-sig" onclick="clearSignaturePad()">🧹 ล้างลายเซ็น</button>
+        </div>
+
+        <!-- เฉพาะ คลัง >> บริษัท -->
+        <div id="p2-status-box" class="p2-status-box p2-step hidden">
+          <label style="margin-top:0;"><span class="p2-step-num">5</span>สถานะการรับสินค้า</label>
+          <label class="opt" id="opt-picked"><input type="radio" name="rcvStatus" id="rcvPicked" value="picked" onchange="onReceiverStatusChange(this)"> 🚚 ผู้แทน/บริษัทขนส่ง รับสินค้าไปแล้ว</label>
+          <label class="opt" id="opt-rejected"><input type="radio" name="rcvStatus" id="rcvRejected" value="rejected" onchange="onReceiverStatusChange(this)"> ↩️ ผู้แทน/บริษัทไม่รับคืนสินค้า (สินค้าตีกลับ)</label>
+          <p class="p2-hint" id="rejected-hint">* เลือก "สินค้าตีกลับ" ได้หลังจากบันทึกว่าส่งสินค้าไปแล้วเท่านั้น</p>
+
+          <div id="p2-reject-box" class="hidden" style="margin-top:12px; padding:12px; border-radius:10px; background:#fff7ed; border:1px solid #fed7aa;">
+            <div style="font-weight:700; color:#9a3412; margin-bottom:6px;">↩️ หลักฐานสินค้าตีกลับ</div>
+            <label style="margin-top:0;">วันที่สินค้ากลับเข้าคลัง</label>
+            <input type="date" id="rejectDate">
+            <label>รูปสินค้าที่ตีกลับ <span id="reject-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
+            <input type="file" id="rejectPhotoInput" accept="image/*" style="background:white;">
+            <input type="hidden" id="oldRejectPhotoUrl">
+            <p id="old-reject-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600;">⚠️ มีรูปสินค้าตีกลับในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่</p>
+          </div>
+        </div>
       </div>
 
       <div class="form-section" id="part3-section">
@@ -261,6 +298,7 @@
           <option value="คืนเงินสด">ได้รับคืนเป็นเงินสดเรียบร้อย</option>
           <option value="สาขาได้รับสินค้าหมุนเวียน">สาขาได้รับสินค้าหมุนเวียน</option>
           <option value="สาขาขอแบ่ง">สาขาขอแบ่ง</option>
+          <option value="สินค้าตีกลับเข้าคลัง">สินค้าตีกลับเข้าคลัง</option>
           <option value="อื่นๆ(ระบุ)">อื่นๆ (ระบุ)</option>
         </select>
         <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" class="hidden" style="margin-top:15px;">
@@ -505,6 +543,7 @@
     if (status === "ปิดเคสแล้ว") return "badge-green";
     if (status === "ส่งคืนแล้วรอปิดเคส") return "badge-yellow";
     if (status === "รอปลายทางอนุมัติ") return "badge-purple";
+    if (status === "ไม่รับคืนสินค้า") return "badge-orange";
     return "badge-red";
   }
 
@@ -623,6 +662,7 @@
       <div style="margin-top:20px; border-top:1px dashed #cbd5e1; padding-top:15px;">
         <div class="detail-item"><span class="detail-label">วันที่รับคืน:</span><span class="detail-value">${item.returnDate || '-'}</span></div>
         <div class="detail-item"><span class="detail-label">ผู้ส่งคืน:</span><span class="detail-value">${item.returnStaff || '-'}</span></div>
+        ${item.receiverStatus === 'rejected' ? `<div class="detail-item"><span class="detail-label">↩️ สินค้าตีกลับเข้าคลัง:</span><span class="detail-value">${item.rejectDate || '-'} ${item.rejectPhotoUrl ? `| <a href="${item.rejectPhotoUrl}" target="_blank">🔗 ดูรูปสินค้าตีกลับ</a>` : ''}</span></div>` : ''}
       </div>
       <div style="margin-top:15px;"><label>ลายเซ็นต์ผู้รับคืน:</label>${sigHtml}</div>
       <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
@@ -647,6 +687,55 @@
   };
 
   // ================= Destination field toggling =================
+  // ================= ส่วนที่ 2: คลัง >> บริษัท (กรอกทีละขั้น + สถานะการรับสินค้า) =================
+  let savedReceiverStatus = '';   // สถานะที่บันทึกไว้แล้วในระบบ ใช้ตรวจว่าติ๊ก "ตีกลับ" ได้หรือยัง
+  function isWarehouseToCompany() {
+    return document.getElementById('form-branch').value === 'คลัง'
+      && document.getElementById('destinationType').value === 'บริษัท';
+  }
+  window.onReceiverStatusChange = () => refreshPart2Flow();
+  function hasRejectEvidence() {
+    return !!document.getElementById('rejectDate').value
+      && !!(document.getElementById('rejectPhotoInput').files.length || document.getElementById('oldRejectPhotoUrl').value);
+  }
+  window.refreshPart2Flow = () => {
+    const flow = isWarehouseToCompany();
+    const steps = ['p2-step1','p2-step2','p2-step3','p2-step4'].map(id => document.getElementById(id));
+    const box = document.getElementById('p2-status-box');
+    const part3 = document.getElementById('part3-section');
+    const part2Visible = !document.getElementById('part2-section').classList.contains('hidden');
+    document.getElementById('p2-flow-hint').classList.toggle('hidden', !flow);
+    box.classList.toggle('hidden', !flow);
+    if (!flow) {
+      steps.forEach(st => st.classList.remove('locked', 'done'));
+      if (part2Visible) part3.classList.remove('hidden');
+      return;
+    }
+    const done = [
+      !!document.getElementsByName('returnDate')[0].value,
+      !!document.getElementsByName('returnStaff')[0].value.trim(),
+      !!(document.getElementById('photoInput').files.length || document.getElementById('oldPhotoUrl').value || document.getElementById('oldFileName').value),
+      !!(hasSigDrawn || document.getElementById('oldSignatureData').value)
+    ];
+    let open = true;
+    steps.forEach((st, i) => { st.classList.toggle('locked', !open); st.classList.toggle('done', open && done[i]); open = open && done[i]; });
+    box.classList.toggle('locked', !open);
+    // "ตีกลับ" ติ๊กได้เมื่อเคยบันทึกว่าส่งไปแล้วเท่านั้น
+    const canReject = savedReceiverStatus === 'picked' || savedReceiverStatus === 'rejected';
+    const rej = document.getElementById('rcvRejected');
+    rej.disabled = !canReject;
+    if (!canReject) rej.checked = false;
+    document.getElementById('opt-rejected').classList.toggle('disabled', !canReject);
+    document.getElementById('rejected-hint').classList.toggle('hidden', canReject);
+    document.getElementById('p2-reject-box').classList.toggle('hidden', !rej.checked);
+    // ตีกลับ: ต้องกรอกวันที่กลับเข้าคลัง + รูปสินค้าตีกลับก่อน จึงเปิดส่วนที่ 3
+    const ticked = open && (document.getElementById('rcvPicked').checked || (rej.checked && hasRejectEvidence()));
+    if (part2Visible) part3.classList.toggle('hidden', !ticked);
+  };
+  ['input','change'].forEach(ev => document.addEventListener(ev, (e) => {
+    if (e.target && (e.target.name === 'returnDate' || e.target.name === 'returnStaff' || e.target.id === 'photoInput' || e.target.id === 'rejectDate' || e.target.id === 'rejectPhotoInput')) refreshPart2Flow();
+  }));
+
   window.toggleDestinationFields = () => {
     const type = document.getElementById('destinationType').value;
     document.getElementById('dest-branch-wrap').classList.toggle('hidden', type !== 'สาขา');
@@ -672,6 +761,7 @@
     }
     if (type === 'สาขา') refreshDestBranchOptions();
     updateProductBillFieldsVisibility();
+    refreshPart2Flow();
   };
 
   // เฉพาะต้นทาง "คลัง" ที่คืนตรงไปยัง "บริษัท" -> "อื่นๆ" เท่านั้น ที่ต้องระบุ จากสาขา/เลขที่บิล แยกรายชิ้น
@@ -801,6 +891,7 @@
       banner.classList.add('hidden');
       approveBtnWrap.classList.add('hidden');
     }
+    refreshPart2Flow();
   }
 
   // ================= Open form (new/edit) =================
@@ -821,6 +912,14 @@
     document.getElementById('product-container').innerHTML = "";
     addProductRow();
 
+    savedReceiverStatus = '';
+    document.getElementById('rejectDate').value = '';
+    document.getElementById('rejectPhotoInput').value = '';
+    document.getElementById('oldRejectPhotoUrl').value = '';
+    document.getElementById('reject-photo-status').innerText = '';
+    document.getElementById('old-reject-photo-hint').classList.add('hidden');
+    document.getElementById('rcvPicked').checked = false;
+    document.getElementById('rcvRejected').checked = false;
     document.getElementById('destinationType').value = "";
     toggleDestinationFields();
     clearSignaturePad();
@@ -864,6 +963,14 @@
     document.getElementsByName('notifyNote')[0].value = item.notifyNote || "";
     document.getElementsByName('returnDate')[0].value = item.returnDate || "";
     document.getElementsByName('returnStaff')[0].value = item.returnStaff || "";
+    savedReceiverStatus = item.receiverStatus || '';
+    document.getElementById('rcvPicked').checked = item.receiverStatus === 'picked';
+    document.getElementById('rcvRejected').checked = item.receiverStatus === 'rejected';
+    document.getElementById('rejectDate').value = item.rejectDate || '';
+    document.getElementById('rejectPhotoInput').value = '';
+    document.getElementById('oldRejectPhotoUrl').value = item.rejectPhotoUrl || '';
+    document.getElementById('reject-photo-status').innerText = item.rejectPhotoUrl ? '(มีรูปเดิมในระบบแล้ว)' : '';
+    document.getElementById('old-reject-photo-hint').classList.toggle('hidden', !item.rejectPhotoUrl);
     document.getElementsByName('actionResult')[0].value = item.actionResult || "";
     document.getElementById('returnType').value = item.returnType || "";
 
@@ -940,7 +1047,7 @@
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       return { x: (clientX - rect.left) * (canvas.width / rect.width), y: (clientY - rect.top) * (canvas.height / rect.height) };
     };
-    const start = (e) => { isDrawingSig = true; hasSigDrawn = true; const p = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); e.preventDefault(); };
+    const start = (e) => { isDrawingSig = true; if (!hasSigDrawn) { hasSigDrawn = true; setTimeout(() => window.refreshPart2Flow && refreshPart2Flow(), 0); } const p = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); e.preventDefault(); };
     const move = (e) => { if (!isDrawingSig) return; const p = getPos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); e.preventDefault(); };
     const end = () => { isDrawingSig = false; };
 
@@ -958,6 +1065,7 @@
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     hasSigDrawn = false;
+    if (window.refreshPart2Flow && document.getElementById('p2-status-box')) refreshPart2Flow();
   };
 
   document.addEventListener('DOMContentLoaded', initSignaturePad);
@@ -1051,6 +1159,20 @@
     const isStep3Checked = document.getElementById('confirmStep3').checked;
     data.confirmStep3 = isStep3Checked ? "YES" : "NO";
 
+    const w2c = isWarehouseToCompany();
+    const receiverStatus = !w2c ? '' :
+      (document.getElementById('rcvRejected').checked ? 'rejected' :
+       document.getElementById('rcvPicked').checked ? 'picked' : '');
+    if (w2c && type !== 'request' && receiverStatus) {
+      if (!data.returnDate || !data.returnStaff || !(document.getElementById('photoInput').files.length || document.getElementById('oldPhotoUrl').value || document.getElementById('oldFileName').value) || !(hasSigDrawn || document.getElementById('oldSignatureData').value)) {
+        alert("กรุณากรอกข้อมูลส่วนที่ 2 ให้ครบ (วันที่ / ผู้ส่งคืน / รูป / ลายเซ็น) ก่อนเลือกสถานะการรับสินค้า"); return;
+      }
+    }
+    if (w2c && type !== 'request' && receiverStatus === 'rejected' && !hasRejectEvidence()) {
+      alert("กรุณากรอกวันที่สินค้ากลับเข้าคลัง และแนบรูปสินค้าที่ตีกลับ"); return;
+    }
+    if (w2c && type === 'close' && !receiverStatus) { alert("กรุณาติ๊กสถานะการรับสินค้า (ส่วนที่ 2) ก่อนปิดเคส"); return; }
+
     if (type === 'request') {
       // ปั๊ว หรือ ต้นทางคลัง ไม่ต้องรออนุมัติ — ข้ามสถานะ "รอปลายทางอนุมัติ" ไปที่ "รอรับคืน" ได้เลย
       data.status = (destType === 'ปั๊ว' || data.branch === 'คลัง') ? "รอรับคืน" : "รอปลายทางอนุมัติ";
@@ -1059,6 +1181,9 @@
       if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !isStep3Checked) { alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส"); return; }
       if (!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้วใช่หรือไม่?")) return;
       data.status = "ปิดเคสแล้ว";
+    } else if (w2c) {
+      data.status = receiverStatus === 'rejected' ? "ไม่รับคืนสินค้า"
+                  : receiverStatus === 'picked' ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน";
     } else {
       data.status = data.returnDate ? "ส่งคืนแล้วรอปิดเคส" : "รอรับคืน";
     }
@@ -1097,6 +1222,25 @@
         if (resData.status === 'success') url = resData.url || "";
       }
 
+      // อัพโหลดรูปสินค้าตีกลับ (เก็บแยกจากรูปตอนส่ง)
+      let rejectPhotoUrl = document.getElementById('oldRejectPhotoUrl').value || "";
+      const rejectFile = receiverStatus === 'rejected' ? document.getElementById('rejectPhotoInput').files[0] : null;
+      if (rejectFile) {
+        if (bPark) bPark.innerText = "กำลังอัพโหลดรูปสินค้าตีกลับ...";
+        const rb64 = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(rejectFile); });
+        const branchClean = data.branch ? data.branch.replace(/\s+/g, '') : 'Branch';
+        const dateClean = data.notifyDate ? data.notifyDate.split('-').reverse().join('') : 'NoDate';
+        const docClean = data.docNumber ? data.docNumber.replace(/[^a-zA-Z0-9]/g, '') : 'NoDoc';
+        const rejectFileName = `${branchClean}-${dateClean}-${docClean}-REJECT.jpg`;
+        const rres = await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ base64: rb64, fileName: rejectFileName, branch: data.branch, year: data.notifyDate ? data.notifyDate.split('-')[0] : new Date().getFullYear().toString() })
+        });
+        const rjson = JSON.parse(await rres.text());
+        if (rjson.status === 'success') rejectPhotoUrl = rjson.url || "";
+      }
+
       let signatureData = document.getElementById('oldSignatureData').value || "";
       if (hasSigDrawn) {
         signatureData = document.getElementById('signaturePad').toDataURL('image/png');
@@ -1112,7 +1256,10 @@
         notifyNote: data.notifyNote || "", returnDate: data.returnDate || "",
         returnStaff: data.returnStaff || "", photoUrl: url, fileName: finalFileName, signatureData: signatureData,
         actionResult: data.actionResult || "", returnType: data.returnType || "", returnTypeOther: data.returnTypeOther || "", creditNoteNo: data.creditNoteNo || "",
-        products: data.products, status: data.status
+        products: data.products, status: data.status,
+        receiverStatus: receiverStatus,
+        rejectDate: receiverStatus === 'rejected' ? (document.getElementById('rejectDate').value || "") : "",
+        rejectPhotoUrl: receiverStatus === 'rejected' ? rejectPhotoUrl : ""
       };
       if (type === 'close') {
         const now = new Date();
