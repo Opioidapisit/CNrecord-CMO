@@ -116,7 +116,7 @@
       <button class="tab-btn" id="tab-approve" onclick="switchTab('approve')">🔔 รออนุมัติจากฉัน <span id="approve-badge" class="tab-badge hidden">0</span></button>
     </div>
 
-    <div class="filter-bar" style="grid-template-columns: 2fr 1fr;">
+    <div class="filter-bar" style="grid-template-columns: 2fr 1fr 1fr;">
       <input type="text" id="filterSearch" placeholder="🔍 ค้นหาปลายทาง, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
@@ -124,6 +124,13 @@
         <option value="รอรับคืน">🔴 รอรับคืน</option>
         <option value="ส่งคืนแล้วรอปิดเคส">🟡 รอปิดเคส</option>
         <option value="ปิดเคสแล้ว">🟢 ปิดเคสแล้ว</option>
+      </select>
+      <select id="sortBy" onchange="applyFilters()">
+        <option value="">เรียงตาม: ล่าสุดที่บันทึก</option>
+        <option value="notify-desc">📅 วันที่แจ้ง (ใหม่ → เก่า)</option>
+        <option value="notify-asc">📅 วันที่แจ้ง (เก่า → ใหม่)</option>
+        <option value="closed-desc">✔️ วันที่ปิดเคส (ใหม่ → เก่า)</option>
+        <option value="closed-asc">✔️ วันที่ปิดเคส (เก่า → ใหม่)</option>
       </select>
     </div>
     <div id="loading-msg" style="text-align:center; padding:40px; color:var(--text-muted);">กำลังโหลดข้อมูล...</div>
@@ -471,6 +478,18 @@
       return (destLabel.includes(search) || (item.docNumber || '').toLowerCase().includes(search) || pNames.includes(search))
         && (status === "" || item.status === status);
     });
+    const sortBy = document.getElementById('sortBy') ? document.getElementById('sortBy').value : '';
+    if (sortBy) {
+      const [field, dir] = sortBy.split('-');
+      const key = field === 'notify' ? 'notifyDate' : 'closedAt';
+      filtered.sort((a, b) => {
+        const va = a[key] || '', vb = b[key] || '';
+        if (!va && !vb) return 0;
+        if (!va) return 1;   // ไม่มีวันที่ ไว้ท้ายสุดเสมอ
+        if (!vb) return -1;
+        return dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+      });
+    }
     renderTable(filtered);
     updateApproveBadge();
   };
@@ -1095,6 +1114,10 @@
         actionResult: data.actionResult || "", returnType: data.returnType || "", returnTypeOther: data.returnTypeOther || "", creditNoteNo: data.creditNoteNo || "",
         products: data.products, status: data.status
       };
+      if (type === 'close') {
+        const now = new Date();
+        saveData.closedAt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      }
 
       let savedDocId = docId;
       if (docId && docId !== "") {
