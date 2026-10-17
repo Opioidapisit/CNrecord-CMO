@@ -523,7 +523,9 @@
             ${item.status === "ปิดเคสแล้ว"
               ? `<button class="btn-action btn-edit" disabled title="เคสนี้ปิดแล้ว ไม่สามารถแก้ไขได้" style="opacity:0.4; cursor:not-allowed;">🔒</button>`
               : `<button class="btn-action btn-edit" onclick="openFormEdit('${item.id}')">✏️</button>`}
-            <button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️</button>
+            ${(item.status === "ปิดเคสแล้ว" || item.status === "ส่งคืนแล้วรอปิดเคส" || item.returnDate)
+              ? `<button class="btn-action btn-delete" disabled title="ส่งคืน/ปิดเคสแล้ว ไม่สามารถลบได้" style="opacity:0.4; cursor:not-allowed;">🗑️</button>`
+              : `<button class="btn-action btn-delete" onclick="deleteRecord('${item.id}')">🗑️</button>`}
           </td>
         </tr>`;
     });
@@ -614,6 +616,11 @@
   };
 
   window.deleteRecord = async (id) => {
+    const rec = allData.find(x => x.id === id);
+    if (rec && (rec.status === "ปิดเคสแล้ว" || rec.status === "ส่งคืนแล้วรอปิดเคส" || rec.returnDate)) {
+      alert("รายการนี้ส่งคืนหรือปิดเคสแล้ว ไม่สามารถลบได้");
+      return;
+    }
     if (confirm("⚠️ ลบรายการนี้ใช่หรือไม่?")) {
       await deleteDoc(doc(db, "returns", id));
       await loadData();
