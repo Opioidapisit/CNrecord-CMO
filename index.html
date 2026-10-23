@@ -301,7 +301,14 @@
           <option value="สินค้าตีกลับเข้าคลัง">สินค้าตีกลับเข้าคลัง</option>
           <option value="อื่นๆ(ระบุ)">อื่นๆ (ระบุ)</option>
         </select>
-        <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้" class="hidden" style="margin-top:15px;">
+        <div id="credit-box" class="hidden" style="margin-top:15px; padding:12px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe;">
+          <label style="margin-top:0;">เลขที่ใบลดหนี้ (CN)</label>
+          <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้">
+          <label>แนบรูปใบลดหนี้ (CN) <span id="cn-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
+          <input type="file" id="cnPhotoInput" accept="image/*" style="background:white;">
+          <input type="hidden" id="oldCnPhotoUrl">
+          <p id="old-cn-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600;">⚠️ มีรูปใบลดหนี้ในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่ <a id="old-cn-photo-link" href="#" target="_blank">🔗 ดูรูปเดิม</a></p>
+        </div>
         <input type="text" name="returnTypeOther" id="returnTypeOther" placeholder="ระบุรายละเอียดเพิ่มเติม" class="hidden" style="margin-top:15px;">
 
         <div id="step3-notice-box" class="notice-box hidden">
@@ -667,7 +674,7 @@
       <div style="margin-top:15px;"><label>ลายเซ็นต์ผู้รับคืน:</label>${sigHtml}</div>
       <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
       <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}${item.returnType === 'อื่นๆ(ระบุ)' && item.returnTypeOther ? ' (' + item.returnTypeOther + ')' : ''}</span></div>
-      <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
+      <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}${item.cnPhotoUrl ? ` | <a href="${item.cnPhotoUrl}" target="_blank">🔗 ดูรูปใบลดหนี้</a>` : ''}</span></div>
       <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value"><b>${item.status}</b></span></div>
     `;
     document.getElementById('detail-content').innerHTML = html;
@@ -824,11 +831,13 @@
     }
 
     const creditInput = document.getElementById('creditNoteNo');
+    const creditBox = document.getElementById('credit-box');
     if (val === 'ได้รับใบลดหนี้') {
-      creditInput.classList.remove('hidden');
+      creditBox.classList.remove('hidden');
     } else {
-      creditInput.classList.add('hidden');
+      creditBox.classList.add('hidden');
       creditInput.value = '';
+      document.getElementById('cnPhotoInput').value = '';
     }
 
     const otherInput = document.getElementById('returnTypeOther');
@@ -917,6 +926,10 @@
     document.getElementById('rejectPhotoInput').value = '';
     document.getElementById('oldRejectPhotoUrl').value = '';
     document.getElementById('reject-photo-status').innerText = '';
+    document.getElementById('cnPhotoInput').value = '';
+    document.getElementById('oldCnPhotoUrl').value = '';
+    document.getElementById('cn-photo-status').innerText = '';
+    document.getElementById('old-cn-photo-hint').classList.add('hidden');
     document.getElementById('old-reject-photo-hint').classList.add('hidden');
     document.getElementById('rcvPicked').checked = false;
     document.getElementById('rcvRejected').checked = false;
@@ -976,6 +989,11 @@
 
     toggleStep3Notice();
     document.getElementsByName('creditNoteNo')[0].value = item.creditNoteNo || "";
+    document.getElementById('cnPhotoInput').value = '';
+    document.getElementById('oldCnPhotoUrl').value = item.cnPhotoUrl || '';
+    document.getElementById('cn-photo-status').innerText = item.cnPhotoUrl ? '(มีรูปเดิมในระบบแล้ว)' : '';
+    document.getElementById('old-cn-photo-hint').classList.toggle('hidden', !item.cnPhotoUrl);
+    document.getElementById('old-cn-photo-link').href = item.cnPhotoUrl || '#';
     document.getElementById('returnTypeOther').value = item.returnTypeOther || "";
     if (item.confirmStep3 === "YES") document.getElementById('confirmStep3').checked = true;
 
@@ -1178,6 +1196,8 @@
       data.status = (destType === 'ปั๊ว' || data.branch === 'คลัง') ? "รอรับคืน" : "รอปลายทางอนุมัติ";
     } else if (type === 'close') {
       if (!data.actionResult || !data.returnType) { alert("กรุณากรอกผลดำเนินการให้ครบถ้วน"); return; }
+      if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !(data.creditNoteNo || '').trim()) { alert("กรุณาระบุเลขที่ใบลดหนี้ (CN)"); return; }
+      if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !(document.getElementById('cnPhotoInput').files.length || document.getElementById('oldCnPhotoUrl').value)) { alert("กรุณาแนบรูปใบลดหนี้ (CN)"); return; }
       if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !isStep3Checked) { alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส"); return; }
       if (!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้วใช่หรือไม่?")) return;
       data.status = "ปิดเคสแล้ว";
@@ -1241,6 +1261,27 @@
         if (rjson.status === 'success') rejectPhotoUrl = rjson.url || "";
       }
 
+      // อัพโหลดรูปใบลดหนี้ (CN)
+      const isCN = data.returnType === 'ได้รับใบลดหนี้';
+      let cnPhotoUrl = isCN ? (document.getElementById('oldCnPhotoUrl').value || "") : "";
+      const cnFile = isCN ? document.getElementById('cnPhotoInput').files[0] : null;
+      if (cnFile) {
+        if (bPark) bPark.innerText = "กำลังอัพโหลดรูปใบลดหนี้...";
+        const cb64 = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(cnFile); });
+        const branchClean = data.branch ? data.branch.replace(/\s+/g, '') : 'Branch';
+        const dateClean = data.notifyDate ? data.notifyDate.split('-').reverse().join('') : 'NoDate';
+        const cnClean = (data.creditNoteNo || '').replace(/[^a-zA-Z0-9]/g, '') || 'NoCN';
+        const cnFileName = `${branchClean}-${dateClean}-CN-${cnClean}.jpg`;
+        const cres = await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ base64: cb64, fileName: cnFileName, branch: data.branch, year: data.notifyDate ? data.notifyDate.split('-')[0] : new Date().getFullYear().toString() })
+        });
+        const cjson = JSON.parse(await cres.text());
+        if (cjson.status === 'success') cnPhotoUrl = cjson.url || "";
+        else throw new Error("อัพโหลดรูปใบลดหนี้ไม่สำเร็จ");
+      }
+
       let signatureData = document.getElementById('oldSignatureData').value || "";
       if (hasSigDrawn) {
         signatureData = document.getElementById('signaturePad').toDataURL('image/png');
@@ -1255,7 +1296,7 @@
         docNumber: data.docNumber, confirmStep1: data.confirmStep1, confirmReceivedDest: data.confirmReceivedDest, confirmStep3: data.confirmStep3,
         notifyNote: data.notifyNote || "", returnDate: data.returnDate || "",
         returnStaff: data.returnStaff || "", photoUrl: url, fileName: finalFileName, signatureData: signatureData,
-        actionResult: data.actionResult || "", returnType: data.returnType || "", returnTypeOther: data.returnTypeOther || "", creditNoteNo: data.creditNoteNo || "",
+        actionResult: data.actionResult || "", returnType: data.returnType || "", returnTypeOther: data.returnTypeOther || "", creditNoteNo: data.creditNoteNo || "", cnPhotoUrl: cnPhotoUrl,
         products: data.products, status: data.status,
         receiverStatus: receiverStatus,
         rejectDate: receiverStatus === 'rejected' ? (document.getElementById('rejectDate').value || "") : "",
