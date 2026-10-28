@@ -302,10 +302,17 @@
           <option value="อื่นๆ(ระบุ)">อื่นๆ (ระบุ)</option>
         </select>
         <div id="credit-box" class="hidden" style="margin-top:15px; padding:12px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe;">
-          <label style="margin-top:0;">เลขที่ใบลดหนี้ (CN)</label>
-          <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้">
-          <label>แนบรูปใบลดหนี้ (CN) <span id="cn-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
-          <input type="file" id="cnPhotoInput" accept="image/*" style="background:white;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+            <div style="flex:1 1 200px; min-width:0;">
+              <label style="margin-top:0;">เลขที่ใบลดหนี้ (CN)</label>
+              <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้">
+            </div>
+            <div style="flex:1 1 200px; min-width:0;">
+              <label style="margin-top:0;">📷 แนบรูป <span id="cn-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:6px;"></span></label>
+              <input type="file" id="cnPhotoInput" accept="image/*" style="background:white;">
+            </div>
+          </div>
+          <p id="cn-alt-hint" class="p2-hint hidden" style="margin:6px 0 0;">* ส่งคืนบริษัทจากคลัง: กรอกเลข CN หรือแนบรูปอย่างใดอย่างหนึ่ง (กรณีไม่ได้รับใบ CN ให้แนบรูปหลักฐานแทน)</p>
           <input type="hidden" id="oldCnPhotoUrl">
           <p id="old-cn-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600;">⚠️ มีรูปใบลดหนี้ในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่ <a id="old-cn-photo-link" href="#" target="_blank">🔗 ดูรูปเดิม</a></p>
         </div>
@@ -834,6 +841,7 @@
     const creditBox = document.getElementById('credit-box');
     if (val === 'ได้รับใบลดหนี้') {
       creditBox.classList.remove('hidden');
+      document.getElementById('cn-alt-hint').classList.toggle('hidden', !isWarehouseToCompany());
     } else {
       creditBox.classList.add('hidden');
       creditInput.value = '';
@@ -1196,8 +1204,17 @@
       data.status = (destType === 'ปั๊ว' || data.branch === 'คลัง') ? "รอรับคืน" : "รอปลายทางอนุมัติ";
     } else if (type === 'close') {
       if (!data.actionResult || !data.returnType) { alert("กรุณากรอกผลดำเนินการให้ครบถ้วน"); return; }
-      if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !(data.creditNoteNo || '').trim()) { alert("กรุณาระบุเลขที่ใบลดหนี้ (CN)"); return; }
-      if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !(document.getElementById('cnPhotoInput').files.length || document.getElementById('oldCnPhotoUrl').value)) { alert("กรุณาแนบรูปใบลดหนี้ (CN)"); return; }
+      const cnHasNo = !!(data.creditNoteNo || '').trim();
+      const cnHasPhoto = !!(document.getElementById('cnPhotoInput').files.length || document.getElementById('oldCnPhotoUrl').value);
+      if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้') {
+        if (isWarehouseToCompany()) {
+          // คลัง -> บริษัท: กรอกเลข CN หรือแนบรูป อย่างใดอย่างหนึ่งก็ได้ (กรณีไม่ได้รับใบ CN)
+          if (!cnHasNo && !cnHasPhoto) { alert("กรุณากรอกเลขที่ใบลดหนี้ (CN) หรือแนบรูปแทน กรณีไม่ได้รับใบ CN"); return; }
+        } else {
+          if (!cnHasNo) { alert("กรุณาระบุเลขที่ใบลดหนี้ (CN)"); return; }
+          if (!cnHasPhoto) { alert("กรุณาแนบรูปใบลดหนี้ (CN)"); return; }
+        }
+      }
       if (document.getElementById('returnType').value === 'ได้รับใบลดหนี้' && !isStep3Checked) { alert("⚠️ กรุณาติ๊กยืนยันการทำสำเนา 2 ชุดก่อนปิดเคส"); return; }
       if (!confirm("ยืนยันจัดการเอกสารเรียบร้อยแล้วใช่หรือไม่?")) return;
       data.status = "ปิดเคสแล้ว";
