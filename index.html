@@ -57,7 +57,19 @@
     .p2-status-box { margin-top:18px; padding:14px; border:1px solid var(--border); border-radius:12px; background:#f8fafc; }
     .p2-status-box label.opt { display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:10px; cursor:pointer; font-weight:600; margin:0; }
     .p2-status-box label.opt.disabled { opacity:.45; cursor:not-allowed; }
-    .p2-status-box input { width:18px; height:18px; margin-top:2px; flex-shrink:0; }
+    .p2-status-box input[type="radio"],
+    .p2-status-box input[type="checkbox"] { width:18px; height:18px; margin-top:2px; flex-shrink:0; }
+
+    /* กล่องหลักฐานสินค้าตีกลับ */
+    .reject-box { margin-top:12px; padding:16px; border-radius:12px; background:#fff7ed; border:1px solid #fed7aa; }
+    .reject-box-title { font-weight:700; color:#9a3412; margin-bottom:12px; font-size:1rem; }
+    .reject-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .reject-grid label { margin:0 0 6px 0; font-size:.95rem; color:#334155; }
+    .reject-grid input[type="date"],
+    .reject-grid input[type="file"] { width:100%; background:#fff; border:1px solid #fdba74; border-radius:10px; padding:10px 12px; font-size:.95rem; }
+    .reject-grid input[type="file"] { border-style:dashed; cursor:pointer; padding:8px 10px; }
+    .reject-grid input[type="file"]::file-selector-button { margin-right:10px; padding:6px 14px; border:none; border-radius:8px; background:#ea580c; color:#fff; font-family:'Sarabun'; font-weight:600; cursor:pointer; }
+    @media (max-width: 640px) { .reject-grid { grid-template-columns:1fr; } }
     .p2-hint { font-size:.85rem; color:var(--text-muted); margin:6px 0 0 0; }
 
     .btn-action { padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; font-size: 1.1rem; }
@@ -274,14 +286,20 @@
           <label class="opt" id="opt-rejected"><input type="radio" name="rcvStatus" id="rcvRejected" value="rejected" onchange="onReceiverStatusChange(this)"> ↩️ ผู้แทน/บริษัทไม่รับคืนสินค้า (สินค้าตีกลับ)</label>
           <p class="p2-hint" id="rejected-hint">* เลือก "สินค้าตีกลับ" ได้หลังจากบันทึกว่าส่งสินค้าไปแล้วเท่านั้น</p>
 
-          <div id="p2-reject-box" class="hidden" style="margin-top:12px; padding:12px; border-radius:10px; background:#fff7ed; border:1px solid #fed7aa;">
-            <div style="font-weight:700; color:#9a3412; margin-bottom:6px;">↩️ หลักฐานสินค้าตีกลับ</div>
-            <label style="margin-top:0;">วันที่สินค้ากลับเข้าคลัง</label>
-            <input type="date" id="rejectDate">
-            <label>รูปสินค้าที่ตีกลับ <span id="reject-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:10px;"></span></label>
-            <input type="file" id="rejectPhotoInput" accept="image/*" style="background:white;">
+          <div id="p2-reject-box" class="reject-box hidden">
+            <div class="reject-box-title">↩️ หลักฐานสินค้าตีกลับ</div>
+            <div class="reject-grid">
+              <div>
+                <label>📅 วันที่สินค้ากลับเข้าคลัง</label>
+                <input type="date" id="rejectDate">
+              </div>
+              <div>
+                <label>📷 รูปสินค้าที่ตีกลับ <span id="reject-photo-status" style="color:var(--success); font-weight:bold; font-size:0.85rem; margin-left:6px;"></span></label>
+                <input type="file" id="rejectPhotoInput" accept="image/*">
+              </div>
+            </div>
             <input type="hidden" id="oldRejectPhotoUrl">
-            <p id="old-reject-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600;">⚠️ มีรูปสินค้าตีกลับในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่</p>
+            <p id="old-reject-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600; margin-top:10px;">⚠️ มีรูปสินค้าตีกลับในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่</p>
           </div>
         </div>
       </div>
