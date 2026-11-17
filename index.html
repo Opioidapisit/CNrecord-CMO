@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -138,7 +139,7 @@
     </div>
 
     <div class="filter-bar" style="grid-template-columns: 2fr 1fr 1fr;">
-      <input type="text" id="filterSearch" placeholder="🔍 ค้นหาปลายทาง, สินค้า หรือเลขบิล..." onkeyup="applyFilters()">
+      <input type="search" id="filterSearch" name="cmo_filter_q" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" readonly onfocus="this.removeAttribute('readonly')" placeholder="🔍 ค้นหาปลายทาง, สินค้า หรือเลขบิล..." oninput="applyFilters()">
       <select id="filterStatus" onchange="applyFilters()">
         <option value="">ทุกสถานะ</option>
         <option value="รอปลายทางอนุมัติ">🟣 รอปลายทางอนุมัติ</option>
@@ -380,7 +381,7 @@
   <div class="modal-card" style="max-width:350px; text-align:center;">
     <h3 style="margin-top:0;">🔒 เข้าสู่ระบบคลัง (ส่วนกลาง)</h3>
     <p style="color:var(--text-muted);">กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบในนามคลัง</p>
-    <input type="password" id="warehouse-password-input" placeholder="รหัสผ่าน" style="text-align:center; font-size:1.1rem; margin-top:10px;" onkeydown="if(event.key==='Enter') checkWarehousePassword()">
+    <input type="password" id="warehouse-password-input" autocomplete="new-password" name="cmo_wh_pw" placeholder="รหัสผ่าน" style="text-align:center; font-size:1.1rem; margin-top:10px;" onkeydown="if(event.key==='Enter') checkWarehousePassword()">
     <p id="warehouse-password-error" class="hidden" style="color:var(--danger); font-weight:600; font-size:0.9rem; margin:10px 0 0;">❌ รหัสผ่านไม่ถูกต้อง</p>
     <div style="display:flex; gap:10px; margin-top:20px;">
       <button class="btn btn-back" style="flex:1;" onclick="closeModal('warehouse-password-modal')">ยกเลิก</button>
@@ -505,6 +506,10 @@
     localStorage.setItem(SESSION_KEY, branchName);
 
     document.getElementById('dash-title').innerText = "ข้อมูล " + branchName;
+    // ล้างค่าที่เบราว์เซอร์อาจเติมอัตโนมัติ (ชื่อผู้ใช้/รหัสที่บันทึกไว้) ออกจากช่องค้นหา
+    const fs = document.getElementById('filterSearch');
+    fs.value = '';
+    setTimeout(() => { if (fs.value && document.activeElement !== fs) { fs.value = ''; applyFilters(); } }, 300);
     document.getElementById('form-branch').value = branchName;
     activeTab = 'mine';
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
