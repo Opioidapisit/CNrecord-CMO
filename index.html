@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -321,21 +320,20 @@
           <option value="อื่นๆ(ระบุ)">อื่นๆ (ระบุ)</option>
         </select>
         <div id="credit-box" class="hidden" style="margin-top:15px; padding:12px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe;">
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
-            <div style="flex:1 1 200px; min-width:0;">
-              <label style="margin-top:0;">เลขที่ใบลดหนี้ (CN)</label>
-              <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้">
-            </div>
-            <div style="flex:1 1 200px; min-width:0;">
-              <label style="margin-top:0;">📷 แนบรูป <span id="cn-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:6px;"></span></label>
-              <input type="file" id="cnPhotoInput" accept="image/*" style="background:white;">
-            </div>
-          </div>
-          <p id="cn-alt-hint" class="p2-hint hidden" style="margin:6px 0 0;">* ส่งคืนบริษัทจากคลัง: กรอกเลข CN หรือแนบรูปอย่างใดอย่างหนึ่ง (กรณีไม่ได้รับใบ CN ให้แนบรูปหลักฐานแทน)</p>
-          <input type="hidden" id="oldCnPhotoUrl">
-          <p id="old-cn-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600;">⚠️ มีรูปใบลดหนี้ในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่ <a id="old-cn-photo-link" href="#" target="_blank">🔗 ดูรูปเดิม</a></p>
+          <label style="margin-top:0;">เลขที่ใบลดหนี้ (CN)</label>
+          <input type="text" name="creditNoteNo" id="creditNoteNo" placeholder="ระบุเลขที่ใบลดหนี้">
+          <p id="cn-alt-hint" class="p2-hint hidden" style="margin:6px 0 0;">* ส่งคืนบริษัทจากคลัง: กรอกเลข CN หรือแนบรูปด้านล่างอย่างใดอย่างหนึ่ง (กรณีไม่ได้รับใบ CN ให้แนบรูปหลักฐานแทน)</p>
         </div>
         <input type="text" name="returnTypeOther" id="returnTypeOther" placeholder="ระบุรายละเอียดเพิ่มเติม" class="hidden" style="margin-top:15px;">
+
+        <!-- แนบรูปผลการดำเนินการ: แสดงทุกสถานะ -->
+        <div id="result-photo-box" style="margin-top:15px; padding:12px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0;">
+          <label style="margin-top:0;">📷 แนบรูปผลการดำเนินการ <span id="cn-photo-status" style="color:var(--success); font-weight:bold; font-size:0.9rem; margin-left:6px;"></span></label>
+          <input type="file" id="cnPhotoInput" accept="image/*" style="background:white;">
+          <p class="p2-hint" style="margin:6px 0 0;">แนบได้ทุกกรณี เช่น ใบลดหนี้, ใบเปลี่ยนสินค้า, หลักฐานรับเงินคืน, สินค้าที่ได้รับ</p>
+          <input type="hidden" id="oldCnPhotoUrl">
+          <p id="old-cn-photo-hint" class="p2-hint hidden" style="color:var(--warning); font-weight:600;">⚠️ มีรูปในระบบแล้ว หากไม่ต้องการเปลี่ยน ไม่ต้องเลือกไฟล์ใหม่ <a id="old-cn-photo-link" href="#" target="_blank">🔗 ดูรูปเดิม</a></p>
+        </div>
 
         <div id="step3-notice-box" class="notice-box hidden">
           <input type="checkbox" id="confirmStep3" style="width:18px; height:18px;">
@@ -717,7 +715,8 @@
       <div style="margin-top:15px;"><label>ลายเซ็นต์ผู้รับคืน:</label>${sigHtml}</div>
       <div style="margin-top:15px;"><label>ผลดำเนินการ:</label><div style="background:#f0fdf4; padding:10px; border-radius:8px; font-size:0.9rem; border:1px solid #d1fae5;">${item.actionResult || '-'}</div></div>
       <div class="detail-item"><span class="detail-label">รูปแบบการคืน:</span><span class="detail-value">${item.returnType || '-'}${item.returnType === 'อื่นๆ(ระบุ)' && item.returnTypeOther ? ' (' + item.returnTypeOther + ')' : ''}</span></div>
-      <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}${item.cnPhotoUrl ? ` | <a href="${item.cnPhotoUrl}" target="_blank">🔗 ดูรูปใบลดหนี้</a>` : ''}</span></div>
+      <div class="detail-item"><span class="detail-label">เลขใบลดหนี้:</span><span class="detail-value">${item.creditNoteNo || '-'}</span></div>
+      <div class="detail-item"><span class="detail-label">รูปผลการดำเนินการ:</span><span class="detail-value">${item.cnPhotoUrl ? `<a href="${item.cnPhotoUrl}" target="_blank">🔗 ดูรูป</a>` : '-'}</span></div>
       <div class="detail-item"><span class="detail-label">สถานะปัจจุบัน:</span><span class="detail-value"><b>${item.status}</b></span></div>
     `;
     document.getElementById('detail-content').innerHTML = html;
@@ -881,7 +880,6 @@
     } else {
       creditBox.classList.add('hidden');
       creditInput.value = '';
-      document.getElementById('cnPhotoInput').value = '';
     }
 
     const otherInput = document.getElementById('returnTypeOther');
@@ -1314,15 +1312,15 @@
 
       // อัพโหลดรูปใบลดหนี้ (CN)
       const isCN = data.returnType === 'ได้รับใบลดหนี้';
-      let cnPhotoUrl = isCN ? (document.getElementById('oldCnPhotoUrl').value || "") : "";
-      const cnFile = isCN ? document.getElementById('cnPhotoInput').files[0] : null;
+      let cnPhotoUrl = document.getElementById('oldCnPhotoUrl').value || "";
+      const cnFile = document.getElementById('cnPhotoInput').files[0] || null;
       if (cnFile) {
-        if (bPark) bPark.innerText = "กำลังอัพโหลดรูปใบลดหนี้...";
+        if (bPark) bPark.innerText = "กำลังอัพโหลดรูปผลการดำเนินการ...";
         const cb64 = await fileToSmallDataURL(cnFile);
         const branchClean = data.branch ? data.branch.replace(/\s+/g, '') : 'Branch';
         const dateClean = data.notifyDate ? data.notifyDate.split('-').reverse().join('') : 'NoDate';
         const cnClean = (data.creditNoteNo || '').replace(/[^a-zA-Z0-9]/g, '') || 'NoCN';
-        const cnFileName = `${branchClean}-${dateClean}-CN-${cnClean}.jpg`;
+        const cnFileName = isCN ? `${branchClean}-${dateClean}-CN-${cnClean}.jpg` : `${branchClean}-${dateClean}-RESULT-${Date.now()}.jpg`;
         const cres = await fetch(GAS_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1331,7 +1329,7 @@
         const ctxt = await cres.text();
         let cjson; try { cjson = JSON.parse(ctxt); } catch (e) { cjson = { message: ctxt.slice(0, 200) }; }
         if (cjson.status === 'success') cnPhotoUrl = cjson.url || "";
-        else throw new Error("อัพโหลดรูปใบลดหนี้ไม่สำเร็จ" + (cjson.message ? " (" + cjson.message + ")" : ""));
+        else throw new Error("อัพโหลดรูปผลการดำเนินการไม่สำเร็จ" + (cjson.message ? " (" + cjson.message + ")" : ""));
       }
 
       let signatureData = document.getElementById('oldSignatureData').value || "";
